@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { View, Text, Platform } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Lightbulb, UserCircle, LucideIcon } from 'lucide-react-native';
 

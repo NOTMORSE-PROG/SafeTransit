@@ -11,9 +11,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withRepeat,
-  withSequence,
-  withTiming,
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -100,9 +97,9 @@ export default function Home() {
   const router = useRouter();
   const mapRef = useRef<MapView>(null);
   const [isProtectionOn, setIsProtectionOn] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
+  const [_currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
   const [selectedTip, setSelectedTip] = useState<TipData | null>(null);
-  const [isSheetExpanded, setIsSheetExpanded] = useState(false);
+  const [_isSheetExpanded, setIsSheetExpanded] = useState(false);
 
   const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
   const startY = useSharedValue(0);

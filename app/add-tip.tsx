@@ -19,7 +19,7 @@ export default function AddTip() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-  const [location, setLocation] = useState('Current Location');
+  const [location, _setLocation] = useState('Current Location');
   const [hasPhoto, setHasPhoto] = useState(false);
 
   const handlePickImage = async () => {
@@ -112,7 +112,7 @@ export default function AddTip() {
             Category <Text className="text-danger-600">*</Text>
           </Text>
           <View className="mb-6">
-            {CATEGORIES.map((category, index) => {
+            {CATEGORIES.map((category) => {
               const IconComponent = category.icon === 'Lightbulb' ? Lightbulb :
                                    category.icon === 'AlertTriangle' ? AlertTriangle :
                                    category.icon === 'Construction' ? Construction :

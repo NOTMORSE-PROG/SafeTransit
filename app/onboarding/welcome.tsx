@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { Shield, Map, Bell, AlertOctagon } from 'lucide-react-native';
-
-const { height } = Dimensions.get('window');
 
 export default function Welcome() {
   const router = useRouter();

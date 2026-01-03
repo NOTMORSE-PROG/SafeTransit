@@ -14,6 +14,14 @@ module.exports = {
     }],
     '@typescript-eslint/no-explicit-any': 'warn',
   },
+  overrides: [
+    {
+      files: ['*.config.js', '*.config.ts'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
+      },
+    },
+  ],
   ignorePatterns: [
     'node_modules/',
     '.expo/',
