@@ -1,74 +1,216 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import MapView, { Polyline, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
+import MapView, { Polyline, Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
-import { PersonStanding, Car, Bus, ChevronLeft, Search, Clock, Ruler, AlertTriangle, CheckCircle, Navigation, MapPin, Check } from 'lucide-react-native';
+import * as ExpoLocation from 'expo-location';
+import {
+  PersonStanding,
+  Car,
+  Bus,
+  ChevronLeft,
+  Clock,
+  Ruler,
+  AlertTriangle,
+  CheckCircle,
+  Navigation,
+  MapPin,
+  Check,
+} from 'lucide-react-native';
+
+import LocationSearchInput from '../components/LocationSearchInput';
+import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
+import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/osrm';
 
 const TRAVEL_MODES = [
   { id: 'walk', label: 'Walk', icon: 'PersonStanding' },
   { id: 'drive', label: 'Drive', icon: 'Car' },
-  { id: 'transit', label: 'Transit', icon: 'Bus' }
+  { id: 'transit', label: 'Transit', icon: 'Bus' },
 ];
 
-const MOCK_ROUTES = [
-  {
-    id: '1',
-    name: 'Safest Route',
-    duration: '25 min',
-    distance: '2.8 km',
-    safety: 'high',
-    coordinates: [
-      { latitude: 14.5995, longitude: 120.9842 },
-      { latitude: 14.6005, longitude: 120.9852 },
-      { latitude: 14.6015, longitude: 120.9862 },
-      { latitude: 14.6025, longitude: 120.9872 },
-    ],
-    color: '#22C55E',
-    warnings: []
-  },
-  {
-    id: '2',
-    name: 'Fastest Route',
-    duration: '18 min',
-    distance: '2.1 km',
-    safety: 'medium',
-    coordinates: [
-      { latitude: 14.5995, longitude: 120.9842 },
-      { latitude: 14.6000, longitude: 120.9850 },
-      { latitude: 14.6010, longitude: 120.9860 },
-      { latitude: 14.6025, longitude: 120.9872 },
-    ],
-    color: '#F59E0B',
-    warnings: ['Passes through 1 caution zone']
-  }
-];
+// Manila default region
+const MANILA_REGION: Region = {
+  latitude: 14.5995,
+  longitude: 120.9842,
+  latitudeDelta: 0.05,
+  longitudeDelta: 0.05,
+};
 
 export default function RoutePlanning() {
   const router = useRouter();
-  const [destination, setDestination] = useState('');
-  const [selectedMode, setSelectedMode] = useState('walk');
-  const [selectedRoute, setSelectedRoute] = useState<typeof MOCK_ROUTES[0] | null>(null);
-  const [showRoutes, setShowRoutes] = useState(false);
 
-  const INITIAL_REGION = {
-    latitude: 14.6010,
-    longitude: 120.9857,
-    latitudeDelta: 0.015,
-    longitudeDelta: 0.015,
+  // Location states
+  const [currentLocation, setCurrentLocation] = useState<LocationSearchResult | null>(null);
+  const [startLocation, setStartLocation] = useState<LocationSearchResult | null>(null);
+  const [endLocation, setEndLocation] = useState<LocationSearchResult | null>(null);
+  const [useCurrentAsStart, setUseCurrentAsStart] = useState(true);
+
+  // Route states
+  const [selectedMode, setSelectedMode] = useState<'walk' | 'drive' | 'transit'>('walk');
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [isLoadingRoutes, setIsLoadingRoutes] = useState(false);
+
+  // UI states
+  const [showRoutes, setShowRoutes] = useState(false);
+  const [mapRegion, setMapRegion] = useState<Region>(MANILA_REGION);
+
+  // Get current location on mount
+  useEffect(() => {
+    getCurrentLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch routes when both locations and mode are selected
+  useEffect(() => {
+    if (startLocation && endLocation) {
+      fetchRoutes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startLocation, endLocation, selectedMode]);
+
+  const getCurrentLocation = async () => {
+    try {
+      const { status } = await ExpoLocation.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission Denied',
+          'Location permission is required to use this feature.'
+        );
+        return;
+      }
+
+      const location = await ExpoLocation.getCurrentPositionAsync({
+        accuracy: ExpoLocation.Accuracy.Balanced,
+      });
+
+      const { latitude, longitude } = location.coords;
+
+      // Reverse geocode to get address
+      const geocoded = await reverseGeocode(latitude, longitude);
+
+      if (geocoded) {
+        setCurrentLocation(geocoded);
+        if (useCurrentAsStart) {
+          setStartLocation(geocoded);
+        }
+
+        // Center map on current location
+        setMapRegion({
+          latitude,
+          longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        });
+      }
+    } catch (error) {
+      console.error('Error getting current location:', error);
+    }
   };
 
-  const handleSearch = () => {
-    if (destination.trim()) {
+  const fetchRoutes = async () => {
+    if (!startLocation || !endLocation) return;
+
+    setIsLoadingRoutes(true);
+    setShowRoutes(false);
+
+    try {
+      const start = {
+        latitude: startLocation.latitude,
+        longitude: startLocation.longitude,
+      };
+
+      const end = {
+        latitude: endLocation.latitude,
+        longitude: endLocation.longitude,
+      };
+
+      // Get routes for all modes
+      const allModeRoutes = await getMultiModalRoutes(start, end, [selectedMode]);
+      const modeRoutes = allModeRoutes.get(selectedMode) || [];
+
+      // Add safety assessment (mock for now)
+      type RouteWithSafety = Route & {
+        safety: string;
+        warnings: string[];
+        color: string;
+      };
+
+      const routesWithSafety: RouteWithSafety[] = modeRoutes.map((route, index) => {
+        const safety = index === 0 ? 'high' : 'medium';
+        const warnings = safety === 'high' ? [] : ['Passes through 1 caution zone'];
+
+        return {
+          ...route,
+          safety,
+          warnings,
+          color: safety === 'high' ? '#22C55E' : '#F59E0B',
+        };
+      });
+
+      setRoutes(routesWithSafety as Route[]);
+      setSelectedRoute(routesWithSafety[0] || null);
       setShowRoutes(true);
-      setSelectedRoute(MOCK_ROUTES[0]);
+
+      // Adjust map to show both points
+      const midLat = (start.latitude + end.latitude) / 2;
+      const midLon = (start.longitude + end.longitude) / 2;
+      const latDelta = Math.abs(start.latitude - end.latitude) * 2.5;
+      const lonDelta = Math.abs(start.longitude - end.longitude) * 2.5;
+
+      setMapRegion({
+        latitude: midLat,
+        longitude: midLon,
+        latitudeDelta: Math.max(latDelta, 0.02),
+        longitudeDelta: Math.max(lonDelta, 0.02),
+      });
+    } catch (error) {
+      console.error('Error fetching routes:', error);
+      Alert.alert('Error', 'Failed to fetch routes. Please try again.');
+    } finally {
+      setIsLoadingRoutes(false);
+    }
+  };
+
+  const handleStartLocationSelect = (location: LocationSearchResult) => {
+    setStartLocation(location);
+    setUseCurrentAsStart(false);
+  };
+
+  const handleEndLocationSelect = (location: LocationSearchResult) => {
+    setEndLocation(location);
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (currentLocation) {
+      setStartLocation(currentLocation);
+      setUseCurrentAsStart(true);
+    } else {
+      getCurrentLocation();
     }
   };
 
   const handleStartNavigation = () => {
-    router.back();
-    // In a real app, this would start turn-by-turn navigation
+    if (!selectedRoute) return;
+
+    Alert.alert(
+      'Start Navigation',
+      `Ready to navigate via ${selectedRoute.name}?\n\nDuration: ${formatDuration(selectedRoute.duration)}\nDistance: ${formatDistance(selectedRoute.distance)}`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Start',
+          onPress: () => {
+            // In a real app, this would start turn-by-turn navigation
+            router.back();
+          },
+        },
+      ]
+    );
   };
+
+  const effectiveStartLocation = useCurrentAsStart ? currentLocation : startLocation;
 
   return (
     <View className="flex-1 bg-white">
@@ -76,24 +218,35 @@ export default function RoutePlanning() {
       <MapView
         provider={PROVIDER_DEFAULT}
         style={{ flex: 1 }}
-        initialRegion={INITIAL_REGION}
+        region={mapRegion}
         showsUserLocation
+        showsMyLocationButton={false}
       >
-        {/* Starting Point */}
-        <Marker
-          coordinate={{ latitude: 14.5995, longitude: 120.9842 }}
-          title="Your Location"
-        >
-          <View className="bg-primary-600 w-8 h-8 rounded-full border-2 border-white items-center justify-center">
-            <Navigation color="#ffffff" size={16} strokeWidth={2.5} />
-          </View>
-        </Marker>
-
-        {/* Destination */}
-        {showRoutes && (
+        {/* Starting Point Marker */}
+        {effectiveStartLocation && (
           <Marker
-            coordinate={{ latitude: 14.6025, longitude: 120.9872 }}
-            title="Destination"
+            coordinate={{
+              latitude: effectiveStartLocation.latitude,
+              longitude: effectiveStartLocation.longitude,
+            }}
+            title={effectiveStartLocation.name}
+            description={effectiveStartLocation.address}
+          >
+            <View className="bg-primary-600 w-8 h-8 rounded-full border-2 border-white items-center justify-center">
+              <Navigation color="#ffffff" size={16} strokeWidth={2.5} />
+            </View>
+          </Marker>
+        )}
+
+        {/* Destination Marker */}
+        {endLocation && (
+          <Marker
+            coordinate={{
+              latitude: endLocation.latitude,
+              longitude: endLocation.longitude,
+            }}
+            title={endLocation.name}
+            description={endLocation.address}
           >
             <View className="bg-danger-600 w-10 h-10 rounded-full items-center justify-center">
               <MapPin color="#ffffff" size={24} strokeWidth={2} />
@@ -102,14 +255,15 @@ export default function RoutePlanning() {
         )}
 
         {/* Routes */}
-        {showRoutes && MOCK_ROUTES.map((route) => (
-          <Polyline
-            key={route.id}
-            coordinates={route.coordinates}
-            strokeColor={route.id === selectedRoute?.id ? route.color : '#D1D5DB'}
-            strokeWidth={route.id === selectedRoute?.id ? 5 : 3}
-          />
-        ))}
+        {showRoutes &&
+          routes.map((route) => (
+            <Polyline
+              key={route.id}
+              coordinates={route.coordinates}
+              strokeColor={route.id === selectedRoute?.id ? (route as Route & { color: string }).color : '#D1D5DB'}
+              strokeWidth={route.id === selectedRoute?.id ? 5 : 3}
+            />
+          ))}
       </MapView>
 
       {/* Top Bar */}
@@ -132,39 +286,46 @@ export default function RoutePlanning() {
             </Text>
           </View>
 
-          {/* Search Input */}
+          {/* Search Inputs */}
           <View className="px-4 py-3 border-b border-neutral-100">
-            <View className="flex-row items-center bg-neutral-100 rounded-xl px-3 py-3">
-              <Search color="#6b7280" size={20} strokeWidth={2} />
-              <TextInput
-                placeholder="Where to?"
-                value={destination}
-                onChangeText={setDestination}
-                onSubmitEditing={handleSearch}
-                className="flex-1 text-base text-neutral-900 ml-2"
-                placeholderTextColor="#9CA3AF"
+            {/* From Input */}
+            <View className="mb-3">
+              <LocationSearchInput
+                placeholder="Where from?"
+                value={effectiveStartLocation?.name || ''}
+                onLocationSelect={handleStartLocationSelect}
+                icon="start"
+                showCurrentLocation={!useCurrentAsStart}
+                onUseCurrentLocation={handleUseCurrentLocation}
               />
             </View>
+
+            {/* To Input */}
+            <LocationSearchInput
+              placeholder="Where to?"
+              value={endLocation?.name || ''}
+              onLocationSelect={handleEndLocationSelect}
+              icon="end"
+              autoFocus={false}
+            />
           </View>
 
           {/* Travel Mode Selector */}
           <View className="px-4 py-3">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              className="flex-row"
-            >
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
               {TRAVEL_MODES.map((mode) => {
-                const IconComponent = mode.icon === 'PersonStanding' ? PersonStanding :
-                                     mode.icon === 'Car' ? Car : Bus;
+                const IconComponent =
+                  mode.icon === 'PersonStanding'
+                    ? PersonStanding
+                    : mode.icon === 'Car'
+                    ? Car
+                    : Bus;
                 return (
                   <TouchableOpacity
                     key={mode.id}
-                    onPress={() => setSelectedMode(mode.id)}
+                    onPress={() => setSelectedMode(mode.id as 'walk' | 'drive' | 'transit')}
                     className={`mr-2 px-4 py-2 rounded-full ${
-                      selectedMode === mode.id
-                        ? 'bg-primary-600'
-                        : 'bg-neutral-200'
+                      selectedMode === mode.id ? 'bg-primary-600' : 'bg-neutral-200'
                     }`}
                     activeOpacity={0.7}
                   >
@@ -176,9 +337,7 @@ export default function RoutePlanning() {
                       />
                       <Text
                         className={`text-sm font-semibold ml-1.5 ${
-                          selectedMode === mode.id
-                            ? 'text-white'
-                            : 'text-neutral-700'
+                          selectedMode === mode.id ? 'text-white' : 'text-neutral-700'
                         }`}
                       >
                         {mode.label}
@@ -189,44 +348,54 @@ export default function RoutePlanning() {
               })}
             </ScrollView>
           </View>
+
+          {/* Loading Indicator */}
+          {isLoadingRoutes && (
+            <View className="px-4 py-3 border-t border-neutral-100">
+              <View className="flex-row items-center justify-center">
+                <ActivityIndicator size="small" color="#2563eb" />
+                <Text className="text-sm text-neutral-600 ml-2">Finding best routes...</Text>
+              </View>
+            </View>
+          )}
         </View>
       </View>
 
       {/* Route Options */}
-      {showRoutes && (
+      {showRoutes && routes.length > 0 && (
         <Animated.View
           entering={SlideInDown.duration(600)}
           className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl"
         >
           <View className="px-6 pt-6 pb-8">
-            <Text className="text-xl font-bold text-neutral-900 mb-4">
-              Choose Your Route
-            </Text>
+            <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
 
             <ScrollView className="mb-4" style={{ maxHeight: 300 }}>
-              {MOCK_ROUTES.map((route, index) => (
-                <Animated.View
-                  key={route.id}
-                  entering={FadeInDown.delay(index * 100).duration(600)}
-                >
-                  <TouchableOpacity
-                    onPress={() => setSelectedRoute(route)}
-                    className={`mb-3 rounded-2xl p-4 border-2 ${
-                      selectedRoute?.id === route.id
-                        ? 'border-primary-600 bg-primary-50'
-                        : 'border-neutral-200 bg-white'
-                    }`}
-                    activeOpacity={0.8}
-                    accessible={true}
-                    accessibilityLabel={`${route.name}, ${route.duration}, ${route.distance}`}
-                    accessibilityRole="button"
+              {routes.map((route, index) => {
+                const routeWithSafety = route as Route & { color: string; warnings?: string[] };
+                return (
+                  <Animated.View
+                    key={route.id}
+                    entering={FadeInDown.delay(index * 100).duration(600)}
                   >
-                    <View className="flex-row items-center justify-between mb-2">
-                      <View className="flex-row items-center flex-1">
-                        <View
-                          className="w-3 h-3 rounded-full mr-2"
-                          style={{ backgroundColor: route.color }}
-                        />
+                    <TouchableOpacity
+                      onPress={() => setSelectedRoute(route)}
+                      className={`mb-3 rounded-2xl p-4 border-2 ${
+                        selectedRoute?.id === route.id
+                          ? 'border-primary-600 bg-primary-50'
+                          : 'border-neutral-200 bg-white'
+                      }`}
+                      activeOpacity={0.8}
+                      accessible={true}
+                      accessibilityLabel={`${route.name}, ${formatDuration(route.duration)}, ${formatDistance(route.distance)}`}
+                      accessibilityRole="button"
+                    >
+                      <View className="flex-row items-center justify-between mb-2">
+                        <View className="flex-row items-center flex-1">
+                          <View
+                            className="w-3 h-3 rounded-full mr-2"
+                            style={{ backgroundColor: routeWithSafety.color }}
+                          />
                         <Text className="text-base font-bold text-neutral-900">
                           {route.name}
                         </Text>
@@ -242,20 +411,20 @@ export default function RoutePlanning() {
                       <View className="flex-row items-center mr-4">
                         <Clock color="#4b5563" size={16} strokeWidth={2} />
                         <Text className="text-sm text-neutral-600 ml-1.5">
-                          {route.duration}
+                          {formatDuration(route.duration)}
                         </Text>
                       </View>
                       <View className="flex-row items-center">
                         <Ruler color="#4b5563" size={16} strokeWidth={2} />
                         <Text className="text-sm text-neutral-600 ml-1.5">
-                          {route.distance}
+                          {formatDistance(route.distance)}
                         </Text>
                       </View>
                     </View>
 
-                    {route.warnings.length > 0 ? (
+                    {routeWithSafety.warnings && routeWithSafety.warnings.length > 0 ? (
                       <View className="bg-warning-50 rounded-lg px-3 py-2">
-                        {route.warnings.map((warning, idx) => (
+                        {routeWithSafety.warnings.map((warning: string, idx: number) => (
                           <View key={idx} className="flex-row items-center">
                             <AlertTriangle color="#b45309" size={14} strokeWidth={2} />
                             <Text className="text-xs text-warning-700 ml-1.5 flex-1">
@@ -276,7 +445,8 @@ export default function RoutePlanning() {
                     )}
                   </TouchableOpacity>
                 </Animated.View>
-              ))}
+              );
+              })}
             </ScrollView>
 
             <TouchableOpacity
