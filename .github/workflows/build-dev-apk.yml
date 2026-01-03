@@ -30,14 +30,13 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Clean npm cache
-        run: npm cache clean --force
-
       - name: Install dependencies
-        run: npm ci
+        run: |
+          rm -f package-lock.json
+          npm install
 
       - name: Generate native code with dev-client (Expo Prebuild)
-        run: npx expo prebuild --platform android --clean --no-install
+        run: npx expo prebuild --platform android --clean
         env:
           EXPO_USE_DEV_CLIENT: true
 
