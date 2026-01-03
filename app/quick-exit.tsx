@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-nati
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { MapPin, ArrowLeft } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -59,9 +60,12 @@ export default function QuickExit() {
               <Text className="text-8xl">⛅</Text>
             </View>
 
-            <Text className="text-white/80 text-lg">
-              📍 {WEATHER_DATA.city}
-            </Text>
+            <View className="flex-row items-center">
+              <MapPin color="#ffffff" size={20} strokeWidth={2} />
+              <Text className="text-white/80 text-lg ml-1.5">
+                {WEATHER_DATA.city}
+              </Text>
+            </View>
           </Animated.View>
 
           {/* Current Details */}
@@ -177,8 +181,11 @@ export default function QuickExit() {
               onLongPress={() => router.back()}
               className="bg-white/30 backdrop-blur rounded-full w-14 h-14 items-center justify-center"
               activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="Return to app"
+              accessibilityRole="button"
             >
-              <Text className="text-white text-2xl">←</Text>
+              <ArrowLeft color="#ffffff" size={24} strokeWidth={2} />
             </TouchableOpacity>
           </Animated.View>
         )}

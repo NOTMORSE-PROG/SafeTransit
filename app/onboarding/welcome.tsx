@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { Shield, Map, Bell, AlertOctagon } from 'lucide-react-native';
 
 const { height } = Dimensions.get('window');
 
@@ -12,7 +13,7 @@ export default function Welcome() {
 
   return (
     <LinearGradient
-      colors={['#8B5CF6', '#7C3AED', '#6D28D9']}
+      colors={['#2563eb', '#1d4ed8', '#1e40af']}
       className="flex-1"
     >
       <View className="flex-1 px-6 justify-between py-16">
@@ -23,7 +24,7 @@ export default function Welcome() {
         >
           <View className="w-32 h-32 bg-white/20 rounded-full items-center justify-center mb-8">
             <View className="w-24 h-24 bg-white rounded-full items-center justify-center">
-              <Text className="text-5xl">🛡️</Text>
+              <Shield color="#2563eb" size={64} strokeWidth={2} />
             </View>
           </View>
 
@@ -43,7 +44,7 @@ export default function Welcome() {
         >
           <View className="flex-row items-start">
             <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center mr-4">
-              <Text className="text-2xl">🗺️</Text>
+              <Map color="#ffffff" size={28} strokeWidth={2} />
             </View>
             <View className="flex-1">
               <Text className="text-white text-lg font-semibold mb-1">
@@ -57,7 +58,7 @@ export default function Welcome() {
 
           <View className="flex-row items-start">
             <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center mr-4">
-              <Text className="text-2xl">🔔</Text>
+              <Bell color="#ffffff" size={28} strokeWidth={2} />
             </View>
             <View className="flex-1">
               <Text className="text-white text-lg font-semibold mb-1">
@@ -71,7 +72,7 @@ export default function Welcome() {
 
           <View className="flex-row items-start">
             <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center mr-4">
-              <Text className="text-2xl">🚨</Text>
+              <AlertOctagon color="#ffffff" size={28} strokeWidth={2} />
             </View>
             <View className="flex-1">
               <Text className="text-white text-lg font-semibold mb-1">

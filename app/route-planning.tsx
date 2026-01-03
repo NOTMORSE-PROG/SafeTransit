@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-nativ
 import { useRouter } from 'expo-router';
 import MapView, { Polyline, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
+import { PersonStanding, Car, Bus, ChevronLeft, Search, Clock, Ruler, AlertTriangle, CheckCircle, Navigation, MapPin, Check } from 'lucide-react-native';
 
 const TRAVEL_MODES = [
-  { id: 'walk', label: 'Walk', emoji: '🚶‍♀️' },
-  { id: 'drive', label: 'Drive', emoji: '🚗' },
-  { id: 'transit', label: 'Transit', emoji: '🚌' }
+  { id: 'walk', label: 'Walk', icon: 'PersonStanding' },
+  { id: 'drive', label: 'Drive', icon: 'Car' },
+  { id: 'transit', label: 'Transit', icon: 'Bus' }
 ];
 
 const MOCK_ROUTES = [
@@ -83,7 +84,9 @@ export default function RoutePlanning() {
           coordinate={{ latitude: 14.5995, longitude: 120.9842 }}
           title="Your Location"
         >
-          <View className="bg-primary-600 w-6 h-6 rounded-full border-2 border-white" />
+          <View className="bg-primary-600 w-8 h-8 rounded-full border-2 border-white items-center justify-center">
+            <Navigation color="#ffffff" size={16} strokeWidth={2.5} />
+          </View>
         </Marker>
 
         {/* Destination */}
@@ -92,8 +95,8 @@ export default function RoutePlanning() {
             coordinate={{ latitude: 14.6025, longitude: 120.9872 }}
             title="Destination"
           >
-            <View className="bg-danger-600 p-2 rounded-full">
-              <Text className="text-white text-xl">📍</Text>
+            <View className="bg-danger-600 w-10 h-10 rounded-full items-center justify-center">
+              <MapPin color="#ffffff" size={24} strokeWidth={2} />
             </View>
           </Marker>
         )}
@@ -113,29 +116,32 @@ export default function RoutePlanning() {
       <View className="absolute top-0 left-0 right-0 pt-12 px-6">
         <View className="bg-white rounded-2xl shadow-xl">
           {/* Header */}
-          <View className="flex-row items-center px-4 py-3 border-b border-gray-100">
+          <View className="flex-row items-center px-4 py-3 border-b border-neutral-100">
             <TouchableOpacity
               onPress={() => router.back()}
               className="mr-3 w-8 h-8 items-center justify-center"
               activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="Go back"
+              accessibilityRole="button"
             >
-              <Text className="text-3xl font-light">‹</Text>
+              <ChevronLeft color="#111827" size={28} strokeWidth={2} />
             </TouchableOpacity>
-            <Text className="text-lg font-bold text-gray-900 flex-1">
+            <Text className="text-lg font-bold text-neutral-900 flex-1">
               Plan Your Route
             </Text>
           </View>
 
           {/* Search Input */}
-          <View className="px-4 py-3 border-b border-gray-100">
-            <View className="flex-row items-center bg-gray-100 rounded-xl px-3 py-3">
-              <Text className="text-xl mr-2">🔍</Text>
+          <View className="px-4 py-3 border-b border-neutral-100">
+            <View className="flex-row items-center bg-neutral-100 rounded-xl px-3 py-3">
+              <Search color="#6b7280" size={20} strokeWidth={2} />
               <TextInput
                 placeholder="Where to?"
                 value={destination}
                 onChangeText={setDestination}
                 onSubmitEditing={handleSearch}
-                className="flex-1 text-base text-gray-900"
+                className="flex-1 text-base text-neutral-900 ml-2"
                 placeholderTextColor="#9CA3AF"
               />
             </View>
@@ -148,31 +154,39 @@ export default function RoutePlanning() {
               showsHorizontalScrollIndicator={false}
               className="flex-row"
             >
-              {TRAVEL_MODES.map((mode) => (
-                <TouchableOpacity
-                  key={mode.id}
-                  onPress={() => setSelectedMode(mode.id)}
-                  className={`mr-2 px-4 py-2 rounded-full ${
-                    selectedMode === mode.id
-                      ? 'bg-primary-600'
-                      : 'bg-gray-200'
-                  }`}
-                  activeOpacity={0.7}
-                >
-                  <View className="flex-row items-center">
-                    <Text className="text-base mr-1">{mode.emoji}</Text>
-                    <Text
-                      className={`text-sm font-semibold ${
-                        selectedMode === mode.id
-                          ? 'text-white'
-                          : 'text-gray-700'
-                      }`}
-                    >
-                      {mode.label}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+              {TRAVEL_MODES.map((mode) => {
+                const IconComponent = mode.icon === 'PersonStanding' ? PersonStanding :
+                                     mode.icon === 'Car' ? Car : Bus;
+                return (
+                  <TouchableOpacity
+                    key={mode.id}
+                    onPress={() => setSelectedMode(mode.id)}
+                    className={`mr-2 px-4 py-2 rounded-full ${
+                      selectedMode === mode.id
+                        ? 'bg-primary-600'
+                        : 'bg-neutral-200'
+                    }`}
+                    activeOpacity={0.7}
+                  >
+                    <View className="flex-row items-center">
+                      <IconComponent
+                        color={selectedMode === mode.id ? '#ffffff' : '#374151'}
+                        size={18}
+                        strokeWidth={2}
+                      />
+                      <Text
+                        className={`text-sm font-semibold ml-1.5 ${
+                          selectedMode === mode.id
+                            ? 'text-white'
+                            : 'text-neutral-700'
+                        }`}
+                      >
+                        {mode.label}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           </View>
         </View>
@@ -185,7 +199,7 @@ export default function RoutePlanning() {
           className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl"
         >
           <View className="px-6 pt-6 pb-8">
-            <Text className="text-xl font-bold text-gray-900 mb-4">
+            <Text className="text-xl font-bold text-neutral-900 mb-4">
               Choose Your Route
             </Text>
 
@@ -200,9 +214,12 @@ export default function RoutePlanning() {
                     className={`mb-3 rounded-2xl p-4 border-2 ${
                       selectedRoute?.id === route.id
                         ? 'border-primary-600 bg-primary-50'
-                        : 'border-gray-200 bg-white'
+                        : 'border-neutral-200 bg-white'
                     }`}
                     activeOpacity={0.8}
+                    accessible={true}
+                    accessibilityLabel={`${route.name}, ${route.duration}, ${route.distance}`}
+                    accessibilityRole="button"
                   >
                     <View className="flex-row items-center justify-between mb-2">
                       <View className="flex-row items-center flex-1">
@@ -210,39 +227,51 @@ export default function RoutePlanning() {
                           className="w-3 h-3 rounded-full mr-2"
                           style={{ backgroundColor: route.color }}
                         />
-                        <Text className="text-base font-bold text-gray-900">
+                        <Text className="text-base font-bold text-neutral-900">
                           {route.name}
                         </Text>
                       </View>
                       {selectedRoute?.id === route.id && (
-                        <View className="bg-primary-600 rounded-full p-1">
-                          <Text className="text-white text-xs">✓</Text>
+                        <View className="bg-primary-600 rounded-full p-1.5">
+                          <Check color="#ffffff" size={12} strokeWidth={3} />
                         </View>
                       )}
                     </View>
 
                     <View className="flex-row items-center mb-2">
-                      <Text className="text-sm text-gray-600 mr-4">
-                        ⏱️ {route.duration}
-                      </Text>
-                      <Text className="text-sm text-gray-600">
-                        📏 {route.distance}
-                      </Text>
+                      <View className="flex-row items-center mr-4">
+                        <Clock color="#4b5563" size={16} strokeWidth={2} />
+                        <Text className="text-sm text-neutral-600 ml-1.5">
+                          {route.duration}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <Ruler color="#4b5563" size={16} strokeWidth={2} />
+                        <Text className="text-sm text-neutral-600 ml-1.5">
+                          {route.distance}
+                        </Text>
+                      </View>
                     </View>
 
                     {route.warnings.length > 0 ? (
                       <View className="bg-warning-50 rounded-lg px-3 py-2">
                         {route.warnings.map((warning, idx) => (
-                          <Text key={idx} className="text-xs text-warning-700">
-                            ⚠️ {warning}
-                          </Text>
+                          <View key={idx} className="flex-row items-center">
+                            <AlertTriangle color="#b45309" size={14} strokeWidth={2} />
+                            <Text className="text-xs text-warning-700 ml-1.5 flex-1">
+                              {warning}
+                            </Text>
+                          </View>
                         ))}
                       </View>
                     ) : (
                       <View className="bg-success-50 rounded-lg px-3 py-2">
-                        <Text className="text-xs text-success-700">
-                          ✓ No danger zones on this route
-                        </Text>
+                        <View className="flex-row items-center">
+                          <CheckCircle color="#15803d" size={14} strokeWidth={2} />
+                          <Text className="text-xs text-success-700 ml-1.5">
+                            No danger zones on this route
+                          </Text>
+                        </View>
                       </View>
                     )}
                   </TouchableOpacity>
@@ -254,9 +283,12 @@ export default function RoutePlanning() {
               onPress={handleStartNavigation}
               disabled={!selectedRoute}
               className={`rounded-xl py-4 ${
-                selectedRoute ? 'bg-primary-600' : 'bg-gray-300'
+                selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
               }`}
               activeOpacity={0.8}
+              accessible={true}
+              accessibilityLabel="Start navigation"
+              accessibilityRole="button"
             >
               <Text className="text-white text-center font-bold text-lg">
                 Start Navigation

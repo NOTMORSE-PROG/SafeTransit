@@ -1,11 +1,16 @@
 import { Tabs } from 'expo-router';
 import { View, Text, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Home, Lightbulb, UserCircle, LucideIcon } from 'lucide-react-native';
 
-function TabBarIcon({ focused, emoji }: { focused: boolean; emoji: string }) {
+function TabBarIcon({ focused, icon: Icon }: { focused: boolean; icon: LucideIcon }) {
   return (
     <View className={`w-12 h-12 items-center justify-center rounded-full ${focused ? 'bg-primary-100' : ''}`}>
-      <Text className="text-2xl">{emoji}</Text>
+      <Icon
+        color={focused ? '#2563eb' : '#6b7280'}
+        size={24}
+        strokeWidth={focused ? 2.5 : 2}
+      />
     </View>
   );
 }
@@ -17,12 +22,12 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#8B5CF6',
-        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarActiveTintColor: '#2563eb',
+        tabBarInactiveTintColor: '#6b7280',
         tabBarStyle: {
           backgroundColor: '#ffffff',
           borderTopWidth: 1,
-          borderTopColor: '#F3F4F6',
+          borderTopColor: '#e5e7eb',
           height: 70 + insets.bottom,
           paddingBottom: insets.bottom,
           paddingTop: 8,
@@ -39,7 +44,7 @@ export default function TabsLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} emoji="🏠" />
+            <TabBarIcon focused={focused} icon={Home} />
           ),
         }}
       />
@@ -48,7 +53,7 @@ export default function TabsLayout() {
         options={{
           title: 'Community',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} emoji="💡" />
+            <TabBarIcon focused={focused} icon={Lightbulb} />
           ),
         }}
       />
@@ -57,7 +62,7 @@ export default function TabsLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} emoji="👤" />
+            <TabBarIcon focused={focused} icon={UserCircle} />
           ),
         }}
       />

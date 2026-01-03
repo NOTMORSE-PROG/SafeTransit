@@ -5,14 +5,26 @@ import MapView, { Polygon, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as Haptics from 'expo-haptics';
 import Animated, {
+  FadeIn,
   FadeInDown,
   SlideInUp,
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withRepeat,
+  withSequence,
+  withTiming,
   runOnJS,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  AlertOctagon,
+  ShieldCheck,
+  Cloud,
+  Search,
+  Lightbulb,
+  AlertTriangle
+} from 'lucide-react-native';
 
 const { width, height } = Dimensions.get('window');
 const SHEET_MIN_HEIGHT = 280;
@@ -156,27 +168,35 @@ export default function Home() {
   const getZoneColor = (riskLevel: number) => {
     switch (riskLevel) {
       case 3:
-        return 'rgba(239, 68, 68, 0.3)';
+        return 'rgba(239, 68, 68, 0.2)'; // Danger - lighter fill
       case 2:
-        return 'rgba(245, 158, 11, 0.3)';
+        return 'rgba(245, 158, 11, 0.2)'; // Caution - lighter fill
       case 1:
-        return 'rgba(34, 197, 94, 0.3)';
+        return 'rgba(34, 197, 94, 0.15)'; // Safe - lighter fill
       default:
-        return 'rgba(156, 163, 175, 0.3)';
+        return 'rgba(156, 163, 175, 0.2)';
     }
   };
 
   const getZoneStrokeColor = (riskLevel: number) => {
     switch (riskLevel) {
       case 3:
-        return '#EF4444';
+        return '#EF4444'; // Danger red
       case 2:
-        return '#F59E0B';
+        return '#F59E0B'; // Caution amber
       case 1:
-        return '#22C55E';
+        return '#22C55E'; // Safe green
       default:
         return '#9CA3AF';
     }
+  };
+
+  const getZoneStrokeWidth = (riskLevel: number) => {
+    return riskLevel === 3 ? 3 : 2.5; // Thicker for danger
+  };
+
+  const getZoneStrokeDash = (riskLevel: number) => {
+    return riskLevel === 2 ? [8, 4] : undefined; // Dashed for caution
   };
 
   const handleToggleProtection = async () => {
@@ -225,7 +245,8 @@ export default function Home() {
             coordinates={zone.coordinates}
             fillColor={getZoneColor(zone.risk_level)}
             strokeColor={getZoneStrokeColor(zone.risk_level)}
-            strokeWidth={2}
+            strokeWidth={getZoneStrokeWidth(zone.risk_level)}
+            lineDashPattern={getZoneStrokeDash(zone.risk_level)}
           />
         ))}
 
@@ -235,9 +256,16 @@ export default function Home() {
             key={tip.id}
             coordinate={{ latitude: tip.latitude, longitude: tip.longitude }}
             onPress={() => setSelectedTip(tip)}
+            accessible={true}
+            accessibilityLabel={`${tip.title} - ${tip.category} tip`}
+            accessibilityHint="Double tap to read full tip"
           >
             <View className="bg-white rounded-full p-2 shadow-lg">
-              <Text className="text-xl">{tip.category === 'lighting' ? '💡' : '⚠️'}</Text>
+              {tip.category === 'lighting' ? (
+                <Lightbulb color="#f59e0b" size={20} strokeWidth={2} />
+              ) : (
+                <AlertTriangle color="#ef4444" size={20} strokeWidth={2} />
+              )}
             </View>
           </Marker>
         ))}
@@ -249,10 +277,10 @@ export default function Home() {
         className="absolute top-12 left-6 right-6 flex-row items-center justify-between"
       >
         {/* Status Badge */}
-        <View className={`px-4 py-2 rounded-full shadow-lg ${isProtectionOn ? 'bg-success-500' : 'bg-gray-500'}`}>
+        <View className={`px-4 py-2 rounded-full shadow-lg ${isProtectionOn ? 'bg-primary-600' : 'bg-neutral-500'}`}>
           <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-full bg-white mr-2" />
-            <Text className="text-white text-sm font-semibold">
+            <ShieldCheck color="#ffffff" size={16} strokeWidth={2.5} />
+            <Text className="text-white text-sm font-semibold ml-2">
               {isProtectionOn ? 'Protected' : 'Unprotected'}
             </Text>
           </View>
@@ -263,24 +291,27 @@ export default function Home() {
           onPress={handleQuickExit}
           className="bg-white/95 rounded-full p-3 shadow-lg"
           activeOpacity={0.7}
+          accessible={true}
+          accessibilityLabel="Quick exit to weather disguise"
+          accessibilityRole="button"
         >
-          <Text className="text-xl">☁️</Text>
+          <Cloud color="#60a5fa" size={24} strokeWidth={2} />
         </TouchableOpacity>
       </Animated.View>
 
       {/* Legend */}
       <View className="absolute top-24 right-6 bg-white/95 rounded-xl p-3 shadow-md" style={{ marginTop: 40 }}>
-        <View className="flex-row items-center mb-1">
-          <View className="w-3 h-3 rounded-full bg-success-500 mr-2" />
-          <Text className="text-xs text-gray-700">Safe</Text>
+        <View className="flex-row items-center mb-1.5">
+          <View className="w-4 h-3 rounded bg-safe-500 mr-2" style={{ borderWidth: 1, borderColor: '#22C55E' }} />
+          <Text className="text-xs text-neutral-700">Safe</Text>
         </View>
-        <View className="flex-row items-center mb-1">
-          <View className="w-3 h-3 rounded-full bg-warning-500 mr-2" />
-          <Text className="text-xs text-gray-700">Caution</Text>
+        <View className="flex-row items-center mb-1.5">
+          <View className="w-4 h-3 rounded bg-caution-500/20 mr-2" style={{ borderWidth: 1, borderColor: '#F59E0B', borderStyle: 'dashed' }} />
+          <Text className="text-xs text-neutral-700">Caution</Text>
         </View>
         <View className="flex-row items-center">
-          <View className="w-3 h-3 rounded-full bg-danger-500 mr-2" />
-          <Text className="text-xs text-gray-700">Risk</Text>
+          <View className="w-4 h-3 rounded bg-danger-500 mr-2" style={{ borderWidth: 1.5, borderColor: '#EF4444' }} />
+          <Text className="text-xs text-neutral-700">Risk</Text>
         </View>
       </View>
 
@@ -298,34 +329,37 @@ export default function Home() {
         ]}
       >
         <View className="px-6 pt-6">
-          {/* Handle Bar - Only this is draggable */}
+          {/* Handle Bar - Draggable */}
           <GestureDetector gesture={panGesture}>
             <Animated.View className="items-center py-3 mb-4">
-              <View className="w-12 h-1.5 bg-gray-300 rounded-full" />
+              <View className="w-16 h-1.5 bg-neutral-400 rounded-full" />
             </Animated.View>
           </GestureDetector>
 
           {/* Protection Toggle */}
           <TouchableOpacity
             onPress={handleToggleProtection}
-            className={`rounded-2xl p-4 mb-4 ${isProtectionOn ? 'bg-success-50 border-2 border-success-500' : 'bg-gray-100 border-2 border-gray-300'}`}
+            className={`rounded-2xl p-4 mb-4 ${isProtectionOn ? 'bg-primary-50 border-2 border-primary-600' : 'bg-neutral-100 border-2 border-neutral-300'}`}
             activeOpacity={0.7}
+            accessible={true}
+            accessibilityLabel="Background protection toggle"
+            accessibilityRole="button"
           >
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center flex-1">
-                <View className={`w-12 h-12 rounded-full items-center justify-center mr-3 ${isProtectionOn ? 'bg-success-500' : 'bg-gray-400'}`}>
-                  <Text className="text-2xl">🛡️</Text>
+                <View className={`w-12 h-12 rounded-full items-center justify-center mr-3 ${isProtectionOn ? 'bg-primary-600' : 'bg-neutral-400'}`}>
+                  <ShieldCheck color="#ffffff" size={24} strokeWidth={2} />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-base font-bold text-gray-900 mb-1">
+                  <Text className="text-base font-bold text-neutral-900 mb-1">
                     Background Protection
                   </Text>
-                  <Text className={`text-xs ${isProtectionOn ? 'text-success-700' : 'text-gray-500'}`}>
+                  <Text className={`text-xs ${isProtectionOn ? 'text-primary-700' : 'text-neutral-500'}`}>
                     {isProtectionOn ? 'Monitoring your location' : 'Tap to enable protection'}
                   </Text>
                 </View>
               </View>
-              <View className={`w-12 h-7 rounded-full justify-center ${isProtectionOn ? 'bg-success-500' : 'bg-gray-300'}`}>
+              <View className={`w-12 h-7 rounded-full justify-center ${isProtectionOn ? 'bg-primary-600' : 'bg-neutral-300'}`}>
                 <View className={`w-5 h-5 rounded-full bg-white shadow ${isProtectionOn ? 'ml-6' : 'ml-1'}`} />
               </View>
             </View>
@@ -334,14 +368,17 @@ export default function Home() {
           {/* Search Destination */}
           <TouchableOpacity
             onPress={() => router.push('/route-planning')}
-            className="bg-gray-100 rounded-2xl p-4 mb-4"
+            className="bg-neutral-100 rounded-2xl p-4 mb-4"
             activeOpacity={0.7}
+            accessible={true}
+            accessibilityLabel="Plan safe route"
+            accessibilityRole="button"
           >
             <View className="flex-row items-center">
               <View className="w-10 h-10 bg-primary-100 rounded-full items-center justify-center mr-3">
-                <Text className="text-xl">🔍</Text>
+                <Search color="#2563eb" size={20} strokeWidth={2} />
               </View>
-              <Text className="text-gray-500 text-base flex-1 font-medium">
+              <Text className="text-neutral-500 text-base flex-1 font-medium">
                 Where do you want to go?
               </Text>
               <Text className="text-primary-600 text-xl">›</Text>
@@ -349,29 +386,19 @@ export default function Home() {
           </TouchableOpacity>
 
           {/* Quick Actions */}
-          <View className="flex-row justify-between gap-3">
-            <TouchableOpacity
-              onPress={() => router.push('/add-tip')}
-              className="bg-primary-600 rounded-2xl flex-1 py-4"
-              activeOpacity={0.8}
-            >
-              <View className="items-center">
-                <Text className="text-3xl mb-1">💡</Text>
-                <Text className="text-white font-bold text-sm">Add Tip</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handlePanicPress}
-              className="bg-danger-600 rounded-2xl flex-1 py-4"
-              activeOpacity={0.8}
-            >
-              <View className="items-center">
-                <Text className="text-3xl mb-1">🚨</Text>
-                <Text className="text-white font-bold text-sm">Emergency</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => router.push('/add-tip')}
+            className="bg-primary-600 rounded-2xl py-4"
+            activeOpacity={0.8}
+            accessible={true}
+            accessibilityLabel="Add community safety tip"
+            accessibilityRole="button"
+          >
+            <View className="items-center">
+              <Lightbulb color="#ffffff" size={28} strokeWidth={2} />
+              <Text className="text-white font-bold text-sm mt-1">Add Safety Tip</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </Animated.View>
 
@@ -382,30 +409,83 @@ export default function Home() {
           className="absolute left-6 right-6"
           style={{ bottom: height * 0.38 }}
         >
-          <View className="bg-white rounded-2xl p-4 shadow-2xl border border-gray-100">
+          <View className="bg-white rounded-2xl p-4 shadow-2xl border border-neutral-100">
             <View className="flex-row items-start justify-between">
               <View className="flex-1 mr-2">
                 <View className="flex-row items-center mb-2">
-                  <Text className="text-xl mr-2">{selectedTip.category === 'lighting' ? '💡' : '⚠️'}</Text>
-                  <Text className="text-base font-bold text-gray-900 flex-1">
+                  <View className="mr-2">
+                    {selectedTip.category === 'lighting' ? (
+                      <Lightbulb color="#f59e0b" size={20} strokeWidth={2} />
+                    ) : (
+                      <AlertTriangle color="#ef4444" size={20} strokeWidth={2} />
+                    )}
+                  </View>
+                  <Text className="text-base font-bold text-neutral-900 flex-1">
                     {selectedTip.title}
                   </Text>
                 </View>
-                <Text className="text-sm text-gray-600 leading-5">
+                <Text className="text-sm text-neutral-600 leading-5">
                   {selectedTip.message}
                 </Text>
               </View>
               <TouchableOpacity
                 onPress={() => setSelectedTip(null)}
-                className="bg-gray-100 rounded-full w-8 h-8 items-center justify-center"
+                className="bg-neutral-100 rounded-full w-8 h-8 items-center justify-center"
                 activeOpacity={0.7}
+                accessible={true}
+                accessibilityLabel="Close tip"
+                accessibilityRole="button"
               >
-                <Text className="text-gray-600 text-2xl font-light">×</Text>
+                <Text className="text-neutral-600 text-2xl font-light">×</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Animated.View>
       )}
+
+      {/* FLOATING EMERGENCY BUTTON - Always Visible */}
+      <Animated.View
+        entering={FadeIn.delay(800)}
+        className="absolute z-50"
+        style={{ bottom: 100, right: 24 }}
+      >
+        <TouchableOpacity
+          onLongPress={async () => {
+            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+            handlePanicPress();
+          }}
+          onPress={() => {
+            Alert.alert(
+              'Emergency Alert',
+              'Send silent alert to emergency contacts and nearby helpers?',
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Send Alert',
+                  style: 'destructive',
+                  onPress: handlePanicPress
+                }
+              ]
+            );
+          }}
+          className="w-18 h-18 rounded-full bg-danger-600 items-center justify-center"
+          style={{
+            shadowColor: '#dc2626',
+            shadowOffset: { width: 0, height: 12 },
+            shadowOpacity: 0.25,
+            shadowRadius: 16,
+            elevation: 12,
+          }}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityLabel="Emergency alert button"
+          accessibilityHint="Tap to confirm, or long press for silent alert"
+          accessibilityRole="button"
+        >
+          <AlertOctagon color="#ffffff" size={36} strokeWidth={2.5} />
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 }

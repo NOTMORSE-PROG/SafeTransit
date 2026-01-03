@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert, Platform } from 'react
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { MapPin, Bell, Check } from 'lucide-react-native';
 
 export default function Permissions() {
   const router = useRouter();
@@ -83,10 +84,10 @@ export default function Permissions() {
           entering={FadeInDown.delay(200).duration(800)}
           className="mt-16 mb-8"
         >
-          <Text className="text-3xl font-bold text-gray-900 mb-3">
+          <Text className="text-3xl font-bold text-neutral-900 mb-3">
             Grant Permissions
           </Text>
-          <Text className="text-base text-gray-600 leading-6">
+          <Text className="text-base text-neutral-600 leading-6">
             SafeTransit needs these permissions to keep you safe
           </Text>
         </Animated.View>
@@ -96,24 +97,28 @@ export default function Permissions() {
           entering={FadeInDown.delay(400).duration(800)}
           className="mb-6"
         >
-          <View className={`rounded-2xl p-6 ${locationGranted ? 'bg-success-50 border-2 border-success-500' : 'bg-gray-50 border-2 border-gray-200'}`}>
+          <View className={`rounded-2xl p-6 ${locationGranted ? 'bg-success-50 border-2 border-success-500' : 'bg-neutral-50 border-2 border-neutral-200'}`}>
             <View className="flex-row items-center justify-between mb-4">
               <View className="flex-row items-center flex-1">
-                <View className={`w-14 h-14 rounded-full items-center justify-center mr-4 ${locationGranted ? 'bg-success-500' : 'bg-primary-500'}`}>
-                  <Text className="text-3xl">{locationGranted ? '✓' : '📍'}</Text>
+                <View className={`w-14 h-14 rounded-full items-center justify-center mr-4 ${locationGranted ? 'bg-success-500' : 'bg-primary-600'}`}>
+                  {locationGranted ? (
+                    <Check color="#ffffff" size={28} strokeWidth={2.5} />
+                  ) : (
+                    <MapPin color="#ffffff" size={28} strokeWidth={2} />
+                  )}
                 </View>
                 <View className="flex-1">
-                  <Text className="text-lg font-bold text-gray-900 mb-1">
+                  <Text className="text-lg font-bold text-neutral-900 mb-1">
                     Location Access
                   </Text>
-                  <Text className={`text-sm font-medium ${locationGranted ? 'text-success-600' : 'text-gray-500'}`}>
+                  <Text className={`text-sm font-medium ${locationGranted ? 'text-success-600' : 'text-neutral-500'}`}>
                     {locationGranted ? 'Granted' : 'Required'}
                   </Text>
                 </View>
               </View>
             </View>
 
-            <Text className="text-gray-700 text-sm mb-4 leading-5">
+            <Text className="text-neutral-700 text-sm mb-4 leading-5">
               To warn you of danger zones even when your phone is in your pocket, SafeTransit needs to access your location in the background.
             </Text>
 
@@ -123,6 +128,9 @@ export default function Permissions() {
                 disabled={locationLoading}
                 className={`bg-primary-600 rounded-xl py-3 ${locationLoading ? 'opacity-50' : ''}`}
                 activeOpacity={0.8}
+                accessible={true}
+                accessibilityLabel="Grant location access"
+                accessibilityRole="button"
               >
                 <Text className="text-white text-center font-semibold text-base">
                   {locationLoading ? 'Requesting...' : 'Grant Location Access'}
@@ -137,24 +145,28 @@ export default function Permissions() {
           entering={FadeInDown.delay(600).duration(800)}
           className="mb-8"
         >
-          <View className={`rounded-2xl p-6 ${notificationGranted ? 'bg-success-50 border-2 border-success-500' : 'bg-gray-50 border-2 border-gray-200'}`}>
+          <View className={`rounded-2xl p-6 ${notificationGranted ? 'bg-success-50 border-2 border-success-500' : 'bg-neutral-50 border-2 border-neutral-200'}`}>
             <View className="flex-row items-center justify-between mb-4">
               <View className="flex-row items-center flex-1">
-                <View className={`w-14 h-14 rounded-full items-center justify-center mr-4 ${notificationGranted ? 'bg-success-500' : 'bg-primary-500'}`}>
-                  <Text className="text-3xl">{notificationGranted ? '✓' : '🔔'}</Text>
+                <View className={`w-14 h-14 rounded-full items-center justify-center mr-4 ${notificationGranted ? 'bg-success-500' : 'bg-primary-600'}`}>
+                  {notificationGranted ? (
+                    <Check color="#ffffff" size={28} strokeWidth={2.5} />
+                  ) : (
+                    <Bell color="#ffffff" size={28} strokeWidth={2} />
+                  )}
                 </View>
                 <View className="flex-1">
-                  <Text className="text-lg font-bold text-gray-900 mb-1">
+                  <Text className="text-lg font-bold text-neutral-900 mb-1">
                     Notifications
                   </Text>
-                  <Text className={`text-sm font-medium ${notificationGranted ? 'text-success-600' : 'text-gray-500'}`}>
+                  <Text className={`text-sm font-medium ${notificationGranted ? 'text-success-600' : 'text-neutral-500'}`}>
                     {notificationGranted ? 'Granted' : 'Required'}
                   </Text>
                 </View>
               </View>
             </View>
 
-            <Text className="text-gray-700 text-sm mb-4 leading-5">
+            <Text className="text-neutral-700 text-sm mb-4 leading-5">
               Receive critical safety alerts and warnings about nearby danger zones.
             </Text>
 
@@ -164,6 +176,9 @@ export default function Permissions() {
                 disabled={notificationLoading}
                 className={`bg-primary-600 rounded-xl py-3 ${notificationLoading ? 'opacity-50' : ''}`}
                 activeOpacity={0.8}
+                accessible={true}
+                accessibilityLabel="Enable notifications"
+                accessibilityRole="button"
               >
                 <Text className="text-white text-center font-semibold text-base">
                   {notificationLoading ? 'Requesting...' : 'Enable Notifications'}
@@ -175,12 +190,15 @@ export default function Permissions() {
       </ScrollView>
 
       {/* Bottom Button */}
-      <View className="px-6 pb-8 pt-4 bg-white border-t border-gray-100">
+      <View className="px-6 pb-8 pt-4 bg-white border-t border-neutral-100">
         <TouchableOpacity
           onPress={handleContinue}
           disabled={!locationGranted || !notificationGranted || isNavigating}
-          className={`rounded-xl py-4 ${locationGranted && notificationGranted && !isNavigating ? 'bg-primary-600' : 'bg-gray-300'}`}
+          className={`rounded-xl py-4 ${locationGranted && notificationGranted && !isNavigating ? 'bg-primary-600' : 'bg-neutral-300'}`}
           activeOpacity={0.8}
+          accessible={true}
+          accessibilityLabel="Continue to tutorial"
+          accessibilityRole="button"
         >
           <Text className="text-white text-center font-bold text-lg">
             {isNavigating ? 'Loading...' : 'Continue'}

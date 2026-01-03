@@ -3,27 +3,28 @@ import { View, Text, TouchableOpacity, ScrollView, Dimensions, NativeScrollEvent
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Map, ShieldCheck, AlertOctagon } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
 const slides = [
   {
-    emoji: '🗺️',
+    icon: 'Map',
     title: 'Plan Safe Routes',
     description: 'Get safety-first navigation that avoids danger zones. Choose walking, driving, or public transit routes designed for your protection.',
-    color: '#8B5CF6'
+    color: '#2563eb' // primary-600
   },
   {
-    emoji: '🛡️',
+    icon: 'ShieldCheck',
     title: 'Background Protection',
     description: 'Stay protected even when the app is closed. SafeTransit monitors your location and alerts you when entering high-risk areas.',
-    color: '#7C3AED'
+    color: '#1d4ed8' // primary-700
   },
   {
-    emoji: '🚨',
+    icon: 'AlertOctagon',
     title: 'Silent Panic Button',
     description: 'Access hidden emergency features with a simple gesture. Alert helpers and contacts discreetly without drawing attention.',
-    color: '#6D28D9'
+    color: '#dc2626' // danger-600
   }
 ];
 
@@ -85,29 +86,32 @@ export default function Tutorial() {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {slides.map((slide, index) => (
-          <View key={index} style={{ width }} className="flex-1 px-8 justify-center">
-            <Animated.View
-              entering={FadeInDown.duration(800)}
-              className="items-center"
-            >
-              <View
-                className="w-40 h-40 rounded-full items-center justify-center mb-12"
-                style={{ backgroundColor: `${slide.color}20` }}
+        {slides.map((slide, index) => {
+          const IconComponent = slide.icon === 'Map' ? Map : slide.icon === 'ShieldCheck' ? ShieldCheck : AlertOctagon;
+          return (
+            <View key={index} style={{ width }} className="flex-1 px-8 justify-center">
+              <Animated.View
+                entering={FadeInDown.duration(800)}
+                className="items-center"
               >
-                <Text className="text-8xl">{slide.emoji}</Text>
-              </View>
+                <View
+                  className="w-40 h-40 rounded-full items-center justify-center mb-12"
+                  style={{ backgroundColor: `${slide.color}20` }}
+                >
+                  <IconComponent color={slide.color} size={96} strokeWidth={1.5} />
+                </View>
 
-              <Text className="text-3xl font-bold text-gray-900 text-center mb-6">
-                {slide.title}
-              </Text>
+                <Text className="text-3xl font-bold text-neutral-900 text-center mb-6">
+                  {slide.title}
+                </Text>
 
-              <Text className="text-base text-gray-600 text-center leading-7 px-4">
-                {slide.description}
-              </Text>
-            </Animated.View>
-          </View>
-        ))}
+                <Text className="text-base text-neutral-600 text-center leading-7 px-4">
+                  {slide.description}
+                </Text>
+              </Animated.View>
+            </View>
+          );
+        })}
       </ScrollView>
 
       {/* Pagination Dots */}
@@ -116,7 +120,7 @@ export default function Tutorial() {
           <View
             key={index}
             className={`h-2 rounded-full mx-1 ${
-              index === currentPage ? 'w-8 bg-primary-600' : 'w-2 bg-gray-300'
+              index === currentPage ? 'w-8 bg-primary-600' : 'w-2 bg-neutral-300'
             }`}
           />
         ))}
@@ -126,11 +130,15 @@ export default function Tutorial() {
       <View className="px-8 pb-12">
         <TouchableOpacity
           onPress={handleNext}
-          className="bg-primary-600 rounded-xl py-4"
+          disabled={isNavigating}
+          className={`bg-primary-600 rounded-xl py-4 ${isNavigating ? 'opacity-50' : ''}`}
           activeOpacity={0.8}
+          accessible={true}
+          accessibilityLabel={currentPage === slides.length - 1 ? "Get started" : "Next slide"}
+          accessibilityRole="button"
         >
           <Text className="text-white text-center font-bold text-lg">
-            {currentPage === slides.length - 1 ? "Let's Go" : 'Next'}
+            {isNavigating ? 'Loading...' : currentPage === slides.length - 1 ? "Let's Go" : 'Next'}
           </Text>
         </TouchableOpacity>
       </View>
