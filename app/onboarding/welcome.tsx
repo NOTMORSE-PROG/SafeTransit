@@ -4,17 +4,19 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { Shield, Map, Bell, AlertOctagon } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Welcome() {
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
+  const insets = useSafeAreaInsets();
 
   return (
     <LinearGradient
       colors={['#2563eb', '#1d4ed8', '#1e40af']}
       className="flex-1"
     >
-      <View className="flex-1 px-6 justify-between py-16">
+      <View className="flex-1 px-6 justify-between" style={{ paddingTop: Math.max(insets.top, 16), paddingBottom: Math.max(insets.bottom, 16) }}>
         {/* Logo and Title */}
         <Animated.View
           entering={FadeInUp.delay(200).duration(1000)}

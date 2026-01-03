@@ -4,9 +4,11 @@ import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { MapPin, Bell, Check } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Permissions() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [locationGranted, setLocationGranted] = useState(false);
   const [notificationGranted, setNotificationGranted] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
@@ -190,7 +192,7 @@ export default function Permissions() {
       </ScrollView>
 
       {/* Bottom Button */}
-      <View className="px-6 pb-8 pt-4 bg-white border-t border-neutral-100">
+      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom, 32) }}>
         <TouchableOpacity
           onPress={handleContinue}
           disabled={!locationGranted || !notificationGranted || isNavigating}

@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Map, ShieldCheck, AlertOctagon } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -30,6 +31,7 @@ const slides = [
 
 export default function Tutorial() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
@@ -71,7 +73,7 @@ export default function Tutorial() {
   return (
     <View className="flex-1 bg-white">
       {/* Skip Button */}
-      <View className="absolute top-12 right-6 z-10">
+      <View className="absolute right-6 z-10" style={{ top: Math.max(insets.top, 48) }}>
         <TouchableOpacity onPress={handleSkip} activeOpacity={0.7}>
           <Text className="text-primary-600 font-semibold text-base">Skip</Text>
         </TouchableOpacity>
@@ -127,7 +129,7 @@ export default function Tutorial() {
       </View>
 
       {/* Bottom Button */}
-      <View className="px-8 pb-12">
+      <View className="px-8" style={{ paddingBottom: Math.max(insets.bottom, 48) }}>
         <TouchableOpacity
           onPress={handleNext}
           disabled={isNavigating}
