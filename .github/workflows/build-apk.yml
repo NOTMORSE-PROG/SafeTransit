@@ -35,6 +35,15 @@ jobs:
           rm -f package-lock.json
           npm install
 
+      - name: Create placeholder icons
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick
+          convert -size 1024x1024 xc:#8B5CF6 assets/icon.png
+          convert -size 1024x1024 xc:#8B5CF6 assets/adaptive-icon.png
+          convert -size 1024x1024 xc:#8B5CF6 assets/splash.png
+          convert -size 48x48 xc:#8B5CF6 assets/notification-icon.png
+          convert -size 48x48 xc:#8B5CF6 assets/favicon.png
+
       - name: Generate native code (Expo Prebuild)
         run: npx expo prebuild --platform android --clean
 
