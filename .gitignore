@@ -17,8 +17,6 @@ web-build/
 *.apk
 *.aab
 *.ipa
-android/
-ios/
 
 # Metro
 .metro-health-check*
