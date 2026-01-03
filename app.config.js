@@ -1,77 +1,81 @@
+require('dotenv').config({ quiet: true });
+
 module.exports = {
   expo: {
-    name: 'SafeTransit',
-    slug: 'safetransit',
-    version: '1.0.0',
-    orientation: 'portrait',
-    icon: './assets/icon.png',
-    userInterfaceStyle: 'light',
+    name: "SafeTransit",
+    slug: "safetransit",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    userInterfaceStyle: "light",
     splash: {
-      image: './assets/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#8B5CF6',
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#8B5CF6"
     },
-    assetBundlePatterns: ['**/*'],
+    assetBundlePatterns: [
+      "**/*"
+    ],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.safetransit.app',
-      infoPlist: {
-        NSLocationAlwaysAndWhenInUseUsageDescription:
-          'SafeTransit needs access to your location to warn you of danger zones even when your phone is in your pocket.',
-        NSLocationWhenInUseUsageDescription:
-          'SafeTransit needs access to your location to show your position on the map and provide safe routes.',
-        NSLocationAlwaysUsageDescription:
-          'SafeTransit needs background location access to monitor your safety and send alerts when you enter high-risk areas.',
-      },
+      bundleIdentifier: "com.safetransit.app",
+      config: {
+        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY
+      }
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: './assets/adaptive-icon.png',
-        backgroundColor: '#8B5CF6',
+        foregroundImage: "./assets/adaptive-icon.png",
+        backgroundColor: "#8B5CF6"
       },
-      package: 'com.safetransit.app',
+      package: "com.safetransit.app",
       permissions: [
-        'ACCESS_FINE_LOCATION',
-        'ACCESS_COARSE_LOCATION',
-        'ACCESS_BACKGROUND_LOCATION',
-        'VIBRATE',
-        'CAMERA',
-        'READ_EXTERNAL_STORAGE',
-        'WRITE_EXTERNAL_STORAGE',
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "VIBRATE",
+        "CAMERA"
       ],
       minSdkVersion: 30,
       targetSdkVersion: 35,
       config: {
         googleMaps: {
-          apiKey: process.env.GOOGLE_MAPS_API_KEY || '',
-        },
-      },
+          apiKey: process.env.GOOGLE_MAPS_API_KEY
+        }
+      }
     },
     web: {
-      favicon: './assets/favicon.png',
-      bundler: 'metro',
+      favicon: "./assets/favicon.png"
     },
     plugins: [
-      'expo-router',
-      'expo-asset',
+      "expo-router",
       [
-        'expo-location',
+        "expo-location",
         {
-          locationAlwaysAndWhenInUsePermission:
-            'Allow SafeTransit to use your location to warn you of danger zones even when your phone is in your pocket.',
-        },
+          locationAlwaysAndWhenInUsePermission: "Allow SafeTransit to use your location to warn you of danger zones even when your phone is in your pocket."
+        }
       ],
       [
-        'expo-notifications',
+        "expo-notifications",
         {
-          icon: './assets/notification-icon.png',
-          color: '#8B5CF6',
-        },
+          icon: "./assets/notification-icon.png",
+          color: "#8B5CF6"
+        }
       ],
+      [
+        "expo-build-properties",
+        {
+          android: {
+            manifestPlaceholders: {
+              GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY
+            }
+          }
+        }
+      ]
     ],
     experiments: {
-      typedRoutes: true,
+      typedRoutes: true
     },
-    scheme: 'safetransit',
-  },
+    scheme: "safetransit"
+  }
 };
