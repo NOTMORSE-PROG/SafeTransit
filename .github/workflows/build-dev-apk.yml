@@ -33,12 +33,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup Expo
-        uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
       - name: Generate native code with dev-client (Expo Prebuild)
         run: npx expo prebuild --platform android --clean
         env:
