@@ -7,7 +7,6 @@ import {
   RefreshControl,
   Modal,
   Pressable,
-  Dimensions,
   TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -49,7 +48,7 @@ import {
   deleteNotification,
 } from '../../services/notifications';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 
 // Icon mapping for notification types
 const IconMap: Record<string, React.ComponentType<{ color: string; size: number; strokeWidth: number }>> = {
