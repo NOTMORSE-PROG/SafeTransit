@@ -81,7 +81,7 @@ export default function Profile() {
           uri: selectedImage.uri,
           name: selectedImage.fileName || "profile.jpg",
           type: selectedImage.mimeType || "image/jpeg",
-        } as unknown as File;
+        } as any;
         
         await startUpload([file]);
       }
