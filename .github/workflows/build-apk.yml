@@ -1,23 +1,22 @@
 name: Build and Release APK
 
 on:
-  push:
-    branches:
-      - '**'  # Trigger on ANY branch
-  pull_request:
-    types: [closed]
-    branches:
-      - '**'
+  workflow_run:
+    workflows: ["Code Quality Checks"]
+    types:
+      - completed
 
 jobs:
   build-apk:
-    # Only run on push or when PR is merged
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    # Only run if the Code Quality Checks workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -63,11 +62,7 @@ jobs:
       - name: Get branch name
         id: branch
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "name=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
-          else
-            echo "name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-          fi
+          echo "name=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
 
       - name: Get commit info
         id: commit
@@ -138,7 +133,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The APK has been uploaded to GitHub Releases and is ready for download!" >> $GITHUB_STEP_SUMMARY
 
-      # --- NEW STEP ADDED BELOW ---
       - name: Trigger Jarvis
         if: always() # Run even if build fails
         uses: peter-evans/repository-dispatch@v2
@@ -146,4 +140,4 @@ jobs:
           token: ${{ secrets.JARVIS_ACCESS_TOKEN }}
           repository: NOTMORSE-PROG/JARVIS
           event-type: build_status
-          client-payload: '{"event_type": "build_status", "repo": "${{ github.event.repository.name }}", "owner": "${{ github.repository_owner }}", "branch": "${{ github.ref_name }}", "workflow": "${{ github.workflow }}", "status": "${{ job.status }}", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+          client-payload: '{"event_type": "build_status", "repo": "${{ github.event.repository.name }}", "owner": "${{ github.repository_owner }}", "branch": "${{ github.event.workflow_run.head_branch }}", "workflow": "${{ github.workflow }}", "status": "${{ job.status }}", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
