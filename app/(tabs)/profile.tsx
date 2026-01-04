@@ -1,15 +1,109 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { UserCircle, Phone, ChevronRight } from 'lucide-react-native';
+import Animated, { FadeInDown, SlideInDown, SlideOutDown, FadeIn, FadeOut } from 'react-native-reanimated';
+import { UserCircle, Phone, ChevronRight, Camera, Loader2, Image as ImageIcon, Trash2, X } from 'lucide-react-native';
+import * as ImagePicker from 'expo-image-picker';
+// import { useUploadThing } from '../../services/uploadthing'; // Mocking for now
+import { Image } from 'expo-image';
+import { useEffect } from 'react';
 
 export default function Profile() {
   const router = useRouter();
   const [backgroundAlerts, setBackgroundAlerts] = useState(true);
   const [vibrationAlerts, setVibrationAlerts] = useState(true);
   const [soundAlerts, setSoundAlerts] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [showActionSheet, setShowActionSheet] = useState(false);
+
+  useEffect(() => {
+    loadProfileImage();
+  }, []);
+
+  const loadProfileImage = async () => {
+    try {
+      const savedImage = await AsyncStorage.getItem('profile_image');
+      if (savedImage) {
+        setImage(savedImage);
+      }
+    } catch (error) {
+      console.error('Failed to load profile image', error);
+    }
+  };
+
+  // Mock Upload Function
+  const startUpload = async (files: { uri: string }[]) => {
+    setIsUploading(true);
+    setShowActionSheet(false); // Close sheet immediately
+    
+    // Simulate network delay
+    setTimeout(async () => {
+      setIsUploading(false);
+      const uploadedUrl = files[0].uri; 
+      setImage(uploadedUrl);
+      
+      try {
+        await AsyncStorage.setItem('profile_image', uploadedUrl);
+        // Alert.alert("Success", "Profile picture updated!"); // Optional feedback
+      } catch (error) {
+        console.error('Failed to save profile image', error);
+      }
+    }, 1500);
+  };
+
+  const pickImage = async (useCamera: boolean = false) => {
+    try {
+      let result;
+      if (useCamera) {
+        await ImagePicker.requestCameraPermissionsAsync();
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0.8,
+        });
+      } else {
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0.8,
+        });
+      }
+
+      if (!result.canceled) {
+        const selectedImage = result.assets[0];
+        // Let's try the Blob approach but cast it to any to avoid TS errors if File is missing
+        const file = {
+          uri: selectedImage.uri,
+          name: selectedImage.fileName || "profile.jpg",
+          type: selectedImage.mimeType || "image/jpeg",
+        } as unknown as File;
+        
+        await startUpload([file]);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to pick image");
+      console.error(error);
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    try {
+      setImage(null);
+      await AsyncStorage.removeItem('profile_image');
+      setShowActionSheet(false);
+    } catch (error) {
+      console.error('Failed to remove profile image', error);
+    }
+  };
+
+  const handleEditPhoto = () => {
+    setShowActionSheet(true);
+  };
 
   const handleLogout = async () => {
     Alert.alert(
@@ -35,9 +129,31 @@ export default function Profile() {
         {/* Header */}
         <View className="bg-primary-600 pt-14 pb-8 px-6">
           <View className="items-center">
-            <View className="w-24 h-24 bg-white rounded-full items-center justify-center mb-4">
-              <UserCircle color="#2563eb" size={64} strokeWidth={1.5} />
-            </View>
+            <TouchableOpacity 
+              onPress={handleEditPhoto}
+              className="relative mb-4"
+              activeOpacity={0.8}
+            >
+              <View className="w-24 h-24 bg-white rounded-full items-center justify-center overflow-hidden">
+                {image ? (
+                  <Image
+                    source={{ uri: image }}
+                    style={{ width: 96, height: 96 }}
+                    contentFit="cover"
+                  />
+                ) : (
+                  <UserCircle color="#2563eb" size={64} strokeWidth={1.5} />
+                )}
+                {isUploading && (
+                  <View className="absolute inset-0 bg-black/40 items-center justify-center">
+                    <Loader2 color="#ffffff" size={32} className="animate-spin" />
+                  </View>
+                )}
+              </View>
+              <View className="absolute bottom-0 right-0 bg-neutral-900 rounded-full p-2 border-2 border-primary-600">
+                <Camera color="#ffffff" size={14} strokeWidth={2} />
+              </View>
+            </TouchableOpacity>
             <Text className="text-white text-2xl font-bold mb-1">
               Traveler
             </Text>
@@ -252,6 +368,76 @@ export default function Profile() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Custom Action Sheet Modal */}
+      <Modal
+        visible={showActionSheet}
+        transparent={true}
+        animationType="none"
+        onRequestClose={() => setShowActionSheet(false)}
+      >
+        <View className="flex-1 justify-end">
+          {/* Backdrop */}
+          <Animated.View 
+            entering={FadeIn}
+            exiting={FadeOut}
+            className="absolute inset-0 bg-black/50"
+          >
+            <Pressable className="flex-1" onPress={() => setShowActionSheet(false)} />
+          </Animated.View>
+
+          {/* Sheet */}
+          <Animated.View 
+            entering={SlideInDown.duration(300)}
+            exiting={SlideOutDown.duration(300)}
+            className="bg-white rounded-t-3xl p-6 pb-10"
+          >
+            <View className="flex-row justify-between items-center mb-6">
+              <Text className="text-xl font-bold text-neutral-900">Profile Photo</Text>
+              <TouchableOpacity 
+                onPress={() => setShowActionSheet(false)}
+                className="bg-neutral-100 p-2 rounded-full"
+              >
+                <X size={20} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+
+            <View className="space-y-4">
+              <TouchableOpacity 
+                onPress={() => pickImage(true)}
+                className="flex-row items-center p-4 bg-neutral-50 rounded-2xl active:bg-neutral-100"
+              >
+                <View className="w-10 h-10 bg-blue-100 rounded-full items-center justify-center mr-4">
+                  <Camera size={20} color="#2563eb" />
+                </View>
+                <Text className="text-base font-semibold text-neutral-900">Take Photo</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                onPress={() => pickImage(false)}
+                className="flex-row items-center p-4 bg-neutral-50 rounded-2xl active:bg-neutral-100"
+              >
+                <View className="w-10 h-10 bg-purple-100 rounded-full items-center justify-center mr-4">
+                  <ImageIcon size={20} color="#9333ea" />
+                </View>
+                <Text className="text-base font-semibold text-neutral-900">Choose from Library</Text>
+              </TouchableOpacity>
+
+              {image && (
+                <TouchableOpacity 
+                  onPress={handleRemovePhoto}
+                  className="flex-row items-center p-4 bg-red-50 rounded-2xl active:bg-red-100"
+                >
+                  <View className="w-10 h-10 bg-red-100 rounded-full items-center justify-center mr-4">
+                    <Trash2 size={20} color="#dc2626" />
+                  </View>
+                  <Text className="text-base font-semibold text-red-600">Remove Photo</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
     </View>
   );
 }
