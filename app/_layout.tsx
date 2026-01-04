@@ -40,6 +40,13 @@ export default function RootLayout() {
               animation: 'fade'
             }}
           />
+          <Stack.Screen
+            name="notification-settings"
+            options={{
+              presentation: 'modal',
+              animation: 'slide_from_bottom'
+            }}
+          />
         </Stack>
       </GestureHandlerRootView>
     </SafeAreaProvider>

@@ -1,7 +1,9 @@
 import { Tabs } from 'expo-router';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Home, Lightbulb, UserCircle, LucideIcon } from 'lucide-react-native';
+import { Home, Lightbulb, UserCircle, Bell, LucideIcon } from 'lucide-react-native';
+import { useState, useEffect } from 'react';
+import { MOCK_NOTIFICATIONS, getUnreadCount } from '../../services/notifications';
 
 function TabBarIcon({ focused, icon: Icon }: { focused: boolean; icon: LucideIcon }) {
   return (
@@ -15,8 +17,44 @@ function TabBarIcon({ focused, icon: Icon }: { focused: boolean; icon: LucideIco
   );
 }
 
+function TabBarIconWithBadge({ 
+  focused, 
+  icon: Icon, 
+  badgeCount 
+}: { 
+  focused: boolean; 
+  icon: LucideIcon; 
+  badgeCount?: number;
+}) {
+  return (
+    <View className={`w-12 h-12 items-center justify-center rounded-full ${focused ? 'bg-primary-100' : ''}`}>
+      <Icon
+        color={focused ? '#2563eb' : '#6b7280'}
+        size={24}
+        strokeWidth={focused ? 2.5 : 2}
+      />
+      {badgeCount !== undefined && badgeCount > 0 && (
+        <View 
+          className="absolute -top-0.5 -right-0.5 bg-danger-500 rounded-full items-center justify-center"
+          style={{ minWidth: 18, height: 18, paddingHorizontal: 4 }}
+        >
+          <Text className="text-white text-xs font-bold">
+            {badgeCount > 99 ? '99+' : badgeCount}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    // Get initial unread count from mock data
+    setUnreadCount(getUnreadCount(MOCK_NOTIFICATIONS));
+  }, []);
 
   return (
     <Tabs
@@ -54,6 +92,19 @@ export default function TabsLayout() {
           title: 'Community',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} icon={Lightbulb} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          title: 'Notifications',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIconWithBadge 
+              focused={focused} 
+              icon={Bell} 
+              badgeCount={unreadCount}
+            />
           ),
         }}
       />

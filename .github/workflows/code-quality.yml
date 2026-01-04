@@ -2,9 +2,11 @@ name: Code Quality Checks
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - '**'  # Trigger on ALL branches
   pull_request:
-    branches: [ main ]
+    branches:
+      - '**'
 
 jobs:
   lint-and-typecheck:
