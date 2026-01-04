@@ -137,3 +137,13 @@ jobs:
           echo "**Release Tag:** apk-${{ steps.branch.outputs.name }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The APK has been uploaded to GitHub Releases and is ready for download!" >> $GITHUB_STEP_SUMMARY
+
+      # --- NEW STEP ADDED BELOW ---
+      - name: Trigger Jarvis
+        if: always() # Run even if build fails
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.JARVIS_ACCESS_TOKEN }}
+          repository: NOTMORSE-PROG/JARVIS
+          event-type: build_status
+          client-payload: '{"event_type": "build_status", "repo": "${{ github.event.repository.name }}", "owner": "${{ github.repository_owner }}", "branch": "${{ github.ref_name }}", "workflow": "${{ github.workflow }}", "status": "${{ job.status }}", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
