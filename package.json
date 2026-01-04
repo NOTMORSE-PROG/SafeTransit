@@ -1,6 +1,7 @@
 {
   "name": "safetransit",
   "version": "1.0.0",
+  "description": "SafeTransit - A comprehensive safety companion app for travelers.",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
