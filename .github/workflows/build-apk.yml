@@ -44,9 +44,10 @@ jobs:
           convert -size 48x48 xc:#8B5CF6 assets/notification-icon.png
           convert -size 48x48 xc:#8B5CF6 assets/favicon.png
 
-      - name: Create .env file with API key
+      - name: Create .env file with secrets
         run: |
           echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
 
       - name: Generate native code (Expo Prebuild)
         run: npx expo prebuild --platform android --clean
