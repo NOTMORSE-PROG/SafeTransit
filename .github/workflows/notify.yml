@@ -1,4 +1,5 @@
 name: Notify Jarvis
+
 on:
   push:
     branches:
@@ -6,6 +7,7 @@ on:
   create:
   pull_request:
     types: [opened, closed]
+
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -20,14 +22,17 @@ jobs:
           client-payload: |
             {
               "event_type": "${{ github.event_name }}",
-              "repo": "${{ github.event.repository.name }}",
-              "owner": "${{ github.repository_owner }}",
-              "branch": "${{ github.ref_name }}",
-              "sender": "${{ github.actor }}",
-              "pusher": "${{ github.actor }}",
-              "message": "${{ github.event.head_commit.message }}",
-              "action": "${{ github.event.action }}",
-              "title": "${{ github.event.pull_request.title }}",
-              "url": "${{ github.event.pull_request.html_url }}",
-              "merged": ${{ github.event.pull_request.merged || false }}
+              "repo_info": {
+                "repo": "${{ github.event.repository.name }}",
+                "owner": "${{ github.repository_owner }}",
+                "branch": "${{ github.ref_name }}",
+                "sender": "${{ github.actor }}"
+              },
+              "details": {
+                "message": "${{ github.event.head_commit.message }}",
+                "action": "${{ github.event.action }}",
+                "title": "${{ github.event.pull_request.title }}",
+                "url": "${{ github.event.pull_request.html_url }}",
+                "merged": ${{ github.event.pull_request.merged || false }}
+              }
             }
