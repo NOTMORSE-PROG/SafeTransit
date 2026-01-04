@@ -29,9 +29,9 @@ jobs:
                 "sender": "${{ github.actor }}"
               },
               "details": {
-                "message": "${{ github.event.head_commit.message }}",
+                "message": ${{ toJSON(github.event.head_commit.message) }},
                 "action": "${{ github.event.action }}",
-                "title": "${{ github.event.pull_request.title }}",
+                "title": ${{ toJSON(github.event.pull_request.title) }},
                 "url": "${{ github.event.pull_request.html_url }}",
                 "merged": ${{ github.event.pull_request.merged || false }}
               }
