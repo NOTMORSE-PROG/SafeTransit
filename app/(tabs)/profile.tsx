@@ -360,7 +360,7 @@ export default function Profile() {
 
           <View className="items-center mb-8">
             <Text className="text-neutral-400 text-xs">
-              SafeTransit v1.0.0
+              SafeTransit v1.0.1
             </Text>
             <Text className="text-neutral-400 text-xs mt-1">
               Made with ❤️ by TIP Manila
