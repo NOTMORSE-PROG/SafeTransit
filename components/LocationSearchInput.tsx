@@ -50,7 +50,7 @@ export default function LocationSearchInput({
   const [recentLocations, setRecentLocations] = useState<RecentLocation[]>([]);
   const [savedPlaces, setSavedPlaces] = useState<SavedPlace[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
+  const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isFocused) {

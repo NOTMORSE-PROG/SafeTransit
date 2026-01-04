@@ -40,20 +40,6 @@ export async function testConnection(): Promise<{ success: boolean; message: str
 }
 
 /**
- * Execute a raw SQL query
- */
-export async function query<T = unknown>(queryString: string, params: unknown[] = []): Promise<T[]> {
-  try {
-    // Use tagged template for parameterized queries
-    const result = await sql(queryString, params);
-    return result as T[];
-  } catch (error) {
-    console.error('Query error:', error);
-    throw error;
-  }
-}
-
-/**
  * Initialize database tables (run once)
  */
 export async function initDatabase(): Promise<void> {
