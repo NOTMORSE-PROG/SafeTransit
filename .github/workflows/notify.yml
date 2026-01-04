@@ -1,0 +1,38 @@
+name: Notify Jarvis
+
+on:
+  push:
+    branches:
+      - '**'
+  create:
+  pull_request:
+    types: [opened, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Trigger Jarvis
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.JARVIS_ACCESS_TOKEN }}
+          repository: NOTMORSE-PROG/JARVIS
+          event-type: ${{ github.event_name }}
+          client-payload: |
+            {
+              "event_type": "${{ github.event_name }}",
+              "repo_info": {
+                "repo": "${{ github.event.repository.name }}",
+                "owner": "${{ github.repository_owner }}",
+                "branch": "${{ github.ref_name }}",
+                "sender": "${{ github.actor }}"
+              },
+              "details": {
+                "message": "${{ github.event.head_commit.message }}",
+                "action": "${{ github.event.action }}",
+                "title": "${{ github.event.pull_request.title }}",
+                "url": "${{ github.event.pull_request.html_url }}",
+                "merged": ${{ github.event.pull_request.merged || false }}
+              }
+            }

@@ -8,6 +8,7 @@ A safety-first navigation app designed for women commuters in Philippine cities.
 - **Background Protection**: Monitors location even when app is closed, alerts on entering danger zones
 - **Safe Route Planning**: Color-coded routes (Green/Yellow/Red) for Walking, Driving, and Transit
 - **Community Tips**: Verified, anonymous safety tips from fellow travelers
+- **Profile Picture**: Personalize your account with a profile photo (Local persistence included).
 - **Silent Panic Button**: Discreet emergency alerts to helpers and contacts
 - **Quick Exit Screen**: Instantly disguises app as weather forecast for privacy
 - **Real-time Danger Zones**: Visual map overlays showing safety levels
