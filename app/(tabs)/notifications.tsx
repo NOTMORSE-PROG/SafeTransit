@@ -162,6 +162,8 @@ function NotificationCard({
     >
       <TouchableOpacity
         onPress={onPress}
+        onLongPress={onMenuPress}
+        delayLongPress={300}
         activeOpacity={0.7}
         style={{
           marginBottom: 12,
