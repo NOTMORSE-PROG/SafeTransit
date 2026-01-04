@@ -4,7 +4,58 @@
 
 import { neon, neonConfig } from '@neondatabase/serverless';
 
-// Get connection string from environment
+// =============================================================================
+// Types
+// =============================================================================
+
+export interface User {
+  id: number;
+  device_id: string;
+  created_at: string;
+  last_active: string;
+}
+
+export interface SavedPlace {
+  id: number;
+  user_id: number;
+  type: 'home' | 'work' | 'favorite';
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  created_at: string;
+}
+
+export interface DangerZone {
+  id: number;
+  name: string;
+  description: string | null;
+  severity: 'low' | 'medium' | 'high';
+  latitude: number;
+  longitude: number;
+  radius_meters: number;
+  reported_by: number | null;
+  verified: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommunityTip {
+  id: number;
+  user_id: number | null;
+  title: string;
+  content: string;
+  category: string;
+  latitude: number | null;
+  longitude: number | null;
+  upvotes: number;
+  created_at: string;
+}
+
+// =============================================================================
+// Database Connection
+// =============================================================================
+
 const getDatabaseUrl = (): string => {
   const url = process.env.DATABASE_URL;
   if (!url) {
@@ -13,7 +64,8 @@ const getDatabaseUrl = (): string => {
   return url;
 };
 
-// Create SQL query function
+// SQL tagged template - use this for all queries
+// Usage: sql`SELECT * FROM users WHERE id = ${userId}`
 export const sql = neon(getDatabaseUrl());
 
 // Configure for better performance
@@ -38,6 +90,164 @@ export async function testConnection(): Promise<{ success: boolean; message: str
     };
   }
 }
+
+// =============================================================================
+// User Repository
+// =============================================================================
+
+export const UserRepo = {
+  async findById(id: number): Promise<User | null> {
+    const result = await sql`SELECT * FROM users WHERE id = ${id} LIMIT 1`;
+    return (result[0] as User) || null;
+  },
+
+  async findByDeviceId(deviceId: string): Promise<User | null> {
+    const result = await sql`SELECT * FROM users WHERE device_id = ${deviceId} LIMIT 1`;
+    return (result[0] as User) || null;
+  },
+
+  async create(deviceId: string): Promise<User> {
+    const result = await sql`
+      INSERT INTO users (device_id) VALUES (${deviceId}) RETURNING *
+    `;
+    return result[0] as User;
+  },
+
+  async updateLastActive(id: number): Promise<void> {
+    await sql`UPDATE users SET last_active = NOW() WHERE id = ${id}`;
+  },
+
+  async findOrCreate(deviceId: string): Promise<User> {
+    const existing = await this.findByDeviceId(deviceId);
+    if (existing) {
+      await this.updateLastActive(existing.id);
+      return existing;
+    }
+    return this.create(deviceId);
+  },
+};
+
+// =============================================================================
+// Danger Zone Repository
+// =============================================================================
+
+export const DangerZoneRepo = {
+  async findAll(limit = 100): Promise<DangerZone[]> {
+    const result = await sql`
+      SELECT * FROM danger_zones ORDER BY created_at DESC LIMIT ${limit}
+    `;
+    return result as DangerZone[];
+  },
+
+  async findNearby(lat: number, lng: number, radiusKm = 5): Promise<DangerZone[]> {
+    const result = await sql`
+      SELECT *,
+        (6371 * acos(cos(radians(${lat})) * cos(radians(latitude)) *
+        cos(radians(longitude) - radians(${lng})) + sin(radians(${lat})) *
+        sin(radians(latitude)))) AS distance
+      FROM danger_zones
+      HAVING distance < ${radiusKm}
+      ORDER BY distance
+    `;
+    return result as DangerZone[];
+  },
+
+  async findById(id: number): Promise<DangerZone | null> {
+    const result = await sql`SELECT * FROM danger_zones WHERE id = ${id} LIMIT 1`;
+    return (result[0] as DangerZone) || null;
+  },
+
+  async create(zone: Omit<DangerZone, 'id' | 'created_at' | 'updated_at'>): Promise<DangerZone> {
+    const result = await sql`
+      INSERT INTO danger_zones (name, description, severity, latitude, longitude, radius_meters, reported_by, verified)
+      VALUES (${zone.name}, ${zone.description}, ${zone.severity}, ${zone.latitude}, ${zone.longitude}, ${zone.radius_meters}, ${zone.reported_by}, ${zone.verified})
+      RETURNING *
+    `;
+    return result[0] as DangerZone;
+  },
+
+  async delete(id: number): Promise<boolean> {
+    const result = await sql`DELETE FROM danger_zones WHERE id = ${id} RETURNING id`;
+    return result.length > 0;
+  },
+};
+
+// =============================================================================
+// Community Tips Repository
+// =============================================================================
+
+export const CommunityTipRepo = {
+  async findAll(limit = 50): Promise<CommunityTip[]> {
+    const result = await sql`
+      SELECT * FROM community_tips ORDER BY created_at DESC LIMIT ${limit}
+    `;
+    return result as CommunityTip[];
+  },
+
+  async findByCategory(category: string): Promise<CommunityTip[]> {
+    const result = await sql`
+      SELECT * FROM community_tips WHERE category = ${category} ORDER BY upvotes DESC
+    `;
+    return result as CommunityTip[];
+  },
+
+  async findById(id: number): Promise<CommunityTip | null> {
+    const result = await sql`SELECT * FROM community_tips WHERE id = ${id} LIMIT 1`;
+    return (result[0] as CommunityTip) || null;
+  },
+
+  async create(tip: Omit<CommunityTip, 'id' | 'upvotes' | 'created_at'>): Promise<CommunityTip> {
+    const result = await sql`
+      INSERT INTO community_tips (user_id, title, content, category, latitude, longitude)
+      VALUES (${tip.user_id}, ${tip.title}, ${tip.content}, ${tip.category}, ${tip.latitude}, ${tip.longitude})
+      RETURNING *
+    `;
+    return result[0] as CommunityTip;
+  },
+
+  async upvote(id: number): Promise<void> {
+    await sql`UPDATE community_tips SET upvotes = upvotes + 1 WHERE id = ${id}`;
+  },
+
+  async delete(id: number): Promise<boolean> {
+    const result = await sql`DELETE FROM community_tips WHERE id = ${id} RETURNING id`;
+    return result.length > 0;
+  },
+};
+
+// =============================================================================
+// Saved Places Repository
+// =============================================================================
+
+export const SavedPlaceRepo = {
+  async findByUserId(userId: number): Promise<SavedPlace[]> {
+    const result = await sql`
+      SELECT * FROM saved_places WHERE user_id = ${userId} ORDER BY created_at DESC
+    `;
+    return result as SavedPlace[];
+  },
+
+  async findByType(userId: number, type: 'home' | 'work' | 'favorite'): Promise<SavedPlace | null> {
+    const result = await sql`
+      SELECT * FROM saved_places WHERE user_id = ${userId} AND type = ${type} LIMIT 1
+    `;
+    return (result[0] as SavedPlace) || null;
+  },
+
+  async create(place: Omit<SavedPlace, 'id' | 'created_at'>): Promise<SavedPlace> {
+    const result = await sql`
+      INSERT INTO saved_places (user_id, type, name, address, latitude, longitude)
+      VALUES (${place.user_id}, ${place.type}, ${place.name}, ${place.address}, ${place.latitude}, ${place.longitude})
+      RETURNING *
+    `;
+    return result[0] as SavedPlace;
+  },
+
+  async delete(id: number): Promise<boolean> {
+    const result = await sql`DELETE FROM saved_places WHERE id = ${id} RETURNING id`;
+    return result.length > 0;
+  },
+};
 
 /**
  * Initialize database tables (run once)

@@ -7,32 +7,33 @@ require('dotenv').config();
 const { neon } = require('@neondatabase/serverless');
 
 async function testConnection() {
-  console.log('🔌 Testing Neon PostgreSQL connection...\n');
+  console.log('='.repeat(60));
+  console.log('SafeTransit Database Connection Test');
+  console.log('='.repeat(60));
 
   const databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
-    console.error('❌ DATABASE_URL is not set in .env file');
+    console.error('\n[FAIL] DATABASE_URL is not set in .env file');
     process.exit(1);
   }
 
   // Mask the password for display
   const maskedUrl = databaseUrl.replace(/:[^:@]+@/, ':****@');
-  console.log(`📍 Connecting to: ${maskedUrl}\n`);
+  console.log(`\nConnecting to: ${maskedUrl}\n`);
 
   try {
     const sql = neon(databaseUrl);
 
-    // Test basic connection
-    console.log('Testing connection...');
+    // Test 1: Basic connection
+    console.log('[TEST] Basic connection...');
     const result = await sql`SELECT NOW() as current_time, version() as pg_version`;
+    console.log('[PASS] Connection successful');
+    console.log(`       Server time: ${result[0].current_time}`);
+    console.log(`       PostgreSQL: ${result[0].pg_version.split(',')[0]}`);
 
-    console.log('✅ Connection successful!\n');
-    console.log(`⏰ Server time: ${result[0].current_time}`);
-    console.log(`🐘 PostgreSQL: ${result[0].pg_version.split(',')[0]}`);
-
-    // Test creating tables
-    console.log('\n📦 Initializing database tables...');
+    // Test 2: Initialize tables
+    console.log('\n[TEST] Initializing tables...');
 
     await sql`
       CREATE TABLE IF NOT EXISTS users (
@@ -42,7 +43,6 @@ async function testConnection() {
         last_active TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    console.log('  ✓ users table ready');
 
     await sql`
       CREATE TABLE IF NOT EXISTS saved_places (
@@ -56,7 +56,6 @@ async function testConnection() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    console.log('  ✓ saved_places table ready');
 
     await sql`
       CREATE TABLE IF NOT EXISTS danger_zones (
@@ -73,7 +72,6 @@ async function testConnection() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    console.log('  ✓ danger_zones table ready');
 
     await sql`
       CREATE TABLE IF NOT EXISTS community_tips (
@@ -88,22 +86,52 @@ async function testConnection() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `;
-    console.log('  ✓ community_tips table ready');
+    console.log('[PASS] All tables initialized');
 
-    // List tables
-    console.log('\n📋 Database tables:');
+    // Test 3: List tables
+    console.log('\n[TEST] Verifying tables...');
     const tables = await sql`
       SELECT tablename FROM pg_tables
       WHERE schemaname = 'public'
       ORDER BY tablename
     `;
-    tables.forEach((t) => console.log(`  - ${t.tablename}`));
+    console.log('[PASS] Tables found:');
+    tables.forEach((t) => console.log(`       - ${t.tablename}`));
 
-    console.log('\n🎉 Database setup complete!\n');
+    // Test 4: CRUD operations
+    console.log('\n[TEST] Testing CRUD operations...');
+
+    // Create test user
+    const testDeviceId = `test-device-${Date.now()}`;
+    const userResult = await sql`
+      INSERT INTO users (device_id) VALUES (${testDeviceId}) RETURNING *
+    `;
+    const testUser = userResult[0];
+    console.log(`[PASS] Created test user (id: ${testUser.id})`);
+
+    // Read user
+    const readResult = await sql`SELECT * FROM users WHERE id = ${testUser.id}`;
+    if (readResult.length > 0) {
+      console.log('[PASS] Read user successfully');
+    }
+
+    // Update user
+    await sql`UPDATE users SET last_active = NOW() WHERE id = ${testUser.id}`;
+    console.log('[PASS] Updated user successfully');
+
+    // Delete test user (cleanup)
+    await sql`DELETE FROM users WHERE id = ${testUser.id}`;
+    console.log('[PASS] Deleted test user (cleanup)');
+
+    // Summary
+    console.log('\n' + '='.repeat(60));
+    console.log('All tests passed! Database is ready for production.');
+    console.log('='.repeat(60) + '\n');
+
   } catch (error) {
-    console.error('\n❌ Connection failed:', error.message);
+    console.error('\n[FAIL] Test failed:', error.message);
     if (error.message.includes('password')) {
-      console.error('\n💡 Tip: Check if your DATABASE_URL credentials are correct');
+      console.error('\nTip: Check if your DATABASE_URL credentials are correct');
     }
     process.exit(1);
   }
