@@ -34,6 +34,8 @@ export default function Profile() {
   };
 
   // Mock Upload Function
+  // NOTE: This is a frontend-only implementation. 
+  // To enable real uploads, uncomment the useUploadThing hook and backend API routes.
   const startUpload = async (files: { uri: string }[]) => {
     setIsUploading(true);
     setShowActionSheet(false); // Close sheet immediately
