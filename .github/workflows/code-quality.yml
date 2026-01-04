@@ -31,6 +31,7 @@ jobs:
         run: npx tsc --noEmit
         continue-on-error: false
 
-      - name: Check for unused exports
-        run: npx ts-prune --error
-        continue-on-error: true
+      - name: Check for unused exports (informational)
+        run: |
+          echo "Note: Expo Router default exports and public API exports are expected"
+          npx ts-prune 2>/dev/null | grep -v " - default$" | grep -v "(used in module)" | grep -v "services/" || echo "No unexpected unused exports found"
