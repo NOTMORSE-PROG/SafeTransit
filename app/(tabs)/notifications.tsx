@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,17 @@ import {
   TouchableOpacity,
   RefreshControl,
   Modal,
-  Pressable,
   TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import Animated, { FadeInDown, FadeOut, Layout, FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { 
+  FadeInDown, 
+  FadeOut, 
+  Layout, 
+  FadeIn, 
+} from 'react-native-reanimated';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import {
   Bell,
   ThumbsUp,
@@ -281,7 +287,138 @@ function NotificationCard({
   );
 }
 
-// Custom Bottom Sheet Menu Component (Facebook-style)
+// Confirmation Modal Component
+function ConfirmationModal({
+  visible,
+  title,
+  message,
+  confirmText,
+  cancelText,
+  onConfirm,
+  onCancel,
+  isDestructive = false,
+}: {
+  visible: boolean;
+  title: string;
+  message: string;
+  confirmText: string;
+  cancelText: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  isDestructive?: boolean;
+}) {
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
+      <View style={{ 
+        flex: 1, 
+        backgroundColor: 'rgba(0,0,0,0.5)', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        paddingHorizontal: 32,
+      }}>
+        <Animated.View 
+          entering={FadeIn.duration(200)}
+          style={{
+            backgroundColor: '#ffffff',
+            borderRadius: 20,
+            paddingTop: 24,
+            paddingBottom: 20,
+            paddingHorizontal: 24,
+            width: '100%',
+            maxWidth: 340,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 16,
+            elevation: 20,
+          }}
+        >
+          {/* Icon */}
+          <View style={{ alignItems: 'center', marginBottom: 16 }}>
+            <View style={{ 
+              width: 56, 
+              height: 56, 
+              borderRadius: 28, 
+              backgroundColor: isDestructive ? '#fee2e2' : '#dbeafe', 
+              alignItems: 'center', 
+              justifyContent: 'center' 
+            }}>
+              {isDestructive ? (
+                <Trash2 color="#dc2626" size={28} strokeWidth={2} />
+              ) : (
+                <AlertTriangle color="#2563eb" size={28} strokeWidth={2} />
+              )}
+            </View>
+          </View>
+
+          {/* Title */}
+          <Text style={{ 
+            fontSize: 18, 
+            fontWeight: '700', 
+            color: '#111827', 
+            textAlign: 'center',
+            marginBottom: 8,
+          }}>
+            {title}
+          </Text>
+
+          {/* Message */}
+          <Text style={{ 
+            fontSize: 14, 
+            color: '#6b7280', 
+            textAlign: 'center',
+            lineHeight: 20,
+            marginBottom: 24,
+          }}>
+            {message}
+          </Text>
+
+          {/* Buttons */}
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <TouchableOpacity
+              onPress={onCancel}
+              style={{
+                flex: 1,
+                paddingVertical: 14,
+                borderRadius: 12,
+                backgroundColor: '#f3f4f6',
+                alignItems: 'center',
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{ fontSize: 15, fontWeight: '600', color: '#4b5563' }}>
+                {cancelText}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={onConfirm}
+              style={{
+                flex: 1,
+                paddingVertical: 14,
+                borderRadius: 12,
+                backgroundColor: isDestructive ? '#dc2626' : '#2563eb',
+                alignItems: 'center',
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{ fontSize: 15, fontWeight: '600', color: '#ffffff' }}>
+                {confirmText}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+
+// Custom Bottom Sheet Menu Component using @gorhom/bottom-sheet (Facebook-style)
 function NotificationMenu({
   visible,
   notification,
@@ -295,6 +432,41 @@ function NotificationMenu({
   onRemove: () => void;
   onTurnOff: () => void;
 }) {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  
+  // Snap points for the bottom sheet
+  const snapPoints = useMemo(() => ['40%'], []);
+  
+  // Open/close based on visibility
+  useEffect(() => {
+    if (visible && bottomSheetRef.current) {
+      bottomSheetRef.current.expand();
+    } else if (!visible && bottomSheetRef.current) {
+      bottomSheetRef.current.close();
+    }
+  }, [visible]);
+
+  // Render backdrop
+  const renderBackdrop = useCallback(
+    (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        opacity={0.5}
+        pressBehavior="close"
+      />
+    ),
+    []
+  );
+
+  // Handle sheet changes
+  const handleSheetChanges = useCallback((index: number) => {
+    if (index === -1) {
+      onClose();
+    }
+  }, [onClose]);
+
   if (!notification) return null;
 
   const typeName = getNotificationTypeName(notification.type);
@@ -306,105 +478,116 @@ function NotificationMenu({
       animationType="none"
       onRequestClose={onClose}
     >
-      <Pressable 
-        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}
-        onPress={onClose}
-      >
-        <Pressable onPress={(e) => e.stopPropagation()}>
-          <Animated.View 
-            entering={SlideInDown.duration(300)}
-            style={{
-              backgroundColor: '#ffffff',
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-              paddingTop: 8,
-              paddingBottom: 40,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: -4 },
-              shadowOpacity: 0.15,
-              shadowRadius: 12,
-              elevation: 20,
-            }}
-          >
-            {/* Handle bar */}
-            <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-              <View style={{ width: 40, height: 4, backgroundColor: '#d1d5db', borderRadius: 2 }} />
-            </View>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          onClose={onClose}
+          enablePanDownToClose={true}
+          backdropComponent={renderBackdrop}
+          handleIndicatorStyle={{
+            backgroundColor: '#d1d5db',
+            width: 40,
+            height: 4,
+          }}
+          backgroundStyle={{
+            backgroundColor: '#ffffff',
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+          }}
+          style={{
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -4 },
+            shadowOpacity: 0.15,
+            shadowRadius: 12,
+            elevation: 20,
+          }}
+        >
+          <BottomSheetView style={{ flex: 1, paddingHorizontal: 16 }}>
+            {/* Drag hint text */}
+            <Text style={{ 
+              fontSize: 11, 
+              color: '#9ca3af', 
+              textAlign: 'center',
+              marginBottom: 12,
+              opacity: 0.7,
+            }}>
+              Drag down to dismiss
+            </Text>
 
-            {/* Menu Options */}
-            <View style={{ paddingHorizontal: 16 }}>
-              {/* Remove notification */}
-              <TouchableOpacity
-                onPress={onRemove}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 16,
-                  paddingHorizontal: 16,
-                  backgroundColor: '#f9fafb',
-                  borderRadius: 12,
-                  marginBottom: 8,
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#fee2e2', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
-                  <Trash2 color="#dc2626" size={22} strokeWidth={2} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 16, fontWeight: '600', color: '#111827', marginBottom: 2 }}>
-                    Remove this notification
-                  </Text>
-                  <Text style={{ fontSize: 13, color: '#6b7280' }}>
-                    Hide it from your notifications
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              {/* Turn off notifications */}
-              <TouchableOpacity
-                onPress={onTurnOff}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingVertical: 16,
-                  paddingHorizontal: 16,
-                  backgroundColor: '#f9fafb',
-                  borderRadius: 12,
-                  marginBottom: 8,
-                }}
-                activeOpacity={0.7}
-              >
-                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#f3f4f6', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
-                  <BellOff color="#4b5563" size={22} strokeWidth={2} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 16, fontWeight: '600', color: '#111827', marginBottom: 2 }}>
-                    Turn off {typeName}
-                  </Text>
-                  <Text style={{ fontSize: 13, color: '#6b7280' }}>
-                    Stop receiving notifications like this
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              {/* Cancel button */}
-              <TouchableOpacity
-                onPress={onClose}
-                style={{
-                  paddingVertical: 16,
-                  alignItems: 'center',
-                  marginTop: 8,
-                }}
-                activeOpacity={0.7}
-              >
-                <Text style={{ fontSize: 16, fontWeight: '600', color: '#6b7280' }}>
-                  Cancel
+            {/* Remove notification */}
+            <TouchableOpacity
+              onPress={onRemove}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 16,
+                paddingHorizontal: 16,
+                backgroundColor: '#f9fafb',
+                borderRadius: 12,
+                marginBottom: 8,
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#fee2e2', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+                <Trash2 color="#dc2626" size={22} strokeWidth={2} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: '#111827', marginBottom: 2 }}>
+                  Remove this notification
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        </Pressable>
-      </Pressable>
+                <Text style={{ fontSize: 13, color: '#6b7280' }}>
+                  Hide it from your notifications
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Turn off notifications */}
+            <TouchableOpacity
+              onPress={onTurnOff}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 16,
+                paddingHorizontal: 16,
+                backgroundColor: '#f9fafb',
+                borderRadius: 12,
+                marginBottom: 8,
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#f3f4f6', alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+                <BellOff color="#4b5563" size={22} strokeWidth={2} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: '#111827', marginBottom: 2 }}>
+                  Turn off {typeName}
+                </Text>
+                <Text style={{ fontSize: 13, color: '#6b7280' }}>
+                  Stop receiving notifications like this
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Cancel button */}
+            <TouchableOpacity
+              onPress={onClose}
+              style={{
+                paddingVertical: 16,
+                alignItems: 'center',
+                marginTop: 8,
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{ fontSize: 16, fontWeight: '600', color: '#6b7280' }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </BottomSheetView>
+        </BottomSheet>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
@@ -494,6 +677,7 @@ export default function Notifications() {
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const [toast, setToast] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const unreadCount = getUnreadCount(notifications);
   
@@ -533,12 +717,23 @@ export default function Notifications() {
   };
 
   const handleRemove = () => {
+    // Close the menu and show confirmation dialog
+    setMenuVisible(false);
+    setDeleteConfirmVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
     if (selectedNotification) {
       setNotifications(prev => deleteNotification(prev, selectedNotification.id));
       setToast('Notification removed');
       setTimeout(() => setToast(''), 2000);
     }
-    setMenuVisible(false);
+    setDeleteConfirmVisible(false);
+    setSelectedNotification(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmVisible(false);
     setSelectedNotification(null);
   };
 
@@ -781,6 +976,18 @@ export default function Notifications() {
 
       {/* Toast */}
       <Toast message={toast} />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        visible={deleteConfirmVisible}
+        title="Delete Notification?"
+        message="Are you sure you want to delete this notification? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        isDestructive={true}
+      />
     </View>
   );
 }

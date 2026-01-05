@@ -328,8 +328,16 @@ export default function Home() {
         <View className="px-6 pt-6">
           {/* Handle Bar - Draggable */}
           <GestureDetector gesture={panGesture}>
-            <Animated.View className="items-center py-3 mb-4">
+            <Animated.View className="items-center py-3 mb-2">
               <View className="w-16 h-1.5 bg-neutral-400 rounded-full" />
+              <Text style={{ 
+                fontSize: 11, 
+                color: '#9ca3af', 
+                marginTop: 6,
+                opacity: 0.7,
+              }}>
+                Drag to expand or collapse
+              </Text>
             </Animated.View>
           </GestureDetector>
 
