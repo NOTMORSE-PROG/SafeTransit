@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,22 @@ import {
   Modal,
   Pressable,
   TextInput,
+  PanResponder,
+  Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import Animated, { FadeInDown, FadeOut, Layout, FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { 
+  FadeInDown, 
+  FadeOut, 
+  Layout, 
+  FadeIn, 
+  SlideInDown,
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
 import {
   Bell,
   ThumbsUp,
@@ -281,7 +294,141 @@ function NotificationCard({
   );
 }
 
-// Custom Bottom Sheet Menu Component (Facebook-style)
+// Confirmation Modal Component
+function ConfirmationModal({
+  visible,
+  title,
+  message,
+  confirmText,
+  cancelText,
+  onConfirm,
+  onCancel,
+  isDestructive = false,
+}: {
+  visible: boolean;
+  title: string;
+  message: string;
+  confirmText: string;
+  cancelText: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  isDestructive?: boolean;
+}) {
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
+      <View style={{ 
+        flex: 1, 
+        backgroundColor: 'rgba(0,0,0,0.5)', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        paddingHorizontal: 32,
+      }}>
+        <Animated.View 
+          entering={FadeIn.duration(200)}
+          style={{
+            backgroundColor: '#ffffff',
+            borderRadius: 20,
+            paddingTop: 24,
+            paddingBottom: 20,
+            paddingHorizontal: 24,
+            width: '100%',
+            maxWidth: 340,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 16,
+            elevation: 20,
+          }}
+        >
+          {/* Icon */}
+          <View style={{ alignItems: 'center', marginBottom: 16 }}>
+            <View style={{ 
+              width: 56, 
+              height: 56, 
+              borderRadius: 28, 
+              backgroundColor: isDestructive ? '#fee2e2' : '#dbeafe', 
+              alignItems: 'center', 
+              justifyContent: 'center' 
+            }}>
+              {isDestructive ? (
+                <Trash2 color="#dc2626" size={28} strokeWidth={2} />
+              ) : (
+                <AlertTriangle color="#2563eb" size={28} strokeWidth={2} />
+              )}
+            </View>
+          </View>
+
+          {/* Title */}
+          <Text style={{ 
+            fontSize: 18, 
+            fontWeight: '700', 
+            color: '#111827', 
+            textAlign: 'center',
+            marginBottom: 8,
+          }}>
+            {title}
+          </Text>
+
+          {/* Message */}
+          <Text style={{ 
+            fontSize: 14, 
+            color: '#6b7280', 
+            textAlign: 'center',
+            lineHeight: 20,
+            marginBottom: 24,
+          }}>
+            {message}
+          </Text>
+
+          {/* Buttons */}
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <TouchableOpacity
+              onPress={onCancel}
+              style={{
+                flex: 1,
+                paddingVertical: 14,
+                borderRadius: 12,
+                backgroundColor: '#f3f4f6',
+                alignItems: 'center',
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{ fontSize: 15, fontWeight: '600', color: '#4b5563' }}>
+                {cancelText}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={onConfirm}
+              style={{
+                flex: 1,
+                paddingVertical: 14,
+                borderRadius: 12,
+                backgroundColor: isDestructive ? '#dc2626' : '#2563eb',
+                alignItems: 'center',
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={{ fontSize: 15, fontWeight: '600', color: '#ffffff' }}>
+                {confirmText}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const MENU_HEIGHT = 280; // Approximate height of the menu
+const DISMISS_THRESHOLD = 80; // How far to drag before dismissing
+
+// Custom Bottom Sheet Menu Component (Facebook-style) with drag-to-dismiss
 function NotificationMenu({
   visible,
   notification,
@@ -295,6 +442,54 @@ function NotificationMenu({
   onRemove: () => void;
   onTurnOff: () => void;
 }) {
+  const [translateY, setTranslateY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Create pan responder for drag gesture
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        // Only respond to vertical drags
+        return Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && gestureState.dy > 0;
+      },
+      onPanResponderGrant: () => {
+        setIsDragging(true);
+      },
+      onPanResponderMove: (_, gestureState) => {
+        // Only allow dragging down (positive dy)
+        if (gestureState.dy > 0) {
+          setTranslateY(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        setIsDragging(false);
+        if (gestureState.dy > DISMISS_THRESHOLD || gestureState.vy > 0.5) {
+          // Dismiss the menu
+          setTranslateY(MENU_HEIGHT);
+          setTimeout(() => {
+            onClose();
+            setTranslateY(0);
+          }, 200);
+        } else {
+          // Spring back to original position
+          setTranslateY(0);
+        }
+      },
+      onPanResponderTerminate: () => {
+        setIsDragging(false);
+        setTranslateY(0);
+      },
+    })
+  ).current;
+
+  // Reset translateY when menu becomes visible
+  useEffect(() => {
+    if (visible) {
+      setTranslateY(0);
+    }
+  }, [visible]);
+
   if (!notification) return null;
 
   const typeName = getNotificationTypeName(notification.type);
@@ -324,11 +519,26 @@ function NotificationMenu({
               shadowOpacity: 0.15,
               shadowRadius: 12,
               elevation: 20,
+              transform: [{ translateY: translateY }],
             }}
+            {...panResponder.panHandlers}
           >
-            {/* Handle bar */}
+            {/* Handle bar - visual indicator for dragging */}
             <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-              <View style={{ width: 40, height: 4, backgroundColor: '#d1d5db', borderRadius: 2 }} />
+              <View style={{ 
+                width: 40, 
+                height: 4, 
+                backgroundColor: isDragging ? '#9ca3af' : '#d1d5db', 
+                borderRadius: 2 
+              }} />
+              <Text style={{ 
+                fontSize: 11, 
+                color: '#9ca3af', 
+                marginTop: 4,
+                opacity: isDragging ? 0 : 0.7,
+              }}>
+                Drag down to dismiss
+              </Text>
             </View>
 
             {/* Menu Options */}
@@ -494,6 +704,7 @@ export default function Notifications() {
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const [toast, setToast] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const unreadCount = getUnreadCount(notifications);
   
@@ -533,12 +744,23 @@ export default function Notifications() {
   };
 
   const handleRemove = () => {
+    // Close the menu and show confirmation dialog
+    setMenuVisible(false);
+    setDeleteConfirmVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
     if (selectedNotification) {
       setNotifications(prev => deleteNotification(prev, selectedNotification.id));
       setToast('Notification removed');
       setTimeout(() => setToast(''), 2000);
     }
-    setMenuVisible(false);
+    setDeleteConfirmVisible(false);
+    setSelectedNotification(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmVisible(false);
     setSelectedNotification(null);
   };
 
@@ -781,6 +1003,18 @@ export default function Notifications() {
 
       {/* Toast */}
       <Toast message={toast} />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        visible={deleteConfirmVisible}
+        title="Delete Notification?"
+        message="Are you sure you want to delete this notification? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        isDestructive={true}
+      />
     </View>
   );
 }
