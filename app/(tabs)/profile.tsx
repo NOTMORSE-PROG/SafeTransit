@@ -78,12 +78,11 @@ export default function Profile() {
 
       if (!result.canceled) {
         const selectedImage = result.assets[0];
-        // Let's try the Blob approach but cast it to any to avoid TS errors if File is missing
-        const file = {
+        const file: { uri: string; name: string; type: string } = {
           uri: selectedImage.uri,
           name: selectedImage.fileName || "profile.jpg",
           type: selectedImage.mimeType || "image/jpeg",
-        } as any;
+        };
         
         await startUpload([file]);
       }

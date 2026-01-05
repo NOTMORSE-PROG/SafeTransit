@@ -140,4 +140,13 @@ jobs:
           token: ${{ secrets.JARVIS_ACCESS_TOKEN }}
           repository: NOTMORSE-PROG/JARVIS
           event-type: build_status
-          client-payload: '{"event_type": "build_status", "repo": "${{ github.event.repository.name }}", "owner": "${{ github.repository_owner }}", "branch": "${{ github.event.workflow_run.head_branch }}", "workflow": "${{ github.workflow }}", "status": "${{ job.status }}", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+          client-payload: >-
+            {
+              "event_type": "build_status",
+              "repo": "${{ github.event.repository.name }}",
+              "owner": "${{ github.repository_owner }}",
+              "branch": "${{ github.event.workflow_run.head_branch }}",
+              "workflow": "${{ github.workflow }}",
+              "status": "${{ job.status }}",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"  
+            }
