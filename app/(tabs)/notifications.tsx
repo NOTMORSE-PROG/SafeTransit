@@ -9,7 +9,6 @@ import {
   Pressable,
   TextInput,
   PanResponder,
-  Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { 
@@ -18,11 +17,6 @@ import Animated, {
   Layout, 
   FadeIn, 
   SlideInDown,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
 import {
   Bell,
@@ -424,7 +418,7 @@ function ConfirmationModal({
   );
 }
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 const MENU_HEIGHT = 280; // Approximate height of the menu
 const DISMISS_THRESHOLD = 80; // How far to drag before dismissing
 
