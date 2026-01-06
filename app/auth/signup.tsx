@@ -302,7 +302,7 @@ export default function Signup() {
           onPress={() => router.push("/auth/login")}
           className="mt-8"
         >
-          <Text className="text-center text-neutral-400 text-xs font-medium">
+          <Text className="text-center text-neutral-400 text-base font-medium mb-[50px]">
             Already have an account?{" "}
             <Text className="text-primary-600 font-bold uppercase tracking-tighter">
               Login
