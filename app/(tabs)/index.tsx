@@ -102,6 +102,7 @@ export default function Home() {
   const [selectedTip, setSelectedTip] = useState<TipData | null>(null);
   const [_isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [isEmergencyModalVisible, setIsEmergencyModalVisible] = useState(false);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
 
   const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
   const startY = useSharedValue(0);
@@ -457,20 +458,7 @@ export default function Home() {
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
             handlePanicPress();
           }}
-          onPress={() => {
-            Alert.alert(
-              'Emergency Alert',
-              'Send silent alert to emergency contacts and nearby helpers?',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Send Alert',
-                  style: 'destructive',
-                  onPress: handlePanicPress
-                }
-              ]
-            );
-          }}
+          onPress={() => setIsConfirmModalVisible(true)}
           className="w-18 h-18 rounded-full bg-danger-600 items-center justify-center"
           style={{
             shadowColor: '#dc2626',
@@ -489,7 +477,19 @@ export default function Home() {
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Custom Emergency Alert Modal */}
+      {/* Confirmation Modal - Before sending alert */}
+      <EmergencyAlertModal
+        visible={isConfirmModalVisible}
+        title="Emergency Alert"
+        message="Send silent alert to emergency contacts and nearby helpers?"
+        onClose={() => setIsConfirmModalVisible(false)}
+        isConfirmation={true}
+        onConfirm={handlePanicPress}
+        confirmText="Send Alert"
+        cancelText="Cancel"
+      />
+
+      {/* Success Modal - After alert sent */}
       <EmergencyAlertModal
         visible={isEmergencyModalVisible}
         title="Emergency Alert"
