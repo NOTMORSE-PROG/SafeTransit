@@ -17,6 +17,12 @@ function patchFile(filePath) {
     
     const replacement = isKotlin ? kotlinReplacement : groovyReplacement;
 
+    // Fix bad syntax (Groovy in Kotlin) from previous runs
+    if (isKotlin && content.includes("maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }")) {
+      content = content.replace(/maven \{ url 'https:\/\/maven-central\.storage-download\.googleapis\.com\/maven2\/' \}/g, kotlinReplacement);
+      patched = true;
+    }
+
     // Replace mavenCentral() with Google Mirror
     if (content.includes('mavenCentral()')) {
       content = content.replace(/mavenCentral\(\)/g, replacement);
