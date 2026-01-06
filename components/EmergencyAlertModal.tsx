@@ -61,6 +61,7 @@ export default function EmergencyAlertModal({
                     style={styles.modalContainer}
                 >
                     {/* Modal Card */}
+                    {/* Modal Card */}
                     <View style={styles.modalCard}>
                         {/* Gradient Accent Line */}
                         <View style={styles.accentLine} />
