@@ -19,6 +19,7 @@ import {
 } from 'lucide-react-native';
 
 import LocationSearchInput from '../components/LocationSearchInput';
+import NavigationConfirmModal from '../components/NavigationConfirmModal';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
 import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/osrm';
 
@@ -54,6 +55,7 @@ export default function RoutePlanning() {
   // UI states
   const [showRoutes, setShowRoutes] = useState(false);
   const [mapRegion, setMapRegion] = useState<Region>(MANILA_REGION);
+  const [showNavigationModal, setShowNavigationModal] = useState(false);
 
   // Get current location on mount
   useEffect(() => {
@@ -193,21 +195,13 @@ export default function RoutePlanning() {
 
   const handleStartNavigation = () => {
     if (!selectedRoute) return;
+    setShowNavigationModal(true);
+  };
 
-    Alert.alert(
-      'Start Navigation',
-      `Ready to navigate via ${selectedRoute.name}?\n\nDuration: ${formatDuration(selectedRoute.duration)}\nDistance: ${formatDistance(selectedRoute.distance)}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Start',
-          onPress: () => {
-            // In a real app, this would start turn-by-turn navigation
-            router.back();
-          },
-        },
-      ]
-    );
+  const handleConfirmNavigation = () => {
+    setShowNavigationModal(false);
+    // In a real app, this would start turn-by-turn navigation
+    router.back();
   };
 
   const effectiveStartLocation = useCurrentAsStart ? currentLocation : startLocation;
@@ -318,15 +312,14 @@ export default function RoutePlanning() {
                   mode.icon === 'PersonStanding'
                     ? PersonStanding
                     : mode.icon === 'Car'
-                    ? Car
-                    : Bus;
+                      ? Car
+                      : Bus;
                 return (
                   <TouchableOpacity
                     key={mode.id}
                     onPress={() => setSelectedMode(mode.id as 'walk' | 'drive' | 'transit')}
-                    className={`mr-2 px-4 py-2 rounded-full ${
-                      selectedMode === mode.id ? 'bg-primary-600' : 'bg-neutral-200'
-                    }`}
+                    className={`mr-2 px-4 py-2 rounded-full ${selectedMode === mode.id ? 'bg-primary-600' : 'bg-neutral-200'
+                      }`}
                     activeOpacity={0.7}
                   >
                     <View className="flex-row items-center">
@@ -336,9 +329,8 @@ export default function RoutePlanning() {
                         strokeWidth={2}
                       />
                       <Text
-                        className={`text-sm font-semibold ml-1.5 ${
-                          selectedMode === mode.id ? 'text-white' : 'text-neutral-700'
-                        }`}
+                        className={`text-sm font-semibold ml-1.5 ${selectedMode === mode.id ? 'text-white' : 'text-neutral-700'
+                          }`}
                       >
                         {mode.label}
                       </Text>
@@ -367,7 +359,7 @@ export default function RoutePlanning() {
           entering={SlideInDown.duration(600)}
           className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl"
         >
-          <View className="px-6 pt-6 pb-8">
+          <View className="px-6 pt-6 pb-12">
             <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
 
             <ScrollView className="mb-4" style={{ maxHeight: 300 }}>
@@ -380,11 +372,10 @@ export default function RoutePlanning() {
                   >
                     <TouchableOpacity
                       onPress={() => setSelectedRoute(route)}
-                      className={`mb-3 rounded-2xl p-4 border-2 ${
-                        selectedRoute?.id === route.id
+                      className={`mb-3 rounded-2xl p-4 border-2 ${selectedRoute?.id === route.id
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-neutral-200 bg-white'
-                      }`}
+                        }`}
                       activeOpacity={0.8}
                       accessible={true}
                       accessibilityLabel={`${route.name}, ${formatDuration(route.duration)}, ${formatDistance(route.distance)}`}
@@ -396,65 +387,64 @@ export default function RoutePlanning() {
                             className="w-3 h-3 rounded-full mr-2"
                             style={{ backgroundColor: routeWithSafety.color }}
                           />
-                        <Text className="text-base font-bold text-neutral-900">
-                          {route.name}
-                        </Text>
-                      </View>
-                      {selectedRoute?.id === route.id && (
-                        <View className="bg-primary-600 rounded-full p-1.5">
-                          <Check color="#ffffff" size={12} strokeWidth={3} />
+                          <Text className="text-base font-bold text-neutral-900">
+                            {route.name}
+                          </Text>
                         </View>
-                      )}
-                    </View>
-
-                    <View className="flex-row items-center mb-2">
-                      <View className="flex-row items-center mr-4">
-                        <Clock color="#4b5563" size={16} strokeWidth={2} />
-                        <Text className="text-sm text-neutral-600 ml-1.5">
-                          {formatDuration(route.duration)}
-                        </Text>
-                      </View>
-                      <View className="flex-row items-center">
-                        <Ruler color="#4b5563" size={16} strokeWidth={2} />
-                        <Text className="text-sm text-neutral-600 ml-1.5">
-                          {formatDistance(route.distance)}
-                        </Text>
-                      </View>
-                    </View>
-
-                    {routeWithSafety.warnings && routeWithSafety.warnings.length > 0 ? (
-                      <View className="bg-warning-50 rounded-lg px-3 py-2">
-                        {routeWithSafety.warnings.map((warning: string, idx: number) => (
-                          <View key={idx} className="flex-row items-center">
-                            <AlertTriangle color="#b45309" size={14} strokeWidth={2} />
-                            <Text className="text-xs text-warning-700 ml-1.5 flex-1">
-                              {warning}
-                            </Text>
+                        {selectedRoute?.id === route.id && (
+                          <View className="bg-primary-600 rounded-full p-1.5">
+                            <Check color="#ffffff" size={12} strokeWidth={3} />
                           </View>
-                        ))}
+                        )}
                       </View>
-                    ) : (
-                      <View className="bg-success-50 rounded-lg px-3 py-2">
+
+                      <View className="flex-row items-center mb-2">
+                        <View className="flex-row items-center mr-4">
+                          <Clock color="#4b5563" size={16} strokeWidth={2} />
+                          <Text className="text-sm text-neutral-600 ml-1.5">
+                            {formatDuration(route.duration)}
+                          </Text>
+                        </View>
                         <View className="flex-row items-center">
-                          <CheckCircle color="#15803d" size={14} strokeWidth={2} />
-                          <Text className="text-xs text-success-700 ml-1.5">
-                            No danger zones on this route
+                          <Ruler color="#4b5563" size={16} strokeWidth={2} />
+                          <Text className="text-sm text-neutral-600 ml-1.5">
+                            {formatDistance(route.distance)}
                           </Text>
                         </View>
                       </View>
-                    )}
-                  </TouchableOpacity>
-                </Animated.View>
-              );
+
+                      {routeWithSafety.warnings && routeWithSafety.warnings.length > 0 ? (
+                        <View className="bg-warning-50 rounded-lg px-3 py-2">
+                          {routeWithSafety.warnings.map((warning: string, idx: number) => (
+                            <View key={idx} className="flex-row items-center">
+                              <AlertTriangle color="#b45309" size={14} strokeWidth={2} />
+                              <Text className="text-xs text-warning-700 ml-1.5 flex-1">
+                                {warning}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      ) : (
+                        <View className="bg-success-50 rounded-lg px-3 py-2">
+                          <View className="flex-row items-center">
+                            <CheckCircle color="#15803d" size={14} strokeWidth={2} />
+                            <Text className="text-xs text-success-700 ml-1.5">
+                              No danger zones on this route
+                            </Text>
+                          </View>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  </Animated.View>
+                );
               })}
             </ScrollView>
 
             <TouchableOpacity
               onPress={handleStartNavigation}
               disabled={!selectedRoute}
-              className={`rounded-xl py-4 ${
-                selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
-              }`}
+              className={`rounded-xl py-4 ${selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
+                }`}
               activeOpacity={0.8}
               accessible={true}
               accessibilityLabel="Start navigation"
@@ -466,6 +456,18 @@ export default function RoutePlanning() {
             </TouchableOpacity>
           </View>
         </Animated.View>
+      )}
+
+      {/* Navigation Confirmation Modal */}
+      {selectedRoute && (
+        <NavigationConfirmModal
+          visible={showNavigationModal}
+          routeName={selectedRoute.name}
+          duration={formatDuration(selectedRoute.duration)}
+          distance={formatDistance(selectedRoute.distance)}
+          onClose={() => setShowNavigationModal(false)}
+          onConfirm={handleConfirmNavigation}
+        />
       )}
     </View>
   );
