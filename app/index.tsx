@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const router = useRouter();
@@ -9,18 +9,18 @@ export default function Index() {
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
-        const hasOnboarded = await AsyncStorage.getItem('hasOnboarded');
+        const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
 
         setTimeout(() => {
-          if (hasOnboarded === 'true') {
-            router.replace('/(tabs)');
+          if (hasOnboarded === "true") {
+            router.replace("/(tabs)");
           } else {
-            router.replace('/onboarding/welcome');
+            router.replace("/auth/signup");
           }
         }, 1000);
       } catch (error) {
-        console.error('Error checking onboarding status:', error);
-        router.replace('/onboarding/welcome');
+        console.error("Error checking onboarding status:", error);
+        router.replace("/auth/signup");
       }
     };
 
