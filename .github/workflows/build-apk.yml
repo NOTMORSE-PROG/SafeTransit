@@ -1,5 +1,5 @@
 name: Build and Release APK
-run-name: "Build APK - ${{ github.event.workflow_run.head_branch }} (${{ github.event.workflow_run.head_sha }})"
+run-name: "APK Build from branch: ${{ github.event.workflow_run.head_branch || github.ref_name }}"
 
 on:
   workflow_run:
