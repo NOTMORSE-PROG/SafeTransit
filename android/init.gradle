@@ -1,22 +1,29 @@
 // Gradle init script to fix Maven Central 403 rate limiting on GitHub Actions
-// This script intercepts all repository definitions and redirects Maven Central to Google's mirror
 
-def replaceMavenCentral(repository) {
-    if (repository instanceof MavenArtifactRepository) {
-        def url = repository.url.toString()
-        if (url.contains("repo.maven.apache.org") || url.contains("repo1.maven.org")) {
-            repository.url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
-            println "Redirected Maven Central to Google Mirror: ${repository.url}"
+def addMirror(handler) {
+    handler.maven {
+        url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
+        // Force this repository to be checked for everything
+        content {
+            includeGroupRegex '.*'
         }
     }
 }
 
-gradle.allprojects { project ->
-    project.buildscript.repositories.all { repo ->
-        replaceMavenCentral(repo)
+def replaceMavenCentral(repository) {
+    if (repository instanceof MavenArtifactRepository) {
+        def url = repository.url.toString()
+        if (url.contains("repo.maven.apache.org") || url.contains("repo1.maven.org") || url.contains("plugins.gradle.org")) {
+            repository.url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
+            println "Redirected ${url} to Google Mirror"
+        }
     }
-    project.repositories.all { repo ->
-        replaceMavenCentral(repo)
+}
+
+gradle.beforeSettings { settings ->
+    settings.pluginManagement.repositories {
+        // Add mirror first
+        addMirror(it)
     }
 }
 
@@ -25,6 +32,15 @@ gradle.settingsEvaluated { settings ->
         replaceMavenCentral(repo)
     }
     settings.dependencyResolutionManagement.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+}
+
+gradle.allprojects { project ->
+    project.buildscript.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+    project.repositories.all { repo ->
         replaceMavenCentral(repo)
     }
 }
