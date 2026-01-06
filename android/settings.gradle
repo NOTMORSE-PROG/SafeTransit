@@ -3,8 +3,6 @@ pluginManagement {
     google()
     // Use Maven Central mirror to avoid 403 rate limiting on GitHub Actions
     maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
-    mavenCentral()
-    gradlePluginPortal()
   }
   
   def reactNativeGradlePlugin = new File(
@@ -31,7 +29,6 @@ dependencyResolutionManagement {
     google()
     // Use Maven Central mirror to avoid 403 rate limiting on GitHub Actions
     maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
-    mavenCentral()
     maven { url 'https://www.jitpack.io' }
   }
 }

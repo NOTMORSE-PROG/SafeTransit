@@ -3,7 +3,6 @@
 def addMirror(handler) {
     handler.maven {
         url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
-        // Force this repository to be checked for everything
         content {
             includeGroupRegex '.*'
         }
@@ -22,8 +21,15 @@ def replaceMavenCentral(repository) {
 
 gradle.beforeSettings { settings ->
     settings.pluginManagement.repositories {
-        // Add mirror first
+        // Clear existing repositories to remove default Maven Central / Plugin Portal
+        clear()
+        
+        // Add Google and Mirror
+        google()
         addMirror(it)
+        
+        // Re-add Gradle Plugin Portal but pointing to mirror (conceptually, though we just use the mirror directly)
+        // We don't add gradlePluginPortal() back because it redirects to Maven Central
     }
 }
 
