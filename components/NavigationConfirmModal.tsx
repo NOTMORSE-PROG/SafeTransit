@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import Animated, { FadeIn, SlideInDown, SlideOutDown } from 'react-native-reanimated';
-import { Navigation, Clock, Ruler, ShieldCheck, X } from 'lucide-react-native';
+import { Navigation, Clock, Ruler, ShieldCheck } from 'lucide-react-native';
 
 interface NavigationConfirmModalProps {
     visible: boolean;
