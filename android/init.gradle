@@ -1,38 +1,30 @@
 // Gradle init script to fix Maven Central 403 rate limiting on GitHub Actions
-// This script adds Google's Maven Central mirror before Maven Central for all repositories
+// This script intercepts all repository definitions and redirects Maven Central to Google's mirror
 
-gradle.allprojects { project ->
-    project.buildscript {
-        repositories {
-            google()
-            maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
-            mavenCentral()
-            gradlePluginPortal()
+def replaceMavenCentral(repository) {
+    if (repository instanceof MavenArtifactRepository) {
+        def url = repository.url.toString()
+        if (url.contains("repo.maven.apache.org") || url.contains("repo1.maven.org")) {
+            repository.url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
+            println "Redirected Maven Central to Google Mirror: ${repository.url}"
         }
     }
-    project.repositories {
-        google()
-        maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
-        mavenCentral()
-        maven { url 'https://www.jitpack.io' }
+}
+
+gradle.allprojects { project ->
+    project.buildscript.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+    project.repositories.all { repo ->
+        replaceMavenCentral(repo)
     }
 }
 
 gradle.settingsEvaluated { settings ->
-    settings.pluginManagement {
-        repositories {
-            google()
-            maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
-            mavenCentral()
-            gradlePluginPortal()
-        }
+    settings.pluginManagement.repositories.all { repo ->
+        replaceMavenCentral(repo)
     }
-    settings.dependencyResolutionManagement {
-        repositories {
-            google()
-            maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
-            mavenCentral()
-            maven { url 'https://www.jitpack.io' }
-        }
+    settings.dependencyResolutionManagement.repositories.all { repo ->
+        replaceMavenCentral(repo)
     }
 }
