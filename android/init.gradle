@@ -1,0 +1,30 @@
+// Gradle init script to fix Maven Central 403 rate limiting on GitHub Actions
+// This script adds Google's Maven Central mirror before Maven Central for all repositories
+
+allprojects {
+    buildscript {
+        repositories {
+            google()
+            maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+            mavenCentral()
+            gradlePluginPortal()
+        }
+    }
+    repositories {
+        google()
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+
+settingsEvaluated { settings ->
+    settings.pluginManagement {
+        repositories {
+            google()
+            maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+            mavenCentral()
+            gradlePluginPortal()
+        }
+    }
+}
