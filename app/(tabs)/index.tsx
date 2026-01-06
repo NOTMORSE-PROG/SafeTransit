@@ -22,6 +22,7 @@ import {
   Lightbulb,
   AlertTriangle
 } from 'lucide-react-native';
+import EmergencyAlertModal from '../../components/EmergencyAlertModal';
 
 const { width, height } = Dimensions.get('window');
 const SHEET_MIN_HEIGHT = 280;
@@ -100,6 +101,7 @@ export default function Home() {
   const [_currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
   const [selectedTip, setSelectedTip] = useState<TipData | null>(null);
   const [_isSheetExpanded, setIsSheetExpanded] = useState(false);
+  const [isEmergencyModalVisible, setIsEmergencyModalVisible] = useState(false);
 
   const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
   const startY = useSharedValue(0);
@@ -211,12 +213,7 @@ export default function Home() {
 
   const handlePanicPress = async () => {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-
-    Alert.alert(
-      'Emergency Alert',
-      'Silent alert sent to nearby helpers and emergency contacts.',
-      [{ text: 'OK' }]
-    );
+    setIsEmergencyModalVisible(true);
   };
 
   const handleQuickExit = () => {
@@ -330,9 +327,9 @@ export default function Home() {
           <GestureDetector gesture={panGesture}>
             <Animated.View className="items-center py-3 mb-2">
               <View className="w-16 h-1.5 bg-neutral-400 rounded-full" />
-              <Text style={{ 
-                fontSize: 11, 
-                color: '#9ca3af', 
+              <Text style={{
+                fontSize: 11,
+                color: '#9ca3af',
                 marginTop: 6,
                 opacity: 0.7,
               }}>
@@ -491,6 +488,15 @@ export default function Home() {
           <AlertOctagon color="#ffffff" size={36} strokeWidth={2.5} />
         </TouchableOpacity>
       </Animated.View>
+
+      {/* Custom Emergency Alert Modal */}
+      <EmergencyAlertModal
+        visible={isEmergencyModalVisible}
+        title="Emergency Alert"
+        message="Silent alert sent to nearby helpers and emergency contacts."
+        onClose={() => setIsEmergencyModalVisible(false)}
+        buttonText="OK"
+      />
     </View>
   );
 }
