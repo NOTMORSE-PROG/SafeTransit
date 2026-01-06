@@ -1,22 +1,37 @@
 name: Build and Release APK
 
 on:
-  workflow_run:
-    workflows: ["Code Quality Checks"]
-    types:
-      - completed
+  push:
+    branches:
+      - '**'
 
 jobs:
+  wait-for-quality-checks:
+    runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.check.outputs.passed }}
+    steps:
+      - name: Wait for Code Quality Checks
+        id: check
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'lint'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          allowed-conclusions: success
+
+      - name: Set output
+        run: echo "passed=true" >> $GITHUB_OUTPUT
+
   build-apk:
-    # Only run if the Code Quality Checks workflow succeeded
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: wait-for-quality-checks
+    if: ${{ needs.wait-for-quality-checks.outputs.passed == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -62,7 +77,7 @@ jobs:
       - name: Get branch name
         id: branch
         run: |
-          echo "name=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
+          echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
 
       - name: Get commit info
         id: commit
@@ -145,7 +160,7 @@ jobs:
               "event_type": "build_status",
               "repo": "${{ github.event.repository.name }}",
               "owner": "${{ github.repository_owner }}",
-              "branch": "${{ github.event.workflow_run.head_branch }}",
+              "branch": "${{ github.ref_name }}",
               "workflow": "${{ github.workflow }}",
               "status": "${{ job.status }}",
               "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"  
