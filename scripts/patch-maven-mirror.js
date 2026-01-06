@@ -29,6 +29,13 @@ function patchFile(filePath) {
         patched = true;
     }
     
+    // Prepend Google Mirror to gradlePluginPortal()
+    if (content.includes('gradlePluginPortal()')) {
+      const portalReplacement = replacement + '\n    gradlePluginPortal()';
+      content = content.replace(/gradlePluginPortal\(\)/g, portalReplacement);
+      patched = true;
+    }
+
     // Replace JCenter (often causes issues too)
     if (content.includes('jcenter()')) {
         content = content.replace(/jcenter\(\)/g, replacement);
