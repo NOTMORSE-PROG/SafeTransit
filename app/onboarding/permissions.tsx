@@ -192,7 +192,7 @@ export default function Permissions() {
       </ScrollView>
 
       {/* Bottom Button */}
-      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom, 32) }}>
+      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom, 48) }}>
         <TouchableOpacity
           onPress={handleContinue}
           disabled={!locationGranted || !notificationGranted || isNavigating}
