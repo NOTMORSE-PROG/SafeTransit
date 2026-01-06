@@ -9,22 +9,29 @@ function patchFile(filePath) {
   try {
     let content = fs.readFileSync(filePath, 'utf8');
     let patched = false;
+    const isKotlin = filePath.endsWith('.kts');
+
+    const mirrorUrl = 'https://maven-central.storage-download.googleapis.com/maven2/';
+    const groovyReplacement = `maven { url '${mirrorUrl}' }`;
+    const kotlinReplacement = `maven { url = uri("${mirrorUrl}") }`;
+    
+    const replacement = isKotlin ? kotlinReplacement : groovyReplacement;
 
     // Replace mavenCentral() with Google Mirror
     if (content.includes('mavenCentral()')) {
-      content = content.replace(/mavenCentral\(\)/g, "maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }");
+      content = content.replace(/mavenCentral\(\)/g, replacement);
       patched = true;
     }
 
     // Replace direct Maven Central URLs
     if (content.includes('repo.maven.apache.org/maven2')) {
-        content = content.replace(/https:\/\/repo\.maven\.apache\.org\/maven2/g, "https://maven-central.storage-download.googleapis.com/maven2");
+        content = content.replace(/https:\/\/repo\.maven\.apache\.org\/maven2/g, mirrorUrl);
         patched = true;
     }
     
     // Replace JCenter (often causes issues too)
     if (content.includes('jcenter()')) {
-        content = content.replace(/jcenter\(\)/g, "maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }");
+        content = content.replace(/jcenter\(\)/g, replacement);
         patched = true;
     }
 
