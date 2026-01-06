@@ -47,7 +47,7 @@ function walk(dir) {
         const stat = fs.statSync(filePath);
         if (stat.isDirectory()) {
           walk(filePath);
-        } else if (file.endsWith('build.gradle') || file.endsWith('build.gradle.kts')) {
+        } else if (file.endsWith('build.gradle') || file.endsWith('build.gradle.kts') || file.endsWith('settings.gradle') || file.endsWith('settings.gradle.kts')) {
           patchFile(filePath);
         }
       }
