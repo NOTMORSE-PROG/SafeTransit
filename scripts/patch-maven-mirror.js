@@ -63,6 +63,7 @@ function walk(dir) {
   }
 }
 
-console.log('Starting Maven Central mirror patch for node_modules...');
+console.log('Starting Maven Central mirror patch for node_modules and android...');
 walk(searchDir);
+walk(path.join(__dirname, '../android'));
 console.log('Patch complete.');
