@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
-import Animated, { FadeIn, FadeInDown, SlideInUp } from 'react-native-reanimated';
+import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Navigation, Clock, Ruler, ShieldCheck, X, Route } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -12,8 +12,6 @@ interface NavigationConfirmModalProps {
     onClose: () => void;
     onConfirm: () => void;
 }
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function NavigationConfirmModal({
     visible,
