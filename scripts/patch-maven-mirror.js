@@ -1,0 +1,82 @@
+/* eslint-env node */
+/* eslint-disable @typescript-eslint/no-require-imports */
+const fs = require('fs');
+const path = require('path');
+
+const searchDir = path.join(__dirname, '../node_modules');
+
+function patchFile(filePath) {
+  try {
+    let content = fs.readFileSync(filePath, 'utf8');
+    let patched = false;
+    const isKotlin = filePath.endsWith('.kts');
+
+    const mirrorUrl = 'https://maven-central.storage-download.googleapis.com/maven2/';
+    const groovyReplacement = `maven { url '${mirrorUrl}' }`;
+    const kotlinReplacement = `maven { url = uri("${mirrorUrl}") }`;
+    
+    const replacement = isKotlin ? kotlinReplacement : groovyReplacement;
+
+    // Fix bad syntax (Groovy in Kotlin) from previous runs
+    if (isKotlin && content.includes("maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }")) {
+      content = content.replace(/maven \{ url 'https:\/\/maven-central\.storage-download\.googleapis\.com\/maven2\/' \}/g, kotlinReplacement);
+      patched = true;
+    }
+
+    // Replace mavenCentral() with Google Mirror
+    if (content.includes('mavenCentral()')) {
+      content = content.replace(/mavenCentral\(\)/g, replacement);
+      patched = true;
+    }
+
+    // Replace direct Maven Central URLs
+    if (content.includes('repo.maven.apache.org/maven2')) {
+        content = content.replace(/https:\/\/repo\.maven\.apache\.org\/maven2/g, mirrorUrl);
+        patched = true;
+    }
+    
+    // Prepend Google Mirror to gradlePluginPortal()
+    if (content.includes('gradlePluginPortal()')) {
+      const portalReplacement = replacement + '\n    gradlePluginPortal()';
+      content = content.replace(/gradlePluginPortal\(\)/g, portalReplacement);
+      patched = true;
+    }
+
+    // Replace JCenter (often causes issues too)
+    if (content.includes('jcenter()')) {
+        content = content.replace(/jcenter\(\)/g, replacement);
+        patched = true;
+    }
+
+    if (patched) {
+      fs.writeFileSync(filePath, content, 'utf8');
+      console.log(`Patched: ${filePath}`);
+    }
+  } catch (err) {
+    console.error(`Error patching ${filePath}:`, err);
+  }
+}
+
+function walk(dir) {
+  if (!fs.existsSync(dir)) return;
+  
+  try {
+      const files = fs.readdirSync(dir);
+      for (const file of files) {
+        const filePath = path.join(dir, file);
+        const stat = fs.statSync(filePath);
+        if (stat.isDirectory()) {
+          walk(filePath);
+        } else if (file.endsWith('build.gradle') || file.endsWith('build.gradle.kts') || file.endsWith('settings.gradle') || file.endsWith('settings.gradle.kts')) {
+          patchFile(filePath);
+        }
+      }
+  } catch (e) {
+      console.warn(`Could not read dir ${dir}: ${e.message}`);
+  }
+}
+
+console.log('Starting Maven Central mirror patch for node_modules and android...');
+walk(searchDir);
+walk(path.join(__dirname, '../android'));
+console.log('Patch complete.');
