@@ -23,12 +23,12 @@ jobs:
           client-payload: |-
             {
               "event_type": "push",
-              "owner": "${{ github.repository_owner }}",
-              "repo": "${{ github.event.repository.name }}",
-              "branch": "${{ github.ref_name }}",
-              "message": "${{ github.event.head_commit.message }}",
-              "sender": "${{ github.actor }}",
-              "url": "${{ github.event.head_commit.url }}"
+              "owner": ${{ toJSON(github.repository_owner) }},
+              "repo": ${{ toJSON(github.event.repository.name) }},
+              "branch": ${{ toJSON(github.ref_name) }},
+              "message": ${{ toJSON(github.event.head_commit.message) }},
+              "sender": ${{ toJSON(github.actor) }},
+              "url": ${{ toJSON(github.event.head_commit.url) }}
             }
 
       - name: Notify Jarvis of pull request event
@@ -41,14 +41,14 @@ jobs:
           client-payload: |-
             {
               "event_type": "pull_request",
-              "owner": "${{ github.repository_owner }}",
-              "repo": "${{ github.event.repository.name }}",
-              "action": "${{ github.event.action }}",
+              "owner": ${{ toJSON(github.repository_owner) }},
+              "repo": ${{ toJSON(github.event.repository.name) }},
+              "action": ${{ toJSON(github.event.action) }},
               "merged": ${{ github.event.pull_request.merged }},
-              "title": "${{ github.event.pull_request.title }}",
-              "url": "${{ github.event.pull_request.html_url }}",
-              "sender": "${{ github.actor }}",
-              "branch": "${{ github.event.pull_request.head.ref }}"
+              "title": ${{ toJSON(github.event.pull_request.title) }},
+              "url": ${{ toJSON(github.event.pull_request.html_url) }},
+              "sender": ${{ toJSON(github.actor) }},
+              "branch": ${{ toJSON(github.event.pull_request.head.ref) }}
             }
 
       - name: Notify Jarvis of branch creation
@@ -61,10 +61,10 @@ jobs:
           client-payload: |-
             {
               "event_type": "create",
-              "owner": "${{ github.repository_owner }}",
-              "repo": "${{ github.event.repository.name }}",
-              "branch": "${{ github.event.ref }}",
-              "sender": "${{ github.actor }}"
+              "owner": ${{ toJSON(github.repository_owner) }},
+              "repo": ${{ toJSON(github.event.repository.name) }},
+              "branch": ${{ toJSON(github.event.ref) }},
+              "sender": ${{ toJSON(github.actor) }}
             }
 
       - name: Notify Jarvis of branch deletion
@@ -77,8 +77,8 @@ jobs:
           client-payload: |-
             {
               "event_type": "delete",
-              "owner": "${{ github.repository_owner }}",
-              "repo": "${{ github.event.repository.name }}",
-              "branch": "${{ github.event.ref }}",
-              "sender": "${{ github.actor }}"
+              "owner": ${{ toJSON(github.repository_owner) }},
+              "repo": ${{ toJSON(github.event.repository.name) }},
+              "branch": ${{ toJSON(github.event.ref) }},
+              "sender": ${{ toJSON(github.actor) }}
             }
