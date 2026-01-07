@@ -39,13 +39,12 @@ export default function NavigationConfirmModal({
             >
                 {/* Modal Content */}
                 <Animated.View
-                    entering={FadeInDown.duration(350).springify().damping(18)}
-                    className="w-full max-w-sm rounded-3xl overflow-hidden"
+                    entering={FadeInDown.duration(300)}
+                    className="w-full max-w-sm rounded-3xl overflow-hidden bg-white"
                     style={{
-                        backgroundColor: '#1a1f2e',
                         shadowColor: '#000',
                         shadowOffset: { width: 0, height: 12 },
-                        shadowOpacity: 0.5,
+                        shadowOpacity: 0.25,
                         shadowRadius: 24,
                         elevation: 20,
                     }}
@@ -80,7 +79,7 @@ export default function NavigationConfirmModal({
                             <Text className="text-2xl font-bold text-white text-center">
                                 Start Navigation
                             </Text>
-                            <Text className="text-base text-white/70 text-center mt-2">
+                            <Text className="text-base text-white/80 text-center mt-2">
                                 Ready to navigate via
                             </Text>
                         </View>
@@ -89,11 +88,10 @@ export default function NavigationConfirmModal({
                     {/* Route Name Badge */}
                     <View className="px-6 -mt-4">
                         <View
-                            className="rounded-2xl px-4 py-3 flex-row items-center justify-center"
-                            style={{ backgroundColor: '#252d42' }}
+                            className="rounded-2xl px-4 py-3 flex-row items-center justify-center bg-white shadow-sm border border-neutral-100"
                         >
-                            <Route color="#60a5fa" size={18} strokeWidth={2} />
-                            <Text className="text-lg font-bold text-white ml-2">
+                            <Route color="#2563eb" size={18} strokeWidth={2} />
+                            <Text className="text-lg font-bold text-neutral-900 ml-2">
                                 {routeName}
                             </Text>
                         </View>
@@ -105,55 +103,49 @@ export default function NavigationConfirmModal({
                         <View className="flex-row mb-5">
                             {/* Duration Card */}
                             <View
-                                className="flex-1 rounded-2xl p-4 mr-2"
-                                style={{ backgroundColor: '#252d42' }}
+                                className="flex-1 rounded-2xl p-4 mr-2 bg-neutral-50 border border-neutral-100"
                             >
                                 <View className="flex-row items-center mb-2">
                                     <View
-                                        className="w-8 h-8 rounded-full items-center justify-center"
-                                        style={{ backgroundColor: 'rgba(96, 165, 250, 0.2)' }}
+                                        className="w-8 h-8 rounded-full items-center justify-center bg-primary-50"
                                     >
-                                        <Clock color="#60a5fa" size={16} strokeWidth={2} />
+                                        <Clock color="#2563eb" size={16} strokeWidth={2} />
                                     </View>
-                                    <Text className="text-xs text-neutral-400 ml-2 uppercase tracking-wide">
+                                    <Text className="text-xs text-neutral-500 ml-2 uppercase tracking-wide font-medium">
                                         Duration
                                     </Text>
                                 </View>
-                                <Text className="text-xl font-bold text-white">{duration}</Text>
+                                <Text className="text-xl font-bold text-neutral-900">{duration}</Text>
                             </View>
 
                             {/* Distance Card */}
                             <View
-                                className="flex-1 rounded-2xl p-4 ml-2"
-                                style={{ backgroundColor: '#252d42' }}
+                                className="flex-1 rounded-2xl p-4 ml-2 bg-neutral-50 border border-neutral-100"
                             >
                                 <View className="flex-row items-center mb-2">
                                     <View
-                                        className="w-8 h-8 rounded-full items-center justify-center"
-                                        style={{ backgroundColor: 'rgba(96, 165, 250, 0.2)' }}
+                                        className="w-8 h-8 rounded-full items-center justify-center bg-primary-50"
                                     >
-                                        <Ruler color="#60a5fa" size={16} strokeWidth={2} />
+                                        <Ruler color="#2563eb" size={16} strokeWidth={2} />
                                     </View>
-                                    <Text className="text-xs text-neutral-400 ml-2 uppercase tracking-wide">
+                                    <Text className="text-xs text-neutral-500 ml-2 uppercase tracking-wide font-medium">
                                         Distance
                                     </Text>
                                 </View>
-                                <Text className="text-xl font-bold text-white">{distance}</Text>
+                                <Text className="text-xl font-bold text-neutral-900">{distance}</Text>
                             </View>
                         </View>
 
                         {/* Safety Badge */}
                         <View
-                            className="rounded-xl p-3 mb-6 flex-row items-center"
-                            style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)' }}
+                            className="rounded-xl p-3 mb-6 flex-row items-center bg-safe-50 border border-safe-100"
                         >
                             <View
-                                className="w-8 h-8 rounded-full items-center justify-center"
-                                style={{ backgroundColor: 'rgba(34, 197, 94, 0.2)' }}
+                                className="w-8 h-8 rounded-full items-center justify-center bg-safe-100"
                             >
-                                <ShieldCheck color="#22c55e" size={18} strokeWidth={2} />
+                                <ShieldCheck color="#16a34a" size={18} strokeWidth={2} />
                             </View>
-                            <Text className="text-sm text-safe-400 ml-3 flex-1 font-medium">
+                            <Text className="text-sm text-safe-700 ml-3 flex-1 font-medium">
                                 You'll receive safety alerts along your route
                             </Text>
                         </View>
@@ -163,14 +155,13 @@ export default function NavigationConfirmModal({
                             {/* Cancel Button */}
                             <TouchableOpacity
                                 onPress={onClose}
-                                className="flex-1 rounded-xl py-4 mr-2"
-                                style={{ backgroundColor: '#374151' }}
+                                className="flex-1 rounded-xl py-4 mr-2 bg-neutral-100"
                                 activeOpacity={0.8}
                                 accessible={true}
                                 accessibilityLabel="Cancel navigation"
                                 accessibilityRole="button"
                             >
-                                <Text className="text-white text-center font-bold text-base">
+                                <Text className="text-neutral-600 text-center font-bold text-base">
                                     Cancel
                                 </Text>
                             </TouchableOpacity>
@@ -192,9 +183,9 @@ export default function NavigationConfirmModal({
                                     style={{
                                         shadowColor: '#2563eb',
                                         shadowOffset: { width: 0, height: 4 },
-                                        shadowOpacity: 0.4,
+                                        shadowOpacity: 0.3,
                                         shadowRadius: 8,
-                                        elevation: 8,
+                                        elevation: 6,
                                     }}
                                 >
                                     <View className="flex-row items-center justify-center">
