@@ -1,0 +1,40 @@
+// Gradle init script to fix Maven Central 403 rate limiting on GitHub Actions
+
+def replaceMavenCentral(repository) {
+    if (repository instanceof MavenArtifactRepository) {
+        def url = repository.url.toString()
+        if (url.contains("repo.maven.apache.org") || url.contains("repo1.maven.org") || url.contains("plugins.gradle.org")) {
+            repository.url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
+            println "Redirected ${url} to Google Mirror"
+        }
+    }
+}
+
+gradle.beforeSettings { settings ->
+    settings.pluginManagement.repositories {
+        // Add Google Mirror at the beginning
+        maven {
+            url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
+        }
+        google()
+        mavenCentral()
+    }
+}
+
+gradle.settingsEvaluated { settings ->
+    settings.pluginManagement.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+    settings.dependencyResolutionManagement.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+}
+
+gradle.allprojects { project ->
+    project.buildscript.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+    project.repositories.all { repo ->
+        replaceMavenCentral(repo)
+    }
+}
