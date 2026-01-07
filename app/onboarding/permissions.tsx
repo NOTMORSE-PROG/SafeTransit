@@ -4,11 +4,10 @@ import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { MapPin, Bell, Check } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 export default function Permissions() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const [locationGranted, setLocationGranted] = useState(false);
   const [notificationGranted, setNotificationGranted] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
