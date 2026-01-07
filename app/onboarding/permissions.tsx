@@ -80,14 +80,7 @@ export default function Permissions() {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingHorizontal: 24,
-          paddingBottom: Math.max(insets.bottom, 24)
-        }}
-      >
+      <ScrollView className="flex-1 px-6">
         {/* Header */}
         <Animated.View
           entering={FadeInDown.delay(200).duration(800)}
@@ -197,8 +190,8 @@ export default function Permissions() {
           </View>
         </Animated.View>
 
-        {/* Bottom Button - inside ScrollView for better positioning */}
-        <View className="mt-auto pt-6">
+        {/* Continue Button - directly after content */}
+        <View className="pb-8">
           <TouchableOpacity
             onPress={handleContinue}
             disabled={!locationGranted || !notificationGranted || isNavigating}
