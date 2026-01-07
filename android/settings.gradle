@@ -1,4 +1,10 @@
 pluginManagement {
+  repositories {
+    google()
+    // Use Maven Central mirror to avoid 403 rate limiting on GitHub Actions
+    maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+  }
+  
   def reactNativeGradlePlugin = new File(
     providers.exec {
       workingDir(rootDir)
@@ -15,6 +21,16 @@ pluginManagement {
     "../android/expo-gradle-plugin"
   ).absolutePath
   includeBuild(expoPluginsPath)
+}
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+  repositories {
+    google()
+    // Use Maven Central mirror to avoid 403 rate limiting on GitHub Actions
+    maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+    maven { url 'https://www.jitpack.io' }
+  }
 }
 
 plugins {

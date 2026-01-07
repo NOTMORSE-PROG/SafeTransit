@@ -121,15 +121,14 @@ export default function Tutorial() {
         {slides.map((_, index) => (
           <View
             key={index}
-            className={`h-2 rounded-full mx-1 ${
-              index === currentPage ? 'w-8 bg-primary-600' : 'w-2 bg-neutral-300'
-            }`}
+            className={`h-2 rounded-full mx-1 ${index === currentPage ? 'w-8 bg-primary-600' : 'w-2 bg-neutral-300'
+              }`}
           />
         ))}
       </View>
 
       {/* Bottom Button */}
-      <View className="px-8" style={{ paddingBottom: Math.max(insets.bottom, 48) }}>
+      <View className="px-8" style={{ paddingBottom: Math.max(insets.bottom + 16, 64) }}>
         <TouchableOpacity
           onPress={handleNext}
           disabled={isNavigating}
