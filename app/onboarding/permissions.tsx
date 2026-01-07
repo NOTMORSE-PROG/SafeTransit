@@ -4,10 +4,11 @@ import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { MapPin, Bell, Check } from 'lucide-react-native';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Permissions() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [locationGranted, setLocationGranted] = useState(false);
   const [notificationGranted, setNotificationGranted] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
@@ -188,24 +189,24 @@ export default function Permissions() {
             )}
           </View>
         </Animated.View>
-
-        {/* Continue Button - directly after content */}
-        <View className="pb-8">
-          <TouchableOpacity
-            onPress={handleContinue}
-            disabled={!locationGranted || !notificationGranted || isNavigating}
-            className={`rounded-xl py-4 ${locationGranted && notificationGranted && !isNavigating ? 'bg-primary-600' : 'bg-neutral-300'}`}
-            activeOpacity={0.8}
-            accessible={true}
-            accessibilityLabel="Continue to tutorial"
-            accessibilityRole="button"
-          >
-            <Text className="text-white text-center font-bold text-lg">
-              {isNavigating ? 'Loading...' : 'Continue'}
-            </Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
+
+      {/* Bottom Button - Fixed at bottom with safe area padding */}
+      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom + 16, 32) }}>
+        <TouchableOpacity
+          onPress={handleContinue}
+          disabled={!locationGranted || !notificationGranted || isNavigating}
+          className={`rounded-xl py-4 ${locationGranted && notificationGranted && !isNavigating ? 'bg-primary-600' : 'bg-neutral-300'}`}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityLabel="Continue to tutorial"
+          accessibilityRole="button"
+        >
+          <Text className="text-white text-center font-bold text-lg">
+            {isNavigating ? 'Loading...' : 'Continue'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
