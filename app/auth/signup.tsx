@@ -59,6 +59,11 @@ export default function Signup() {
 
   // Signup event ahndler
   const handleSignup = async () => {
+    if (!passwordsMatch) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     if (!canSubmit) return;
     setError("Please follow all the requirements before signing up.");
     setIsLoading(true);
@@ -228,6 +233,11 @@ export default function Signup() {
               )}
             </TouchableOpacity>
           </View>
+          {!passwordsMatch && confirmPassword.length > 0 && (
+            <Text className="text-[10px] font-bold text-red-500 mt-1 ml-1 uppercase">
+              Passwords do not match
+            </Text>
+          )}
         </Animated.View>
 
         <Animated.View
