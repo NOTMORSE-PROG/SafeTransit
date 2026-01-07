@@ -80,7 +80,14 @@ export default function Permissions() {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView className="flex-1 px-6">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingHorizontal: 24,
+          paddingBottom: Math.max(insets.bottom, 24)
+        }}
+      >
         {/* Header */}
         <Animated.View
           entering={FadeInDown.delay(200).duration(800)}
@@ -189,24 +196,24 @@ export default function Permissions() {
             )}
           </View>
         </Animated.View>
-      </ScrollView>
 
-      {/* Bottom Button */}
-      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom, 48) }}>
-        <TouchableOpacity
-          onPress={handleContinue}
-          disabled={!locationGranted || !notificationGranted || isNavigating}
-          className={`rounded-xl py-4 ${locationGranted && notificationGranted && !isNavigating ? 'bg-primary-600' : 'bg-neutral-300'}`}
-          activeOpacity={0.8}
-          accessible={true}
-          accessibilityLabel="Continue to tutorial"
-          accessibilityRole="button"
-        >
-          <Text className="text-white text-center font-bold text-lg">
-            {isNavigating ? 'Loading...' : 'Continue'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        {/* Bottom Button - inside ScrollView for better positioning */}
+        <View className="mt-auto pt-6">
+          <TouchableOpacity
+            onPress={handleContinue}
+            disabled={!locationGranted || !notificationGranted || isNavigating}
+            className={`rounded-xl py-4 ${locationGranted && notificationGranted && !isNavigating ? 'bg-primary-600' : 'bg-neutral-300'}`}
+            activeOpacity={0.8}
+            accessible={true}
+            accessibilityLabel="Continue to tutorial"
+            accessibilityRole="button"
+          >
+            <Text className="text-white text-center font-bold text-lg">
+              {isNavigating ? 'Loading...' : 'Continue'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 }
