@@ -52,6 +52,9 @@ jobs:
       - name: Generate native code (Expo Prebuild)
         run: npx expo prebuild --platform android --clean
 
+      - name: Copy init.gradle to android folder
+        run: cp scripts/init.gradle android/init.gradle
+
       - name: Make gradlew executable
         run: chmod +x ./android/gradlew
 
