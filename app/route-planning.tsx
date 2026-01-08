@@ -20,6 +20,7 @@ import {
 } from 'lucide-react-native';
 
 import LocationSearchInput from '../components/LocationSearchInput';
+import NavigationConfirmModal from '../components/NavigationConfirmModal';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
 import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/osrm';
 
@@ -56,6 +57,7 @@ export default function RoutePlanning() {
   // UI states
   const [showRoutes, setShowRoutes] = useState(false);
   const [mapRegion, setMapRegion] = useState<Region>(MANILA_REGION);
+  const [showNavigationModal, setShowNavigationModal] = useState(false);
 
   // Get current location on mount
   useEffect(() => {
@@ -195,21 +197,13 @@ export default function RoutePlanning() {
 
   const handleStartNavigation = () => {
     if (!selectedRoute) return;
+    setShowNavigationModal(true);
+  };
 
-    Alert.alert(
-      'Start Navigation',
-      `Ready to navigate via ${selectedRoute.name}?\n\nDuration: ${formatDuration(selectedRoute.duration)}\nDistance: ${formatDistance(selectedRoute.distance)}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Start',
-          onPress: () => {
-            // In a real app, this would start turn-by-turn navigation
-            router.back();
-          },
-        },
-      ]
-    );
+  const handleConfirmNavigation = () => {
+    setShowNavigationModal(false);
+    // In a real app, this would start turn-by-turn navigation
+    router.back();
   };
 
   const effectiveStartLocation = useCurrentAsStart ? currentLocation : startLocation;
@@ -320,15 +314,14 @@ export default function RoutePlanning() {
                   mode.icon === 'PersonStanding'
                     ? PersonStanding
                     : mode.icon === 'Car'
-                    ? Car
-                    : Bus;
+                      ? Car
+                      : Bus;
                 return (
                   <TouchableOpacity
                     key={mode.id}
                     onPress={() => setSelectedMode(mode.id as 'walk' | 'drive' | 'transit')}
-                    className={`mr-2 px-4 py-2 rounded-full ${
-                      selectedMode === mode.id ? 'bg-primary-600' : 'bg-neutral-200'
-                    }`}
+                    className={`mr-2 px-4 py-2 rounded-full ${selectedMode === mode.id ? 'bg-primary-600' : 'bg-neutral-200'
+                      }`}
                     activeOpacity={0.7}
                   >
                     <View className="flex-row items-center">
@@ -338,9 +331,8 @@ export default function RoutePlanning() {
                         strokeWidth={2}
                       />
                       <Text
-                        className={`text-sm font-semibold ml-1.5 ${
-                          selectedMode === mode.id ? 'text-white' : 'text-neutral-700'
-                        }`}
+                        className={`text-sm font-semibold ml-1.5 ${selectedMode === mode.id ? 'text-white' : 'text-neutral-700'
+                          }`}
                       >
                         {mode.label}
                       </Text>
@@ -382,11 +374,10 @@ export default function RoutePlanning() {
                   >
                     <TouchableOpacity
                       onPress={() => setSelectedRoute(route)}
-                      className={`mb-3 rounded-2xl p-4 border-2 ${
-                        selectedRoute?.id === route.id
+                      className={`mb-3 rounded-2xl p-4 border-2 ${selectedRoute?.id === route.id
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-neutral-200 bg-white'
-                      }`}
+                        }`}
                       activeOpacity={0.8}
                       accessible={true}
                       accessibilityLabel={`${route.name}, ${formatDuration(route.duration)}, ${formatDistance(route.distance)}`}
@@ -454,9 +445,8 @@ export default function RoutePlanning() {
             <TouchableOpacity
               onPress={handleStartNavigation}
               disabled={!selectedRoute}
-              className={`rounded-xl py-4 ${
-                selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
-              }`}
+              className={`rounded-xl py-4 ${selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
+                }`}
               activeOpacity={0.8}
               accessible={true}
               accessibilityLabel="Start navigation"
@@ -468,6 +458,18 @@ export default function RoutePlanning() {
             </TouchableOpacity>
           </View>
         </Animated.View>
+      )}
+
+      {/* Navigation Confirmation Modal */}
+      {selectedRoute && (
+        <NavigationConfirmModal
+          visible={showNavigationModal}
+          routeName={selectedRoute.name}
+          duration={formatDuration(selectedRoute.duration)}
+          distance={formatDistance(selectedRoute.distance)}
+          onClose={() => setShowNavigationModal(false)}
+          onConfirm={handleConfirmNavigation}
+        />
       )}
     </View>
   );
