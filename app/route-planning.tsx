@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView, { Polyline, Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import * as ExpoLocation from 'expo-location';
@@ -39,6 +40,7 @@ const MANILA_REGION: Region = {
 
 export default function RoutePlanning() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   // Location states
   const [currentLocation, setCurrentLocation] = useState<LocationSearchResult | null>(null);
@@ -359,7 +361,7 @@ export default function RoutePlanning() {
           entering={SlideInDown.duration(600)}
           className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl"
         >
-          <View className="px-6 pt-6 pb-12">
+          <View className="px-6 pt-6" style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}>
             <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
 
             <ScrollView className="mb-4" style={{ maxHeight: 300 }}>
