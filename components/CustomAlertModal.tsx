@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
-import { CheckCircle2, AlertTriangle, Info, ShieldAlert } from 'lucide-react-native';
+import { Check, AlertTriangle, Info, ShieldAlert } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type AlertType = 'success' | 'warning' | 'info' | 'error';
@@ -20,7 +20,7 @@ interface CustomAlertModalProps {
 const alertConfig = {
     success: {
         colors: ['#22c55e', '#16a34a'] as const,
-        icon: CheckCircle2,
+        icon: Check,
         iconBg: 'bg-success-500',
         badgeBg: 'bg-success-50',
         badgeBorder: 'border-success-200',
