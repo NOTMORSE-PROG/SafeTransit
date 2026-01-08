@@ -8,8 +8,8 @@ import {
   ActivityIndicator,
   Keyboard,
   Modal,
-  SafeAreaView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MapPin, Home, Briefcase, Clock, Star, X, Locate, ChevronLeft } from 'lucide-react-native';
 import Animated, { SlideInUp } from 'react-native-reanimated';
 import {
@@ -44,6 +44,7 @@ export default function LocationSearchInput({
   showCurrentLocation = false,
   onUseCurrentLocation,
 }: LocationSearchInputProps) {
+  const insets = useSafeAreaInsets();
   const [isFocused, setIsFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState(value);
   const [searchResults, setSearchResults] = useState<LocationSearchResult[]>([]);
@@ -158,10 +159,10 @@ export default function LocationSearchInput({
           Keyboard.dismiss();
         }}
       >
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
           <Animated.View entering={SlideInUp.duration(300)} className="flex-1">
             {/* Header */}
-            <View className="flex-row items-center px-4 py-3 border-b border-neutral-200">
+            <View className="flex-row items-center px-4 py-3 border-b border-neutral-200" style={{ paddingTop: insets.top + 8 }}>
               <TouchableOpacity
                 onPress={() => {
                   setIsFocused(false);
@@ -236,7 +237,7 @@ export default function LocationSearchInput({
               ]}
               keyExtractor={(item, index) => `${item.id}-${index}`}
               keyboardShouldPersistTaps="handled"
-              contentContainerStyle={{ paddingBottom: 20 }}
+              contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 16) + 20 }}
               ListEmptyComponent={
                 <View className="p-8">
                   <Text className="text-sm text-neutral-500 text-center">
@@ -294,7 +295,7 @@ export default function LocationSearchInput({
               }}
             />
           </Animated.View>
-        </SafeAreaView>
+        </View>
       </Modal>
     </>
   );
