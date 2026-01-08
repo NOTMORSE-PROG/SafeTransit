@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import MapView, { Polygon, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -23,6 +23,7 @@ import {
   AlertTriangle
 } from 'lucide-react-native';
 import EmergencyAlertModal from '../../components/EmergencyAlertModal';
+import ProtectionEnabledModal from '../../components/ProtectionEnabledModal';
 
 const { width, height } = Dimensions.get('window');
 const SHEET_MIN_HEIGHT = 280;
@@ -103,6 +104,7 @@ export default function Home() {
   const [_isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [isEmergencyModalVisible, setIsEmergencyModalVisible] = useState(false);
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+  const [isProtectionModalVisible, setIsProtectionModalVisible] = useState(false);
 
   const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
   const startY = useSharedValue(0);
@@ -204,11 +206,7 @@ export default function Home() {
     setIsProtectionOn(!isProtectionOn);
 
     if (!isProtectionOn) {
-      Alert.alert(
-        'Protection Enabled',
-        'Background monitoring is now active. You will be alerted when entering high-risk zones.',
-        [{ text: 'OK' }]
-      );
+      setIsProtectionModalVisible(true);
     }
   };
 
@@ -496,6 +494,12 @@ export default function Home() {
         message="Silent alert sent to nearby helpers and emergency contacts."
         onClose={() => setIsEmergencyModalVisible(false)}
         buttonText="OK"
+      />
+
+      {/* Protection Enabled Modal */}
+      <ProtectionEnabledModal
+        visible={isProtectionModalVisible}
+        onClose={() => setIsProtectionModalVisible(false)}
       />
     </View>
   );
