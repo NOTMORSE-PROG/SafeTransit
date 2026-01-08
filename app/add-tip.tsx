@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -16,6 +17,7 @@ const CATEGORIES = [
 
 export default function AddTip() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -258,7 +260,7 @@ export default function AddTip() {
       </ScrollView>
 
       {/* Submit Button */}
-      <View className="px-6 pb-8 pt-4 bg-white border-t border-neutral-100">
+      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
         <TouchableOpacity
           onPress={handleSubmit}
           disabled={!selectedCategory || !title.trim() || !message.trim()}
