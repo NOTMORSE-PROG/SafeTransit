@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
-import { Check, AlertTriangle, Info, Bell, ShieldAlert } from 'lucide-react-native';
+import { Check, AlertTriangle, Info, ShieldAlert } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 type AlertType = 'success' | 'warning' | 'info' | 'error';
