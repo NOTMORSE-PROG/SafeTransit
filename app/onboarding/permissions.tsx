@@ -1,10 +1,20 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { MapPin, Bell, Check } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CustomAlertModal from '@/components/CustomAlertModal';
+
+type AlertType = 'success' | 'warning' | 'info' | 'error';
+
+interface AlertState {
+  visible: boolean;
+  title: string;
+  message: string;
+  type: AlertType;
+}
 
 export default function Permissions() {
   const router = useRouter();
@@ -14,6 +24,20 @@ export default function Permissions() {
   const [locationLoading, setLocationLoading] = useState(false);
   const [notificationLoading, setNotificationLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [alertState, setAlertState] = useState<AlertState>({
+    visible: false,
+    title: '',
+    message: '',
+    type: 'info',
+  });
+
+  const showAlert = (title: string, message: string, type: AlertType = 'info') => {
+    setAlertState({ visible: true, title, message, type });
+  };
+
+  const hideAlert = () => {
+    setAlertState(prev => ({ ...prev, visible: false }));
+  };
 
   const requestLocationPermission = async () => {
     setLocationLoading(true);
@@ -26,10 +50,10 @@ export default function Permissions() {
         if (backgroundStatus === 'granted') {
           setLocationGranted(true);
         } else {
-          Alert.alert(
+          showAlert(
             'Background Location Required',
             'SafeTransit needs background location access to warn you of danger zones even when your phone is locked.',
-            [{ text: 'OK' }]
+            'warning'
           );
         }
       }
@@ -49,10 +73,10 @@ export default function Permissions() {
         // Simulate permission request delay
         await new Promise(resolve => setTimeout(resolve, 500));
         setNotificationGranted(true);
-        Alert.alert(
+        showAlert(
           'Notifications Enabled',
           'You will receive safety alerts when entering danger zones.',
-          [{ text: 'OK' }]
+          'success'
         );
       }
     } catch (error) {
@@ -70,10 +94,10 @@ export default function Permissions() {
       setIsNavigating(true);
       router.replace('/onboarding/tutorial'); // Use replace to avoid stacking
     } else {
-      Alert.alert(
+      showAlert(
         'Permissions Required',
         'Both location and notification permissions are required for SafeTransit to protect you.',
-        [{ text: 'OK' }]
+        'warning'
       );
     }
   };
@@ -207,6 +231,15 @@ export default function Permissions() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Custom Alert Modal */}
+      <CustomAlertModal
+        visible={alertState.visible}
+        title={alertState.title}
+        message={alertState.message}
+        type={alertState.type}
+        onClose={hideAlert}
+      />
     </View>
   );
 }
