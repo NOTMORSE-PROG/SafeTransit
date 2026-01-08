@@ -95,20 +95,21 @@ export default function CustomAlertModal({
                 >
                     {/* Header with Icon */}
                     <View className="pt-8 pb-4 px-6 items-center">
-                        {/* Icon Circle with Gradient Ring */}
+                        {/* Icon Circle with Gradient */}
                         <View
-                            className="w-20 h-20 rounded-full items-center justify-center mb-5"
-                            style={{
-                                backgroundColor: type === 'success' ? '#dcfce7' :
-                                    type === 'warning' ? '#fef3c7' :
-                                        type === 'error' ? '#fee2e2' : '#dbeafe',
-                            }}
+                            className="w-16 h-16 rounded-full items-center justify-center mb-5 overflow-hidden"
                         >
                             <LinearGradient
                                 colors={[...config.colors]}
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 1 }}
-                                className="w-14 h-14 rounded-full items-center justify-center"
+                                style={{
+                                    width: 64,
+                                    height: 64,
+                                    borderRadius: 32,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
                             >
                                 <IconComponent color="#ffffff" size={28} strokeWidth={2.5} />
                             </LinearGradient>
