@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView, { Polyline, Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
 import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
 import * as ExpoLocation from 'expo-location';
@@ -38,6 +39,7 @@ const MANILA_REGION: Region = {
 
 export default function RoutePlanning() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   // Location states
   const [currentLocation, setCurrentLocation] = useState<LocationSearchResult | null>(null);
@@ -367,7 +369,7 @@ export default function RoutePlanning() {
           entering={SlideInDown.duration(600)}
           className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl"
         >
-          <View className="px-6 pt-6 pb-8">
+          <View className="px-6 pt-6" style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}>
             <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
 
             <ScrollView className="mb-4" style={{ maxHeight: 300 }}>
@@ -396,56 +398,56 @@ export default function RoutePlanning() {
                             className="w-3 h-3 rounded-full mr-2"
                             style={{ backgroundColor: routeWithSafety.color }}
                           />
-                        <Text className="text-base font-bold text-neutral-900">
-                          {route.name}
-                        </Text>
-                      </View>
-                      {selectedRoute?.id === route.id && (
-                        <View className="bg-primary-600 rounded-full p-1.5">
-                          <Check color="#ffffff" size={12} strokeWidth={3} />
+                          <Text className="text-base font-bold text-neutral-900">
+                            {route.name}
+                          </Text>
                         </View>
-                      )}
-                    </View>
-
-                    <View className="flex-row items-center mb-2">
-                      <View className="flex-row items-center mr-4">
-                        <Clock color="#4b5563" size={16} strokeWidth={2} />
-                        <Text className="text-sm text-neutral-600 ml-1.5">
-                          {formatDuration(route.duration)}
-                        </Text>
-                      </View>
-                      <View className="flex-row items-center">
-                        <Ruler color="#4b5563" size={16} strokeWidth={2} />
-                        <Text className="text-sm text-neutral-600 ml-1.5">
-                          {formatDistance(route.distance)}
-                        </Text>
-                      </View>
-                    </View>
-
-                    {routeWithSafety.warnings && routeWithSafety.warnings.length > 0 ? (
-                      <View className="bg-warning-50 rounded-lg px-3 py-2">
-                        {routeWithSafety.warnings.map((warning: string, idx: number) => (
-                          <View key={idx} className="flex-row items-center">
-                            <AlertTriangle color="#b45309" size={14} strokeWidth={2} />
-                            <Text className="text-xs text-warning-700 ml-1.5 flex-1">
-                              {warning}
-                            </Text>
+                        {selectedRoute?.id === route.id && (
+                          <View className="bg-primary-600 rounded-full p-1.5">
+                            <Check color="#ffffff" size={12} strokeWidth={3} />
                           </View>
-                        ))}
+                        )}
                       </View>
-                    ) : (
-                      <View className="bg-success-50 rounded-lg px-3 py-2">
+
+                      <View className="flex-row items-center mb-2">
+                        <View className="flex-row items-center mr-4">
+                          <Clock color="#4b5563" size={16} strokeWidth={2} />
+                          <Text className="text-sm text-neutral-600 ml-1.5">
+                            {formatDuration(route.duration)}
+                          </Text>
+                        </View>
                         <View className="flex-row items-center">
-                          <CheckCircle color="#15803d" size={14} strokeWidth={2} />
-                          <Text className="text-xs text-success-700 ml-1.5">
-                            No danger zones on this route
+                          <Ruler color="#4b5563" size={16} strokeWidth={2} />
+                          <Text className="text-sm text-neutral-600 ml-1.5">
+                            {formatDistance(route.distance)}
                           </Text>
                         </View>
                       </View>
-                    )}
-                  </TouchableOpacity>
-                </Animated.View>
-              );
+
+                      {routeWithSafety.warnings && routeWithSafety.warnings.length > 0 ? (
+                        <View className="bg-warning-50 rounded-lg px-3 py-2">
+                          {routeWithSafety.warnings.map((warning: string, idx: number) => (
+                            <View key={idx} className="flex-row items-center">
+                              <AlertTriangle color="#b45309" size={14} strokeWidth={2} />
+                              <Text className="text-xs text-warning-700 ml-1.5 flex-1">
+                                {warning}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      ) : (
+                        <View className="bg-success-50 rounded-lg px-3 py-2">
+                          <View className="flex-row items-center">
+                            <CheckCircle color="#15803d" size={14} strokeWidth={2} />
+                            <Text className="text-xs text-success-700 ml-1.5">
+                              No danger zones on this route
+                            </Text>
+                          </View>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  </Animated.View>
+                );
               })}
             </ScrollView>
 
