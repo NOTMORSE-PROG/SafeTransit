@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -316,17 +316,31 @@ export default function HowItWorksScreen() {
   };
 
   const filteredSections = sections.filter(
-    (section) =>
-      searchQuery === '' ||
-      section.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      section.content.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      section.content.paragraphs.some((p) => p.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      section.content.bullets?.some((b) =>
-        b.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        b.description.toLowerCase().includes(searchQuery.toLowerCase())
-      ) ||
-      section.content.notes?.some((n) => n.toLowerCase().includes(searchQuery.toLowerCase()))
+    (section) => {
+      if (searchQuery === '') return true;
+
+      const query = searchQuery.toLowerCase().trim();
+      return (
+        section.title.toLowerCase().includes(query) ||
+        section.content.subtitle?.toLowerCase().includes(query) ||
+        section.content.paragraphs.some((p) => p.toLowerCase().includes(query)) ||
+        section.content.bullets?.some((b) =>
+          b.label.toLowerCase().includes(query) ||
+          b.description.toLowerCase().includes(query)
+        ) ||
+        section.content.notes?.some((n) => n.toLowerCase().includes(query))
+      );
+    }
   );
+
+  // Auto-expand first matching section when searching
+  useEffect(() => {
+    if (searchQuery && filteredSections.length > 0) {
+      setExpandedSection(filteredSections[0].id);
+    } else if (!searchQuery) {
+      setExpandedSection(null);
+    }
+  }, [searchQuery, filteredSections.length]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
