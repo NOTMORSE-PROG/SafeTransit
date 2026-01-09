@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Lightbulb, UserCircle, Bell, LucideIcon } from 'lucide-react-native';
 import PagerView from 'react-native-pager-view';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
 import { MOCK_NOTIFICATIONS, getUnreadCount } from '../../services/notifications';
 
 import HomeScreen from './index';
@@ -53,22 +53,23 @@ export default function TabsLayout() {
   const [currentPage, setCurrentPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
   const opacity = useSharedValue(1);
-  const isClickingRef = useRef(false);
 
   useEffect(() => {
     setUnreadCount(getUnreadCount(MOCK_NOTIFICATIONS));
   }, []);
 
+  const setPage = (index: number) => {
+    pagerRef.current?.setPageWithoutAnimation(index);
+  };
+
   const navigateToTab = (index: number) => {
     if (index === currentPage) return;
 
-    isClickingRef.current = true;
-    opacity.value = withTiming(0, { duration: 100 }, () => {
-      pagerRef.current?.setPageWithoutAnimation(index);
-      opacity.value = withTiming(1, { duration: 150 });
-      setTimeout(() => {
-        isClickingRef.current = false;
-      }, 250);
+    opacity.value = withTiming(0, { duration: 100 }, (finished) => {
+      if (finished) {
+        runOnJS(setPage)(index);
+        opacity.value = withTiming(1, { duration: 150 });
+      }
     });
   };
 
