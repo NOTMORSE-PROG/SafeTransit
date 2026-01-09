@@ -320,16 +320,7 @@ export default function HowItWorksScreen() {
       if (searchQuery === '') return true;
 
       const query = searchQuery.toLowerCase().trim();
-      return (
-        section.title.toLowerCase().includes(query) ||
-        section.content.subtitle?.toLowerCase().includes(query) ||
-        section.content.paragraphs.some((p) => p.toLowerCase().includes(query)) ||
-        section.content.bullets?.some((b) =>
-          b.label.toLowerCase().includes(query) ||
-          b.description.toLowerCase().includes(query)
-        ) ||
-        section.content.notes?.some((n) => n.toLowerCase().includes(query))
-      );
+      return section.title.toLowerCase().includes(query);
     }
   );
 
