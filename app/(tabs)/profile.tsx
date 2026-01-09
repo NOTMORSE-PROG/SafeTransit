@@ -308,6 +308,7 @@ export default function Profile() {
                 accessible={true}
                 accessibilityLabel="How it works"
                 accessibilityRole="button"
+                onPress={() => router.push('/how-it-works')}
               >
                 <View className="flex-row items-center justify-between">
                   <Text className="text-base text-neutral-900">How It Works</Text>
