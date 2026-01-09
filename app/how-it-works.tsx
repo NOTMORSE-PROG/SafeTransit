@@ -20,7 +20,7 @@ import {
 
 interface Section {
   id: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ size?: number; color?: string }>;
   iconBg: string;
   title: string;
   content: {
