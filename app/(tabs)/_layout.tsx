@@ -57,9 +57,7 @@ export default function TabsLayout() {
   }, []);
 
   const navigateToTab = (index: number) => {
-    requestAnimationFrame(() => {
-      pagerRef.current?.setPage(index);
-    });
+    pagerRef.current?.setPageWithoutAnimation(index);
   };
 
   const tabs = [
