@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -332,15 +332,6 @@ export default function HowItWorksScreen() {
       );
     }
   );
-
-  // Auto-expand first matching section when searching
-  useEffect(() => {
-    if (searchQuery && filteredSections.length > 0) {
-      setExpandedSection(filteredSections[0].id);
-    } else if (!searchQuery) {
-      setExpandedSection(null);
-    }
-  }, [searchQuery, filteredSections.length]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
