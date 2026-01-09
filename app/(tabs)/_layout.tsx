@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Lightbulb, UserCircle, Bell, LucideIcon } from 'lucide-react-native';
 import PagerView from 'react-native-pager-view';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { MOCK_NOTIFICATIONS, getUnreadCount } from '../../services/notifications';
 
 import HomeScreen from './index';
@@ -51,14 +52,29 @@ export default function TabsLayout() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
+  const opacity = useSharedValue(1);
+  const isClickingRef = useRef(false);
 
   useEffect(() => {
     setUnreadCount(getUnreadCount(MOCK_NOTIFICATIONS));
   }, []);
 
   const navigateToTab = (index: number) => {
-    pagerRef.current?.setPageWithoutAnimation(index);
+    if (index === currentPage) return;
+
+    isClickingRef.current = true;
+    opacity.value = withTiming(0, { duration: 100 }, () => {
+      pagerRef.current?.setPageWithoutAnimation(index);
+      opacity.value = withTiming(1, { duration: 150 });
+      setTimeout(() => {
+        isClickingRef.current = false;
+      }, 250);
+    });
   };
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   const tabs = [
     { icon: Home, label: 'Home', screen: HomeScreen },
@@ -69,20 +85,22 @@ export default function TabsLayout() {
 
   return (
     <View style={styles.container}>
-      <PagerView
-        ref={pagerRef}
-        style={styles.pagerView}
-        initialPage={0}
-        onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
-        overdrag={false}
-        offscreenPageLimit={2}
-      >
-        {tabs.map((tab, index) => (
-          <View key={String(index)} style={styles.page}>
-            <tab.screen />
-          </View>
-        ))}
-      </PagerView>
+      <Animated.View style={[styles.pagerWrapper, animatedStyle]}>
+        <PagerView
+          ref={pagerRef}
+          style={styles.pagerView}
+          initialPage={0}
+          onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
+          overdrag={false}
+          offscreenPageLimit={2}
+        >
+          {tabs.map((tab, index) => (
+            <View key={String(index)} style={styles.page}>
+              <tab.screen />
+            </View>
+          ))}
+        </PagerView>
+      </Animated.View>
 
       <View
         style={[
@@ -109,6 +127,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  pagerWrapper: {
+    flex: 1,
   },
   pagerView: {
     flex: 1,
