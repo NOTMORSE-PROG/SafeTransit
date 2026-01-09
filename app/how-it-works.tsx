@@ -319,11 +319,13 @@ export default function HowItWorksScreen() {
     (section) =>
       searchQuery === '' ||
       section.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      section.content.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       section.content.paragraphs.some((p) => p.toLowerCase().includes(searchQuery.toLowerCase())) ||
       section.content.bullets?.some((b) =>
         b.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      ) ||
+      section.content.notes?.some((n) => n.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
