@@ -2,7 +2,7 @@
 // Handles all database operations for users and password reset tokens
 
 import { neon } from '@neondatabase/serverless';
-import type { User, UserInsert, PasswordResetToken } from '../types/database';
+import type { User, UserInsert, PasswordResetToken, QueryResult } from '../types/database';
 
 // Get database URL from environment
 const getDatabaseUrl = (): string => {
@@ -24,37 +24,37 @@ export const UserRepository = {
    * Find user by ID
    */
   async findById(id: string): Promise<User | null> {
-    const result = await sql<User[]>`
+    const result = await sql`
       SELECT * FROM users WHERE id = ${id} LIMIT 1
     `;
-    return result[0] || null;
+    return (result[0] as User) || null;
   },
 
   /**
    * Find user by email
    */
   async findByEmail(email: string): Promise<User | null> {
-    const result = await sql<User[]>`
+    const result = await sql`
       SELECT * FROM users WHERE email = ${email} LIMIT 1
     `;
-    return result[0] || null;
+    return (result[0] as User) || null;
   },
 
   /**
    * Find user by Google ID
    */
   async findByGoogleId(googleId: string): Promise<User | null> {
-    const result = await sql<User[]>`
+    const result = await sql`
       SELECT * FROM users WHERE google_id = ${googleId} LIMIT 1
     `;
-    return result[0] || null;
+    return (result[0] as User) || null;
   },
 
   /**
    * Create a new user
    */
   async create(data: UserInsert): Promise<User> {
-    const result = await sql<User[]>`
+    const result = await sql`
       INSERT INTO users (
         email,
         password_hash,
@@ -77,7 +77,7 @@ export const UserRepository = {
       )
       RETURNING *
     `;
-    return result[0];
+    return result[0] as User;
   },
 
   /**
@@ -109,13 +109,13 @@ export const UserRepository = {
       return this.findById(id);
     }
 
-    const result = await sql<User[]>`
+    const result = await sql`
       UPDATE users
       SET ${sql.unsafe(updates.join(', '))}
       WHERE id = ${id}
       RETURNING *
     `;
-    return result[0] || null;
+    return (result[0] as User) || null;
   },
 
   /**
@@ -127,7 +127,7 @@ export const UserRepository = {
       SET password_hash = ${passwordHash}
       WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -139,7 +139,7 @@ export const UserRepository = {
       SET is_verified = TRUE, verification_status = 'approved'
       WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -154,7 +154,7 @@ export const UserRepository = {
       SET verification_status = ${status}
       WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -164,7 +164,7 @@ export const UserRepository = {
     const result = await sql`
       DELETE FROM users WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -191,26 +191,26 @@ export const PasswordResetTokenRepository = {
     token: string,
     expiresAt: Date
   ): Promise<PasswordResetToken> {
-    const result = await sql<PasswordResetToken[]>`
+    const result = await sql`
       INSERT INTO password_reset_tokens (user_id, token, expires_at)
       VALUES (${userId}, ${token}, ${expiresAt.toISOString()})
       RETURNING *
     `;
-    return result[0];
+    return result[0] as PasswordResetToken;
   },
 
   /**
    * Find valid (unused and not expired) token
    */
   async findValidToken(token: string): Promise<PasswordResetToken | null> {
-    const result = await sql<PasswordResetToken[]>`
+    const result = await sql`
       SELECT * FROM password_reset_tokens
       WHERE token = ${token}
         AND used_at IS NULL
         AND expires_at > NOW()
       LIMIT 1
     `;
-    return result[0] || null;
+    return (result[0] as PasswordResetToken) || null;
   },
 
   /**
@@ -222,7 +222,7 @@ export const PasswordResetTokenRepository = {
       SET used_at = NOW()
       WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -233,7 +233,7 @@ export const PasswordResetTokenRepository = {
       DELETE FROM password_reset_tokens
       WHERE expires_at < NOW()
     `;
-    return result.count || 0;
+    return (result as unknown as QueryResult).count || 0;
   },
 
   /**
@@ -244,6 +244,6 @@ export const PasswordResetTokenRepository = {
       DELETE FROM password_reset_tokens
       WHERE user_id = ${userId}
     `;
-    return result.count || 0;
+    return (result as unknown as QueryResult).count || 0;
   },
 };

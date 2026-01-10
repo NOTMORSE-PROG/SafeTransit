@@ -2,7 +2,7 @@
 // Handles all database operations for community tips and voting
 
 import { neon } from '@neondatabase/serverless';
-import type { Tip, TipInsert, TipVote, TipCategory, TipStatus } from '../types/database';
+import type { Tip, TipInsert, TipVote, TipCategory, TipStatus, QueryResult } from '../types/database';
 
 // Get database URL from environment
 const getDatabaseUrl = (): string => {
@@ -24,10 +24,10 @@ export const TipsRepository = {
    * Find tip by ID
    */
   async findById(id: string): Promise<Tip | null> {
-    const result = await sql<Tip[]>`
+    const result = await sql`
       SELECT * FROM tips WHERE id = ${id} LIMIT 1
     `;
-    return result[0] || null;
+    return result[0] as Tip || null;
   },
 
   /**
@@ -38,14 +38,14 @@ export const TipsRepository = {
     limit = 50,
     offset = 0
   ): Promise<Tip[]> {
-    return await sql<Tip[]>`
+    return (await sql`
       SELECT * FROM tips
       WHERE category = ${category}
         AND status = 'approved'
         AND (is_temporary = FALSE OR expires_at > NOW())
       ORDER BY created_at DESC
       LIMIT ${limit} OFFSET ${offset}
-    `;
+    `) as Tip[];
   },
 
   /**
@@ -58,7 +58,7 @@ export const TipsRepository = {
     limit = 50
   ): Promise<Tip[]> {
     // Using Haversine formula for distance calculation
-    return await sql<Tip[]>`
+    return (await sql`
       SELECT *,
         (
           6371000 * acos(
@@ -77,7 +77,7 @@ export const TipsRepository = {
       HAVING distance_meters <= ${radiusMeters}
       ORDER BY distance_meters ASC
       LIMIT ${limit}
-    `;
+    `) as Tip[];
   },
 
   /**
@@ -88,31 +88,31 @@ export const TipsRepository = {
     limit = 50,
     offset = 0
   ): Promise<Tip[]> {
-    return await sql<Tip[]>`
+    return (await sql`
       SELECT * FROM tips
       WHERE author_id = ${authorId}
       ORDER BY created_at DESC
       LIMIT ${limit} OFFSET ${offset}
-    `;
+    `) as Tip[];
   },
 
   /**
    * Find pending tips (for moderation)
    */
   async findPending(limit = 50, offset = 0): Promise<Tip[]> {
-    return await sql<Tip[]>`
+    return (await sql`
       SELECT * FROM tips
       WHERE status = 'pending'
       ORDER BY created_at ASC
       LIMIT ${limit} OFFSET ${offset}
-    `;
+    `) as Tip[];
   },
 
   /**
    * Create a new tip
    */
   async create(data: TipInsert): Promise<Tip> {
-    const result = await sql<Tip[]>`
+    const result = await sql`
       INSERT INTO tips (
         author_id,
         title,
@@ -141,7 +141,7 @@ export const TipsRepository = {
       )
       RETURNING *
     `;
-    return result[0];
+    return result[0] as Tip;
   },
 
   /**
@@ -181,13 +181,13 @@ export const TipsRepository = {
       return this.findById(id);
     }
 
-    const result = await sql<Tip[]>`
+    const result = await sql`
       UPDATE tips
       SET ${sql.unsafe(updates.join(', '))}
       WHERE id = ${id}
       RETURNING *
     `;
-    return result[0] || null;
+    return result[0] as Tip || null;
   },
 
   /**
@@ -199,7 +199,7 @@ export const TipsRepository = {
       SET status = ${status}
       WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -209,7 +209,7 @@ export const TipsRepository = {
     const result = await sql`
       DELETE FROM tips WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -223,7 +223,7 @@ export const TipsRepository = {
         AND expires_at < NOW()
         AND status != 'expired'
     `;
-    return result.count || 0;
+    return (result as unknown as QueryResult).count || 0;
   },
 };
 
@@ -241,7 +241,7 @@ export const TipVotesRepository = {
     voteType: 'up' | 'down'
   ): Promise<void> {
     // First, check if user already voted
-    const existing = await sql<TipVote[]>`
+    const existing = await sql`
       SELECT * FROM tip_votes
       WHERE tip_id = ${tipId} AND user_id = ${userId}
       LIMIT 1
@@ -306,12 +306,12 @@ export const TipVotesRepository = {
    * Get user's vote on a tip
    */
   async getUserVote(tipId: string, userId: string): Promise<'up' | 'down' | null> {
-    const result = await sql<TipVote[]>`
+    const result = await sql`
       SELECT vote_type FROM tip_votes
       WHERE tip_id = ${tipId} AND user_id = ${userId}
       LIMIT 1
     `;
-    return result[0]?.vote_type || null;
+    return (result[0] as TipVote)?.vote_type || null;
   },
 
   /**
@@ -323,7 +323,7 @@ export const TipVotesRepository = {
   ): Promise<Record<string, 'up' | 'down'>> {
     if (tipIds.length === 0) return {};
 
-    const result = await sql<TipVote[]>`
+    const result = await sql`
       SELECT tip_id, vote_type FROM tip_votes
       WHERE tip_id = ANY(${tipIds}) AND user_id = ${userId}
     `;
@@ -338,7 +338,7 @@ export const TipVotesRepository = {
    * Remove vote
    */
   async removeVote(tipId: string, userId: string): Promise<boolean> {
-    const existing = await sql<TipVote[]>`
+    const existing = await sql`
       SELECT vote_type FROM tip_votes
       WHERE tip_id = ${tipId} AND user_id = ${userId}
       LIMIT 1

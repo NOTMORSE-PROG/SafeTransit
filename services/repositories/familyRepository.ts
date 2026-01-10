@@ -8,6 +8,7 @@ import type {
   FamilyMember,
   FamilyLocation,
   FamilyRole,
+  QueryResult,
 } from '../types/database';
 
 // Get database URL from environment
@@ -30,70 +31,70 @@ export const FamilyRepository = {
    * Find family by ID
    */
   async findById(id: string): Promise<Family | null> {
-    const result = await sql<Family[]>`
+    const result = await sql`
       SELECT * FROM families WHERE id = ${id} LIMIT 1
     `;
-    return result[0] || null;
+    return result[0] as Family || null;
   },
 
   /**
    * Find family by invite code
    */
   async findByInviteCode(inviteCode: string): Promise<Family | null> {
-    const result = await sql<Family[]>`
+    const result = await sql`
       SELECT * FROM families WHERE invite_code = ${inviteCode} LIMIT 1
     `;
-    return result[0] || null;
+    return result[0] as Family || null;
   },
 
   /**
    * Find all families for a user
    */
   async findByUserId(userId: string): Promise<Family[]> {
-    return await sql<Family[]>`
+    return (await sql`
       SELECT f.* FROM families f
       INNER JOIN family_members fm ON f.id = fm.family_id
       WHERE fm.user_id = ${userId}
       ORDER BY f.created_at DESC
-    `;
+    `) as Family[];
   },
 
   /**
    * Create a new family
    */
   async create(data: FamilyInsert): Promise<Family> {
-    const result = await sql<Family[]>`
+    const result = await sql`
       INSERT INTO families (name, invite_code, created_by)
       VALUES (${data.name}, ${data.invite_code}, ${data.created_by})
       RETURNING *
     `;
-    return result[0];
+    return result[0] as Family;
   },
 
   /**
    * Update family name
    */
   async updateName(id: string, name: string): Promise<Family | null> {
-    const result = await sql<Family[]>`
+    const result = await sql`
       UPDATE families
       SET name = ${name}
       WHERE id = ${id}
       RETURNING *
     `;
-    return result[0] || null;
+    return result[0] as Family || null;
   },
 
   /**
    * Regenerate invite code
    */
   async regenerateInviteCode(id: string, newCode: string): Promise<Family | null> {
-    const result = await sql<Family[]>`
+    const result = await sql`
       UPDATE families
       SET invite_code = ${newCode}
       WHERE id = ${id}
       RETURNING *
     `;
-    return result[0] || null;
+    return result[0] as Family || null;
   },
 
   /**
@@ -103,7 +104,7 @@ export const FamilyRepository = {
     const result = await sql`
       DELETE FROM families WHERE id = ${id}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -129,11 +130,11 @@ export const FamilyMembersRepository = {
    * Get all members of a family
    */
   async findByFamilyId(familyId: string): Promise<FamilyMember[]> {
-    return await sql<FamilyMember[]>`
+    return (await sql`
       SELECT * FROM family_members
       WHERE family_id = ${familyId}
       ORDER BY joined_at ASC
-    `;
+    `) as FamilyMember[];
   },
 
   /**
@@ -169,12 +170,12 @@ export const FamilyMembersRepository = {
    * Get user's role in family
    */
   async getUserRole(familyId: string, userId: string): Promise<FamilyRole | null> {
-    const result = await sql<FamilyMember[]>`
+    const result = await sql`
       SELECT role FROM family_members
       WHERE family_id = ${familyId} AND user_id = ${userId}
       LIMIT 1
     `;
-    return result[0]?.role || null;
+    return (result[0] as FamilyMember)?.role || null;
   },
 
   /**
@@ -185,12 +186,12 @@ export const FamilyMembersRepository = {
     userId: string,
     role: FamilyRole = 'member'
   ): Promise<FamilyMember> {
-    const result = await sql<FamilyMember[]>`
+    const result = await sql`
       INSERT INTO family_members (family_id, user_id, role)
       VALUES (${familyId}, ${userId}, ${role})
       RETURNING *
     `;
-    return result[0];
+    return result[0] as FamilyMember;
   },
 
   /**
@@ -201,7 +202,7 @@ export const FamilyMembersRepository = {
       DELETE FROM family_members
       WHERE family_id = ${familyId} AND user_id = ${userId}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
@@ -217,14 +218,14 @@ export const FamilyMembersRepository = {
       SET role = ${role}
       WHERE family_id = ${familyId} AND user_id = ${userId}
     `;
-    return result.count > 0;
+    return (result as unknown as QueryResult).count > 0;
   },
 
   /**
    * Get member count for a family
    */
   async getMemberCount(familyId: string): Promise<number> {
-    const result = await sql<{ count: string }[]>`
+    const result = await sql`
       SELECT COUNT(*) as count FROM family_members
       WHERE family_id = ${familyId}
     `;
@@ -254,38 +255,38 @@ export const FamilyLocationsRepository = {
     `;
 
     // Insert new live location
-    const result = await sql<FamilyLocation[]>`
+    const result = await sql`
       INSERT INTO family_locations (user_id, latitude, longitude, accuracy, is_live)
       VALUES (${userId}, ${latitude}, ${longitude}, ${accuracy || null}, TRUE)
       RETURNING *
     `;
-    return result[0];
+    return result[0] as FamilyLocation;
   },
 
   /**
    * Get latest live location for a user
    */
   async getLatestLocation(userId: string): Promise<FamilyLocation | null> {
-    const result = await sql<FamilyLocation[]>`
+    const result = await sql`
       SELECT * FROM family_locations
       WHERE user_id = ${userId} AND is_live = TRUE
       ORDER BY timestamp DESC
       LIMIT 1
     `;
-    return result[0] || null;
+    return (result[0] as FamilyLocation) || null;
   },
 
   /**
    * Get latest locations for all family members
    */
   async getFamilyLocations(familyId: string): Promise<FamilyLocation[]> {
-    return await sql<FamilyLocation[]>`
+    return (await sql`
       SELECT DISTINCT ON (fl.user_id) fl.*
       FROM family_locations fl
       INNER JOIN family_members fm ON fl.user_id = fm.user_id
       WHERE fm.family_id = ${familyId} AND fl.is_live = TRUE
       ORDER BY fl.user_id, fl.timestamp DESC
-    `;
+    `) as FamilyLocation[];
   },
 
   /**
@@ -313,12 +314,12 @@ export const FamilyLocationsRepository = {
     limit = 100,
     offset = 0
   ): Promise<FamilyLocation[]> {
-    return await sql<FamilyLocation[]>`
+    return (await sql`
       SELECT * FROM family_locations
       WHERE user_id = ${userId}
       ORDER BY timestamp DESC
       LIMIT ${limit} OFFSET ${offset}
-    `;
+    `) as FamilyLocation[];
   },
 
   /**
@@ -330,7 +331,7 @@ export const FamilyLocationsRepository = {
       WHERE timestamp < NOW() - INTERVAL '${daysToKeep} days'
         AND is_live = FALSE
     `;
-    return result.count || 0;
+    return (result as unknown as QueryResult).count || 0;
   },
 
   /**
@@ -341,6 +342,6 @@ export const FamilyLocationsRepository = {
       DELETE FROM family_locations
       WHERE user_id = ${userId}
     `;
-    return result.count || 0;
+    return (result as unknown as QueryResult).count || 0;
   },
 };

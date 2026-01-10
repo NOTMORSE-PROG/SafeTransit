@@ -14,6 +14,14 @@ export type FamilyRole = 'creator' | 'member';
 export type VerificationRequestStatus = 'pending' | 'approved' | 'rejected';
 
 // ==============================================================================
+// Query Result Types
+// ==============================================================================
+
+export interface QueryResult {
+  count: number;
+}
+
+// ==============================================================================
 // Users & Authentication
 // ==============================================================================
 
