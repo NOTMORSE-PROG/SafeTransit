@@ -88,7 +88,7 @@ export const useGoogleAuth = () => {
       await GoogleSignin.hasPlayServices();
 
       // Sign in with Google
-      const userInfo = await GoogleSignin.signIn();
+      await GoogleSignin.signIn();
 
       // Get ID token
       const tokens = await GoogleSignin.getTokens();
@@ -115,15 +115,16 @@ export const useGoogleAuth = () => {
       } else {
         return { success: false, error: data.error };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Google sign-in error:', error);
 
       // Handle specific error codes
-      if (error.code === 'SIGN_IN_CANCELLED') {
+      const errorCode = (error as { code?: string }).code;
+      if (errorCode === 'SIGN_IN_CANCELLED') {
         return { success: false, error: 'Sign-in cancelled' };
-      } else if (error.code === 'IN_PROGRESS') {
+      } else if (errorCode === 'IN_PROGRESS') {
         return { success: false, error: 'Sign-in already in progress' };
-      } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
+      } else if (errorCode === 'PLAY_SERVICES_NOT_AVAILABLE') {
         return {
           success: false,
           error: 'Google Play Services not available. Please use email login.',
@@ -197,13 +198,14 @@ export const useGoogleAuth = () => {
       } else {
         return { success: false, error: data.error };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Link Google error:', error);
 
       // Handle specific error codes
-      if (error.code === 'SIGN_IN_CANCELLED') {
+      const errorCode = (error as { code?: string }).code;
+      if (errorCode === 'SIGN_IN_CANCELLED') {
         return { success: false, error: 'Sign-in cancelled' };
-      } else if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
+      } else if (errorCode === 'PLAY_SERVICES_NOT_AVAILABLE') {
         return {
           success: false,
           error: 'Google Play Services not available.',
