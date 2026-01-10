@@ -248,4 +248,4 @@ eval "set -- $(
         tr '\n' ' '
     )" '"$@"'
 
-exec "$JAVACMD" "$@" --init-script "$APP_HOME/init.gradle"
+exec "$JAVACMD" "$@"

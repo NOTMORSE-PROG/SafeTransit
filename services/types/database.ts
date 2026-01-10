@@ -28,7 +28,7 @@ export interface QueryResult {
 export interface User {
   id: string; // UUID
   email: string;
-  password_hash: string;
+  password_hash: string | null; // Nullable for Google-only accounts
   full_name: string;
   profile_image_url: string | null;
   phone_number: string | null;

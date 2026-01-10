@@ -71,11 +71,20 @@ module.exports = {
             }
           }
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          iosUrlScheme: "com.googleusercontent.apps.769492485032-k900gqq260e60lhg46p4d90gnt1rdq08"
+        }
       ]
     ],
     experiments: {
       typedRoutes: true
     },
-    scheme: "safetransit"
+    scheme: "safetransit",
+    extra: {
+      EXPO_PUBLIC_GOOGLE_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
+    }
   }
 };

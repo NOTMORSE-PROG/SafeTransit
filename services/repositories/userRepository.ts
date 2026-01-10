@@ -176,6 +176,52 @@ export const UserRepository = {
     `;
     return result.length > 0;
   },
+
+  /**
+   * Link Google account to existing user
+   */
+  async linkGoogleAccount(userId: string, googleId: string): Promise<boolean> {
+    const result = await sql`
+      UPDATE users
+      SET google_id = ${googleId}
+      WHERE id = ${userId} AND google_id IS NULL
+    `;
+    return (result as unknown as QueryResult).count > 0;
+  },
+
+  /**
+   * Check if Google ID is already linked to another account
+   */
+  async isGoogleIdLinked(googleId: string): Promise<boolean> {
+    const result = await sql`
+      SELECT 1 FROM users WHERE google_id = ${googleId} LIMIT 1
+    `;
+    return result.length > 0;
+  },
+
+  /**
+   * Get account type information
+   */
+  async getAccountType(email: string): Promise<{
+    hasPassword: boolean;
+    hasGoogle: boolean;
+  } | null> {
+    const result = await sql`
+      SELECT
+        (password_hash IS NOT NULL AND password_hash != '') as has_password,
+        (google_id IS NOT NULL) as has_google
+      FROM users
+      WHERE email = ${email}
+      LIMIT 1
+    `;
+
+    if (result.length === 0) return null;
+
+    return {
+      hasPassword: result[0].has_password,
+      hasGoogle: result[0].has_google,
+    };
+  },
 };
 
 // ==============================================================================

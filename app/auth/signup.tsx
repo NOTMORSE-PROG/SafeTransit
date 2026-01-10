@@ -20,9 +20,13 @@ import {
   User,
   Chrome,
 } from "lucide-react-native";
+import { useAuth } from "../../contexts/AuthContext";
+import { useGoogleAuth } from "../../hooks/useGoogleAuth";
 
 export default function Signup() {
   const router = useRouter();
+  const { login } = useAuth();
+  const { signInWithGoogle, isLoading: googleLoading } = useGoogleAuth();
 
   // Fields, buttons, and switches
   const [fullName, setFullName] = useState("");
@@ -57,26 +61,62 @@ export default function Signup() {
     acceptTerms &&
     !isLoading;
 
-  // Signup event ahndler
+  // Signup event handler
   const handleSignup = async () => {
+    setError(null);
+
     if (!passwordsMatch) {
       setError("Passwords do not match.");
       return;
     }
 
-    if (!canSubmit) return;
-    setError("Please follow all the requirements before signing up.");
-    setIsLoading(true);
+    if (!canSubmit) {
+      setError("Please follow all the requirements before signing up.");
+      return;
+    }
 
     try {
       setIsLoading(true);
-      setError(null);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      router.replace("/onboarding/welcome");
+
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          fullName,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        await login(data.token, data.user);
+        router.replace("/onboarding/welcome");
+      } else {
+        if (data.details && Array.isArray(data.details)) {
+          setError(data.details.join(', '));
+        } else {
+          setError(data.error || 'Signup failed');
+        }
+      }
     } catch {
-      setError("Signup failed. Please try again.");
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setError(null);
+
+    const result = await signInWithGoogle();
+
+    if (result.success && result.token && result.user) {
+      await login(result.token, result.user);
+      router.replace("/onboarding/welcome");
+    } else {
+      setError(result.error || 'Google sign-up failed');
     }
   };
 
@@ -298,14 +338,21 @@ export default function Signup() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => console.log("Sign up with Google")}
+          onPress={handleGoogleSignUp}
+          disabled={googleLoading}
           className="mt-4 flex-row items-center justify-center border border-neutral-200 rounded-2xl py-4"
           activeOpacity={0.7}
         >
-          <Chrome size={18} color="#6B7280" />
-          <Text className="ml-3 text-neutral-600 font-bold text-sm uppercase tracking-tight">
-            Sign up with Google
-          </Text>
+          {googleLoading ? (
+            <ActivityIndicator color="#6B7280" size="small" />
+          ) : (
+            <>
+              <Chrome size={18} color="#6B7280" />
+              <Text className="ml-3 text-neutral-600 font-bold text-sm uppercase tracking-tight">
+                Sign up with Google
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity

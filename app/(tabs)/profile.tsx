@@ -1,22 +1,28 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { FadeInDown, SlideInDown, SlideOutDown, FadeIn, FadeOut } from 'react-native-reanimated';
-import { UserCircle, Phone, ChevronRight, Camera, Loader2, Image as ImageIcon, Trash2, X } from 'lucide-react-native';
+import { UserCircle, Phone, ChevronRight, Camera, Loader2, Image as ImageIcon, Trash2, X, Chrome } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 // import { useUploadThing } from '../../services/uploadthing'; // Mocking for now
 import { Image } from 'expo-image';
 import { useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 
 export default function Profile() {
   const router = useRouter();
+  const { user, token, refreshUser } = useAuth();
+  const { linkGoogleAccount, isLoading: googleLinking } = useGoogleAuth();
+
   const [backgroundAlerts, setBackgroundAlerts] = useState(true);
   const [vibrationAlerts, setVibrationAlerts] = useState(true);
   const [soundAlerts, setSoundAlerts] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [showActionSheet, setShowActionSheet] = useState(false);
+  const [linkingGoogle, setLinkingGoogle] = useState(false);
 
   useEffect(() => {
     loadProfileImage();
@@ -122,6 +128,21 @@ export default function Profile() {
         }
       ]
     );
+  };
+
+  const handleLinkGoogle = async () => {
+    if (!token) return;
+
+    setLinkingGoogle(true);
+    const result = await linkGoogleAccount(token);
+
+    if (result.success) {
+      Alert.alert('Success', 'Google account linked successfully!');
+      await refreshUser();
+    } else {
+      Alert.alert('Error', result.error || 'Failed to link Google account');
+    }
+    setLinkingGoogle(false);
   };
 
   return (
@@ -293,6 +314,52 @@ export default function Profile() {
                 <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
               </View>
             </TouchableOpacity>
+          </Animated.View>
+
+          {/* Linked Accounts */}
+          <Animated.View entering={FadeInDown.delay(350).duration(600)}>
+            <Text className="text-lg font-bold text-neutral-900 mb-3">
+              Linked Accounts
+            </Text>
+
+            <View className="bg-white rounded-2xl overflow-hidden mb-6 shadow-sm">
+              <View className="px-4 py-4 border-b border-neutral-100">
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-1">
+                    <View className="flex-row items-center mb-1">
+                      <Chrome size={18} color="#2563eb" />
+                      <Text className="text-base font-semibold text-neutral-900 ml-2">
+                        Google Account
+                      </Text>
+                    </View>
+                    <Text className="text-sm text-neutral-500">
+                      {user?.hasGoogleLinked
+                        ? 'Connected - You can sign in with Google'
+                        : 'Not connected'}
+                    </Text>
+                  </View>
+                  {!user?.hasGoogleLinked && (
+                    <TouchableOpacity
+                      onPress={handleLinkGoogle}
+                      disabled={linkingGoogle || googleLinking}
+                      className="bg-primary-600 px-4 py-2 rounded-xl"
+                      activeOpacity={0.7}
+                    >
+                      {linkingGoogle || googleLinking ? (
+                        <ActivityIndicator color="#ffffff" size="small" />
+                      ) : (
+                        <Text className="text-white font-bold text-sm">Link</Text>
+                      )}
+                    </TouchableOpacity>
+                  )}
+                  {user?.hasGoogleLinked && (
+                    <View className="bg-green-100 px-3 py-1 rounded-full">
+                      <Text className="text-green-700 font-bold text-xs">Linked</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
           </Animated.View>
 
           {/* About */}
