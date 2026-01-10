@@ -10,6 +10,8 @@
     "web": "expo start --web",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "db:test": "node scripts/test-db.js",
+    "db:migrate": "node db/migrate.js",
+    "db:reset": "node db/reset.js",
     "postinstall": "node scripts/patch-maven-mirror.js"
   },
   "dependencies": {

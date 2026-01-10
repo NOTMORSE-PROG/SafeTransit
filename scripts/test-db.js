@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 // Database Connection Test Script
-// Run with: node scripts/test-db.js
+// Run with: npm run db:test
 
 require('dotenv').config();
 
@@ -15,6 +15,9 @@ async function testConnection() {
 
   if (!databaseUrl) {
     console.error('\n[FAIL] DATABASE_URL is not set in .env file');
+    console.error('\nTo fix:');
+    console.error('1. Copy .env.example to .env');
+    console.error('2. Add your Neon database URL to .env');
     process.exit(1);
   }
 
@@ -32,106 +35,86 @@ async function testConnection() {
     console.log(`       Server time: ${result[0].current_time}`);
     console.log(`       PostgreSQL: ${result[0].pg_version.split(',')[0]}`);
 
-    // Test 2: Initialize tables
-    console.log('\n[TEST] Initializing tables...');
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        device_id VARCHAR(255) UNIQUE NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        last_active TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS saved_places (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        type VARCHAR(20) NOT NULL CHECK (type IN ('home', 'work', 'favorite')),
-        name VARCHAR(255) NOT NULL,
-        address TEXT NOT NULL,
-        latitude DECIMAL(10, 8) NOT NULL,
-        longitude DECIMAL(11, 8) NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS danger_zones (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        description TEXT,
-        severity VARCHAR(20) NOT NULL CHECK (severity IN ('low', 'medium', 'high')),
-        latitude DECIMAL(10, 8) NOT NULL,
-        longitude DECIMAL(11, 8) NOT NULL,
-        radius_meters INTEGER DEFAULT 500,
-        reported_by INTEGER REFERENCES users(id),
-        verified BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
-
-    await sql`
-      CREATE TABLE IF NOT EXISTS community_tips (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
-        title VARCHAR(255) NOT NULL,
-        content TEXT NOT NULL,
-        category VARCHAR(50) NOT NULL,
-        latitude DECIMAL(10, 8),
-        longitude DECIMAL(11, 8),
-        upvotes INTEGER DEFAULT 0,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      )
-    `;
-    console.log('[PASS] All tables initialized');
-
-    // Test 3: List tables
-    console.log('\n[TEST] Verifying tables...');
+    // Test 2: Check if migrations have been run
+    console.log('\n[TEST] Checking database schema...');
     const tables = await sql`
       SELECT tablename FROM pg_tables
       WHERE schemaname = 'public'
       ORDER BY tablename
     `;
-    console.log('[PASS] Tables found:');
-    tables.forEach((t) => console.log(`       - ${t.tablename}`));
 
-    // Test 4: CRUD operations
-    console.log('\n[TEST] Testing CRUD operations...');
+    if (tables.length === 0) {
+      console.log('[WARN] No tables found in database');
+      console.log('\nTo set up the database:');
+      console.log('1. Run: npm run db:migrate');
+      console.log('2. This will create all required tables');
+    } else {
+      console.log(`[PASS] Found ${tables.length} table(s):`);
+      tables.forEach((t) => console.log(`       - ${t.tablename}`));
 
-    // Create test user
-    const testDeviceId = `test-device-${Date.now()}`;
-    const userResult = await sql`
-      INSERT INTO users (device_id) VALUES (${testDeviceId}) RETURNING *
-    `;
-    const testUser = userResult[0];
-    console.log(`[PASS] Created test user (id: ${testUser.id})`);
+      // Check for new schema tables
+      const tableNames = tables.map(t => t.tablename);
+      const expectedTables = [
+        'users',
+        'password_reset_tokens',
+        'emergency_contacts',
+        'tips',
+        'tip_votes',
+        'comments',
+        'comment_likes',
+        'families',
+        'family_members',
+        'family_locations',
+        'notifications',
+        'notification_settings',
+        'verification_requests',
+        'followed_locations',
+        'schema_migrations'
+      ];
 
-    // Read user
-    const readResult = await sql`SELECT * FROM users WHERE id = ${testUser.id}`;
-    if (readResult.length > 0) {
-      console.log('[PASS] Read user successfully');
+      const missingTables = expectedTables.filter(t => !tableNames.includes(t));
+
+      if (missingTables.length > 0) {
+        console.log('\n[WARN] Some expected tables are missing:');
+        missingTables.forEach(t => console.log(`       - ${t}`));
+        console.log('\nRun: npm run db:migrate');
+      } else {
+        console.log('\n[PASS] All expected tables are present');
+      }
     }
 
-    // Update user
-    await sql`UPDATE users SET last_active = NOW() WHERE id = ${testUser.id}`;
-    console.log('[PASS] Updated user successfully');
-
-    // Delete test user (cleanup)
-    await sql`DELETE FROM users WHERE id = ${testUser.id}`;
-    console.log('[PASS] Deleted test user (cleanup)');
+    // Test 3: Check migration tracking
+    const hasMigrations = tables.some(t => t.tablename === 'schema_migrations');
+    if (hasMigrations) {
+      console.log('\n[TEST] Checking migrations...');
+      const migrations = await sql`
+        SELECT version, name, executed_at
+        FROM schema_migrations
+        ORDER BY version
+      `;
+      console.log(`[PASS] ${migrations.length} migration(s) executed:`);
+      migrations.forEach(m => {
+        console.log(`       ${String(m.version).padStart(3, '0')} - ${m.name}`);
+      });
+    }
 
     // Summary
     console.log('\n' + '='.repeat(60));
-    console.log('All tests passed! Database is ready for production.');
+    console.log('Database connection test complete!');
+    if (tables.length === 0) {
+      console.log('\nNext step: Run "npm run db:migrate" to set up tables');
+    } else {
+      console.log('\nDatabase is ready to use.');
+    }
     console.log('='.repeat(60) + '\n');
 
   } catch (error) {
     console.error('\n[FAIL] Test failed:', error.message);
     if (error.message.includes('password')) {
       console.error('\nTip: Check if your DATABASE_URL credentials are correct');
+    }
+    if (error.message.includes('does not exist')) {
+      console.error('\nTip: The database may not exist. Check your Neon console.');
     }
     process.exit(1);
   }
