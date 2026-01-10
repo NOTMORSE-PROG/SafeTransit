@@ -276,17 +276,6 @@ export default function Login() {
             </Text>
           </Text>
         </TouchableOpacity>
-
-        {/* TEMPORARY: Quick login bypass for development */}
-        <TouchableOpacity
-          onPress={() => router.replace("/onboarding/welcome")}
-          className="mt-4 mb-[40px] border border-dashed border-orange-300 rounded-xl py-3 bg-orange-50"
-          activeOpacity={0.7}
-        >
-          <Text className="text-center text-orange-500 text-xs font-bold uppercase tracking-wide">
-            ⚡ DEV ONLY: Skip to Onboarding
-          </Text>
-        </TouchableOpacity>
       </View>
 
       <GoogleOnlyModal
