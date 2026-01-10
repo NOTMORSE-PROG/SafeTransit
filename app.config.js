@@ -77,7 +77,7 @@ module.exports = {
         {
           iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
             ? `com.googleusercontent.apps.${process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID.split('-')[0]}`
-            : "com.googleusercontent.apps.769492485032"
+            : undefined
         }
       ]
     ],
