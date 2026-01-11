@@ -9,26 +9,34 @@ import { Platform } from 'react-native';
 export function getApiUrl(): string {
   // In development, use the Metro bundler URL
   if (__DEV__) {
-    // Get the dev server host from Expo Constants
-    const debuggerHost = Constants.expoConfig?.hostUri;
+    // Try multiple ways to get the dev server host
+    const debuggerHost =
+      Constants.expoConfig?.hostUri ||
+      Constants.manifest?.debuggerHost ||
+      Constants.manifest2?.extra?.expoGo?.debuggerHost;
+
+    console.log('[API] Debugger host:', debuggerHost);
 
     if (debuggerHost) {
       // Extract just the IP/hostname (remove port if present)
       const host = debuggerHost.split(':')[0];
-      // Use port 8082 (or whatever port Metro is running on)
-      return Platform.select({
+      const url = Platform.select({
         android: `http://${host}:8082`,
         ios: `http://${host}:8082`,
         default: '',
       });
+      console.log('[API] Using URL:', url);
+      return url;
     }
 
     // Fallback to localhost
-    return Platform.select({
+    const fallbackUrl = Platform.select({
       android: 'http://10.0.2.2:8082', // Android emulator
       ios: 'http://localhost:8082',
       default: 'http://localhost:8082',
     });
+    console.log('[API] Using fallback URL:', fallbackUrl);
+    return fallbackUrl;
   }
 
   // In production, you would use your deployed API URL
@@ -43,6 +51,9 @@ export function getApiUrl(): string {
 export async function apiFetch(path: string, options?: RequestInit): Promise<Response> {
   const baseUrl = getApiUrl();
   const url = `${baseUrl}${path}`;
+
+  console.log('[API] Fetching:', url);
+  console.log('[API] Method:', options?.method || 'GET');
 
   return fetch(url, options);
 }
