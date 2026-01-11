@@ -12,7 +12,7 @@
     "db:test": "node scripts/test-db.js",
     "db:migrate": "node db/migrate.js",
     "db:reset": "node db/reset.js",
-    "postinstall": "node scripts/patch-maven-mirror.js"
+    "postinstall": "patch-package && node scripts/patch-maven-mirror.js"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.2.8",
@@ -67,6 +67,7 @@
     "babel-preset-expo": "~54.0.9",
     "eslint": "^8.57.0",
     "eslint-config-expo": "^10.0.0",
+    "patch-package": "^8.0.1",
     "typescript": "~5.9.2"
   },
   "overrides": {
