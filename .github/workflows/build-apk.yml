@@ -61,7 +61,7 @@ jobs:
           # Decode the keystore from base64 secret and place it in android/app
           # This ensures the APK is signed with the same SHA-1 fingerprint
           # registered in Google Cloud Console for Google Sign-In
-          echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > android/app/debug.keystore
+          printf '%s' "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > android/app/debug.keystore
           echo "✅ Restored debug.keystore from secret"
           echo "   SHA-1: 98:AB:2E:0C:8E:8A:54:1A:4C:A7:22:B3:63:E7:17:07:B3:99:30:1D"
 
