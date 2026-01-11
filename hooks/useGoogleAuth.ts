@@ -9,7 +9,9 @@ import Constants from 'expo-constants';
 const GOOGLE_WEB_CLIENT_ID = Constants.expoConfig?.extra?.EXPO_PUBLIC_GOOGLE_CLIENT_ID || '';
 
 // Check if running in Expo Go (where native modules aren't available)
-const isExpoGo = Constants.appOwnership === 'expo';
+// In production builds, executionEnvironment is 'standalone'
+// In Expo Go, executionEnvironment is 'storeClient'
+const isExpoGo = Constants.executionEnvironment === 'storeClient';
 
 interface GoogleAuthUser {
   id: string;
