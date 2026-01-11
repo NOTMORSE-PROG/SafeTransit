@@ -39,9 +39,14 @@ export function getApiUrl(): string {
     return fallbackUrl;
   }
 
-  // In production, you would use your deployed API URL
-  // TODO: Add production API URL when ready
-  // return process.env.EXPO_PUBLIC_API_URL || 'https://your-api.com';
+  // In production, use the deployed API URL from environment variable
+  const productionUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL;
+  if (productionUrl) {
+    console.log('[API] Using production URL:', productionUrl);
+    return productionUrl;
+  }
+
+  console.warn('[API] No production API URL set. App will not work without Metro bundler.');
   return '';
 }
 
