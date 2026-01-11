@@ -51,14 +51,10 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}" >> .env
           echo "EXPO_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.EXPO_PUBLIC_GOOGLE_CLIENT_ID }}" >> .env
+          echo "EXPO_PUBLIC_API_URL=${{ secrets.EXPO_PUBLIC_API_URL }}" >> .env
 
       - name: Generate native code (Expo Prebuild)
         run: npx expo prebuild --platform android --clean
-
-      - name: Fix Gradle Plugin Portal configuration
-        run: |
-          # Add gradlePluginPortal() to React Native Gradle plugin settings
-          sed -i '9i\    gradlePluginPortal()' node_modules/@react-native/gradle-plugin/settings.gradle.kts
 
       - name: Make gradlew executable
         run: chmod +x ./android/gradlew
