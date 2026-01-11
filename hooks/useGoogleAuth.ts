@@ -39,17 +39,28 @@ export const useGoogleAuth = () => {
     // Dynamically import to avoid crash in Expo Go
     const initGoogleSignIn = async () => {
       try {
+        console.log('Initializing Google Sign-In...');
+        console.log('Web Client ID:', GOOGLE_WEB_CLIENT_ID);
+
+        if (!GOOGLE_WEB_CLIENT_ID) {
+          console.error('Google Web Client ID is missing!');
+          setIsAvailable(false);
+          return;
+        }
+
         const { GoogleSignin } = await import('@react-native-google-signin/google-signin');
         googleSigninRef.current = GoogleSignin;
-        
+
         GoogleSignin.configure({
           webClientId: GOOGLE_WEB_CLIENT_ID,
           offlineAccess: false,
           forceCodeForRefreshToken: false,
         });
+
+        console.log('Google Sign-In configured successfully');
         setIsAvailable(true);
       } catch (error) {
-        console.log('Google Sign-In module not available:', error);
+        console.error('Google Sign-In initialization error:', error);
         setIsAvailable(false);
       }
     };
