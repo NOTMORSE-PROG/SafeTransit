@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
+import { apiFetch } from "@/utils/api";
 import {
   Eye,
   EyeOff,
@@ -78,7 +79,7 @@ export default function Signup() {
     try {
       setIsLoading(true);
 
-      const response = await fetch('/api/auth/signup', {
+      const response = await apiFetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

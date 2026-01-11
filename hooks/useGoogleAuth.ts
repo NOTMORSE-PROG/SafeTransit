@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Constants from 'expo-constants';
+import { apiFetch } from '@/utils/api';
 
 const GOOGLE_WEB_CLIENT_ID = Constants.expoConfig?.extra?.EXPO_PUBLIC_GOOGLE_CLIENT_ID || '';
 
@@ -115,7 +116,7 @@ export const useGoogleAuth = () => {
       }
 
       // Exchange Google token for our JWT
-      const response = await fetch('/api/auth/google', {
+      const response = await apiFetch('/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ googleToken: idToken }),
@@ -195,7 +196,7 @@ export const useGoogleAuth = () => {
         };
       }
 
-      const response = await fetch('/api/auth/link-google', {
+      const response = await apiFetch('/api/auth/link-google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

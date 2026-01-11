@@ -86,7 +86,8 @@ module.exports = {
     },
     scheme: "safetransit",
     extra: {
-      EXPO_PUBLIC_GOOGLE_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
+      EXPO_PUBLIC_GOOGLE_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL
     }
   }
 };

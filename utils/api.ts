@@ -1,0 +1,65 @@
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
+
+/**
+ * Get the API base URL based on the environment
+ * - If EXPO_PUBLIC_API_URL is set, always use it (prod or dev)
+ * - Otherwise in development, use the Metro bundler URL
+ */
+export function getApiUrl(): string {
+  // Check if production API URL is set - use it if available (even in dev mode)
+  const productionUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL;
+  if (productionUrl) {
+    console.log('[API] Using production URL:', productionUrl);
+    return productionUrl;
+  }
+
+  // If no production URL, fall back to Metro bundler in development
+  if (__DEV__) {
+    // Try multiple ways to get the dev server host
+    const debuggerHost =
+      Constants.expoConfig?.hostUri ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (Constants.manifest as any)?.debuggerHost ||
+      Constants.manifest2?.extra?.expoGo?.debuggerHost;
+
+    console.log('[API] Debugger host:', debuggerHost);
+
+    if (debuggerHost) {
+      // Extract just the IP/hostname (remove port if present)
+      const host = debuggerHost.split(':')[0];
+      const url = Platform.select({
+        android: `http://${host}:8082`,
+        ios: `http://${host}:8082`,
+        default: '',
+      });
+      console.log('[API] Using Metro URL:', url);
+      return url;
+    }
+
+    // Fallback to localhost
+    const fallbackUrl = Platform.select({
+      android: 'http://10.0.2.2:8082', // Android emulator
+      ios: 'http://localhost:8082',
+      default: 'http://localhost:8082',
+    });
+    console.log('[API] Using fallback Metro URL:', fallbackUrl);
+    return fallbackUrl;
+  }
+
+  console.warn('[API] No API URL configured. App will not work.');
+  return '';
+}
+
+/**
+ * Fetch wrapper that automatically prepends the API URL
+ */
+export async function apiFetch(path: string, options?: RequestInit): Promise<Response> {
+  const baseUrl = getApiUrl();
+  const url = `${baseUrl}${path}`;
+
+  console.log('[API] Fetching:', url);
+  console.log('[API] Method:', options?.method || 'GET');
+
+  return fetch(url, options);
+}
