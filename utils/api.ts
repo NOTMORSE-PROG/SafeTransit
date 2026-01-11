@@ -3,11 +3,18 @@ import { Platform } from 'react-native';
 
 /**
  * Get the API base URL based on the environment
- * - In development (Expo Go or dev builds), uses the Metro bundler URL
- * - In production, would use your deployed API URL
+ * - If EXPO_PUBLIC_API_URL is set, always use it (prod or dev)
+ * - Otherwise in development, use the Metro bundler URL
  */
 export function getApiUrl(): string {
-  // In development, use the Metro bundler URL
+  // Check if production API URL is set - use it if available (even in dev mode)
+  const productionUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL;
+  if (productionUrl) {
+    console.log('[API] Using production URL:', productionUrl);
+    return productionUrl;
+  }
+
+  // If no production URL, fall back to Metro bundler in development
   if (__DEV__) {
     // Try multiple ways to get the dev server host
     const debuggerHost =
@@ -25,7 +32,7 @@ export function getApiUrl(): string {
         ios: `http://${host}:8082`,
         default: '',
       });
-      console.log('[API] Using URL:', url);
+      console.log('[API] Using Metro URL:', url);
       return url;
     }
 
@@ -35,18 +42,11 @@ export function getApiUrl(): string {
       ios: 'http://localhost:8082',
       default: 'http://localhost:8082',
     });
-    console.log('[API] Using fallback URL:', fallbackUrl);
+    console.log('[API] Using fallback Metro URL:', fallbackUrl);
     return fallbackUrl;
   }
 
-  // In production, use the deployed API URL from environment variable
-  const productionUrl = Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL;
-  if (productionUrl) {
-    console.log('[API] Using production URL:', productionUrl);
-    return productionUrl;
-  }
-
-  console.warn('[API] No production API URL set. App will not work without Metro bundler.');
+  console.warn('[API] No API URL configured. App will not work.');
   return '';
 }
 
