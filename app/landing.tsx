@@ -2,9 +2,11 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { ShieldCheck, MapPin } from "lucide-react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Landing() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
     <View className="flex-1 bg-white justify-between">
@@ -85,7 +87,8 @@ export default function Landing() {
       {/* Footer */}
       <Animated.View
         entering={FadeInDown.delay(400).duration(600)}
-        className="px-8 py-6 pb-10 border-t border-neutral-100 bg-white"
+        className="px-8 py-6 border-t border-neutral-100 bg-white"
+        style={{ paddingBottom: Math.max(insets.bottom, 24) }}
       >
         <View className="flex-row items-center justify-center space-x-4">
           <TouchableOpacity activeOpacity={0.7}>

@@ -6,7 +6,7 @@ module.exports = {
     slug: "safetransit",
     version: "1.0.1",
     orientation: "portrait",
-    icon: "./assets/logo.png",
+    icon: "./assets/icon.png",
     userInterfaceStyle: "light",
     splash: {
       image: "./assets/logo.png",
@@ -25,7 +25,7 @@ module.exports = {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/logo.png",
+        foregroundImage: "./assets/icon.png",
         backgroundColor: "#FFFFFF"
       },
       package: "com.safetransit.app",
