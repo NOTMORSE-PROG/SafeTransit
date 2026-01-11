@@ -39,6 +39,9 @@ yarn-error.*
 android/
 ios/
 
+# Backend (separate repository)
+backend/
+
 # TypeScript
 *.tsbuildinfo
 
