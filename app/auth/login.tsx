@@ -17,10 +17,15 @@ import {
   Lock,
   Chrome,
 } from "lucide-react-native";
+import { useAuth } from "../../contexts/AuthContext";
+import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import { GoogleOnlyModal } from "../../components/GoogleOnlyModal";
 
 export default function Login() {
   const router = useRouter();
-  
+  const { login } = useAuth();
+  const { signInWithGoogle, isLoading: googleLoading } = useGoogleAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,6 +34,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showGoogleOnlyModal, setShowGoogleOnlyModal] = useState(false);
 
   // Whole form validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,28 +43,55 @@ export default function Login() {
 
   const canSubmit = email.length > 0 && password.length > 0 && isEmailValid && !isLoading;
 
-    const handleLogin = async () => {
-        setError(null);
-        setSuccessMessage(null);
+  const handleLogin = async () => {
+    setError(null);
+    setSuccessMessage(null);
 
-        if (password.toLowerCase() === "admin") {
-            setError("The email or password is incorrect.");
-            return;
-        }
-
-        if (!canSubmit) {
+    if (!canSubmit) {
       setError("Please enter a valid email and password.");
       return;
     }
 
     try {
       setIsLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      router.replace("/onboarding/welcome");
+
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        await login(data.token, data.user);
+        router.replace("/onboarding/welcome");
+      } else {
+        // Check for Google-only account error
+        if (data.errorCode === 'GOOGLE_ONLY_ACCOUNT') {
+          setShowGoogleOnlyModal(true);
+        } else {
+          setError(data.error || 'Login failed');
+        }
+      }
     } catch {
-      setError("Login failed. Please try again.");
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setShowGoogleOnlyModal(false);
+
+    const result = await signInWithGoogle();
+
+    if (result.success && result.token && result.user) {
+      await login(result.token, result.user);
+      router.replace("/onboarding/welcome");
+    } else {
+      setError(result.error || 'Google sign-in failed');
     }
   };
 
@@ -215,14 +248,21 @@ export default function Login() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => console.log("Google Login")}
+          onPress={handleGoogleSignIn}
+          disabled={googleLoading}
           className="mt-4 flex-row items-center justify-center border border-neutral-200 rounded-2xl py-4"
           activeOpacity={0.7}
         >
-          <Chrome size={18} color="#6B7280" />
-          <Text className="ml-3 text-neutral-600 font-bold text-sm uppercase tracking-tight">
-            Login with Google
-          </Text>
+          {googleLoading ? (
+            <ActivityIndicator color="#6B7280" size="small" />
+          ) : (
+            <>
+              <Chrome size={18} color="#6B7280" />
+              <Text className="ml-3 text-neutral-600 font-bold text-sm uppercase tracking-tight">
+                Login with Google
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -237,6 +277,13 @@ export default function Login() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <GoogleOnlyModal
+        visible={showGoogleOnlyModal}
+        onClose={() => setShowGoogleOnlyModal(false)}
+        onContinueWithGoogle={handleGoogleSignIn}
+        isLoading={googleLoading}
+      />
     </View>
   );
 }
