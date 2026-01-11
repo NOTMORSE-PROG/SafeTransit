@@ -11,6 +11,7 @@ npm-debug.*
 *.key
 *.mobileprovision
 debug.keystore.backup
+KEYSTORE_SECRET.txt
 *.orig.*
 web-build/
 
