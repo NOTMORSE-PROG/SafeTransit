@@ -38,8 +38,8 @@ jobs:
       - name: Create placeholder icons if needed
         run: |
           sudo apt-get update && sudo apt-get install -y imagemagick
-          # Only create notification-icon.png if it doesn't exist
-          # The logo.png is now used for icon, adaptive-icon, and splash
+          # Only create notification-icon.png and favicon.png if they don't exist
+          # icon.png is used for app icon and adaptive icon, logo.png for splash screen
           if [ ! -f assets/notification-icon.png ]; then
             convert -size 48x48 xc:#2563eb assets/notification-icon.png
           fi
