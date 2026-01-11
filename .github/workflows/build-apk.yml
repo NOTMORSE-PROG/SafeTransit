@@ -35,14 +35,17 @@ jobs:
           rm -f package-lock.json
           npm install
 
-      - name: Create placeholder icons
+      - name: Create placeholder icons if needed
         run: |
           sudo apt-get update && sudo apt-get install -y imagemagick
-          convert -size 1024x1024 xc:#8B5CF6 assets/icon.png
-          convert -size 1024x1024 xc:#8B5CF6 assets/adaptive-icon.png
-          convert -size 1024x1024 xc:#8B5CF6 assets/splash.png
-          convert -size 48x48 xc:#8B5CF6 assets/notification-icon.png
-          convert -size 48x48 xc:#8B5CF6 assets/favicon.png
+          # Only create notification-icon.png if it doesn't exist
+          # The logo.png is now used for icon, adaptive-icon, and splash
+          if [ ! -f assets/notification-icon.png ]; then
+            convert -size 48x48 xc:#2563eb assets/notification-icon.png
+          fi
+          if [ ! -f assets/favicon.png ]; then
+            convert -size 48x48 xc:#2563eb assets/favicon.png
+          fi
 
       - name: Create .env file with secrets
         run: |

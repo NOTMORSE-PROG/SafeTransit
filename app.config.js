@@ -6,12 +6,12 @@ module.exports = {
     slug: "safetransit",
     version: "1.0.1",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/logo.png",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/splash.png",
+      image: "./assets/logo.png",
       resizeMode: "contain",
-      backgroundColor: "#8B5CF6"
+      backgroundColor: "#2563eb"
     },
     assetBundlePatterns: [
       "**/*"
@@ -25,8 +25,8 @@ module.exports = {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#8B5CF6"
+        foregroundImage: "./assets/logo.png",
+        backgroundColor: "#FFFFFF"
       },
       package: "com.safetransit.app",
       permissions: [

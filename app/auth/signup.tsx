@@ -8,6 +8,7 @@ import {
   Switch,
   Modal,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
@@ -15,7 +16,7 @@ import { apiFetch } from "@/utils/api";
 import {
   Eye,
   EyeOff,
-  ShieldCheck,
+  ArrowLeft,
   Mail,
   Lock,
   User,
@@ -125,14 +126,27 @@ export default function Signup() {
     <View className="flex-1 bg-white">
       {/* Top most part */}
       <View className="bg-primary-600 pt-16 pb-10 px-6 rounded-b-[40px] shadow-2xl">
+        {/* Back Button */}
+        <TouchableOpacity
+          onPress={() => router.push("/landing")}
+          className="absolute top-16 left-6 z-10"
+          activeOpacity={0.7}
+        >
+          <View className="w-10 h-10 rounded-full bg-white/20 items-center justify-center">
+            <ArrowLeft color="#ffffff" size={24} strokeWidth={2} />
+          </View>
+        </TouchableOpacity>
+
         <Animated.View
           entering={FadeIn.duration(800)}
           className="items-center mb-2"
         >
-          <View className="w-20 h-20 rounded-3xl bg-white/10 border border-white/20 backdrop-blur-2xl items-center justify-center mb-4 shadow-inner">
-            <View className="w-16 h-16 rounded-2xl bg-white/20 items-center justify-center">
-              <ShieldCheck color="#ffffff" size={38} strokeWidth={1.5} />
-            </View>
+          <View className="w-20 h-20 rounded-3xl bg-white items-center justify-center mb-4 shadow-inner">
+            <Image
+              source={require("../../assets/logo.png")}
+              style={{ width: 70, height: 70 }}
+              resizeMode="contain"
+            />
           </View>
           <Text className="text-white text-2xl font-bold tracking-tight">
             Create Account
