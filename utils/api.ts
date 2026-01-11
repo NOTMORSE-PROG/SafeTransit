@@ -19,7 +19,8 @@ export function getApiUrl(): string {
     // Try multiple ways to get the dev server host
     const debuggerHost =
       Constants.expoConfig?.hostUri ||
-      Constants.manifest?.debuggerHost ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (Constants.manifest as any)?.debuggerHost ||
       Constants.manifest2?.extra?.expoGo?.debuggerHost;
 
     console.log('[API] Debugger host:', debuggerHost);
