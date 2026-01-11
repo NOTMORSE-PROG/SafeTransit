@@ -4,6 +4,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { apiFetch } from '@/utils/api';
 
 interface User {
   id: string;
@@ -47,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const storedToken = await AsyncStorage.getItem('auth_token');
       if (storedToken) {
         // Verify token with backend
-        const response = await fetch('/api/auth/verify', {
+        const response = await apiFetch('/api/auth/verify', {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
 
