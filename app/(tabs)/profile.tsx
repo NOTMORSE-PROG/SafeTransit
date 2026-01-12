@@ -1,14 +1,13 @@
 import { useState, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable, ActivityIndicator, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { FadeInDown, SlideInDown, SlideOutDown, FadeIn, FadeOut } from 'react-native-reanimated';
-import { UserCircle, Phone, ChevronRight, Camera, Loader2, Image as ImageIcon, Trash2, X, Chrome } from 'lucide-react-native';
+import { UserCircle, Phone, ChevronRight, Camera, Image as ImageIcon, Trash2, X, Chrome, Pencil } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
-// import { useUploadThing } from '../../services/uploadthing'; // Mocking for now
+import * as FileSystem from 'expo-file-system/legacy';
 import { Image } from 'expo-image';
-import { useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import { apiFetch } from '../../utils/api';
@@ -21,15 +20,17 @@ export default function Profile() {
   const [backgroundAlerts, setBackgroundAlerts] = useState(true);
   const [vibrationAlerts, setVibrationAlerts] = useState(true);
   const [soundAlerts, setSoundAlerts] = useState(false);
-  const [image, setImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [linkingGoogle, setLinkingGoogle] = useState(false);
   const [contactCount, setContactCount] = useState(0);
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [editingName, setEditingName] = useState('');
+  const [isSavingName, setIsSavingName] = useState(false);
 
-  useEffect(() => {
-    loadProfileImage();
-  }, []);
+  // Use profile image from user context (synced with database)
+  const profileImage = user?.profileImageUrl || null;
+  const displayName = user?.fullName || 'Traveler';
 
   const loadContactCount = useCallback(async () => {
     try {
@@ -55,37 +56,69 @@ export default function Profile() {
     }, [loadContactCount])
   );
 
-  const loadProfileImage = async () => {
-    try {
-      const savedImage = await AsyncStorage.getItem('profile_image');
-      if (savedImage) {
-        setImage(savedImage);
-      }
-    } catch (error) {
-      console.error('Failed to load profile image', error);
+  // Upload image to UploadThing via backend API
+  const uploadImage = async (file: { uri: string; name: string; type: string }) => {
+    if (!token) {
+      Alert.alert('Error', 'Please log in to upload images');
+      return;
     }
-  };
 
-  // Mock Upload Function
-  // NOTE: This is a frontend-only implementation. 
-  // To enable real uploads, uncomment the useUploadThing hook and backend API routes.
-  const startUpload = async (files: { uri: string }[]) => {
     setIsUploading(true);
-    setShowActionSheet(false); // Close sheet immediately
-    
-    // Simulate network delay
-    setTimeout(async () => {
-      setIsUploading(false);
-      const uploadedUrl = files[0].uri; 
-      setImage(uploadedUrl);
-      
-      try {
-        await AsyncStorage.setItem('profile_image', uploadedUrl);
-        // Alert.alert("Success", "Profile picture updated!"); // Optional feedback
-      } catch (error) {
-        console.error('Failed to save profile image', error);
+    setShowActionSheet(false);
+
+    try {
+      // Read file as base64
+      const base64 = await FileSystem.readAsStringAsync(file.uri, {
+        encoding: 'base64',
+      });
+
+      // Upload to backend
+      const uploadResponse = await apiFetch('/api/user/upload-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          base64,
+          fileName: file.name,
+          mimeType: file.type,
+        }),
+      });
+
+      if (!uploadResponse.ok) {
+        const error = await uploadResponse.json();
+        throw new Error(error.error || 'Upload failed');
       }
-    }, 1500);
+
+      const uploadResult = await uploadResponse.json();
+      console.log('Upload successful:', uploadResult.url);
+
+      // Update profile with new image URL (backend will auto-delete old image)
+      const updateResponse = await apiFetch('/api/user/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          profileImageUrl: uploadResult.url,
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      // Refresh user data to show new image
+      await refreshUser();
+      
+    } catch (error) {
+      console.error('Upload error:', error);
+      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const pickImage = async (useCamera: boolean = false) => {
@@ -111,32 +144,100 @@ export default function Profile() {
 
       if (!result.canceled) {
         const selectedImage = result.assets[0];
-        const file: { uri: string; name: string; type: string } = {
+        const file = {
           uri: selectedImage.uri,
-          name: selectedImage.fileName || "profile.jpg",
-          type: selectedImage.mimeType || "image/jpeg",
+          name: selectedImage.fileName || `profile_${Date.now()}.jpg`,
+          type: selectedImage.mimeType || 'image/jpeg',
         };
         
-        await startUpload([file]);
+        await uploadImage(file);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to pick image");
+      Alert.alert('Error', 'Failed to pick image');
       console.error(error);
     }
   };
 
   const handleRemovePhoto = async () => {
+    if (!token) return;
+    
+    setShowActionSheet(false);
+    setIsUploading(true);
+    
     try {
-      setImage(null);
-      await AsyncStorage.removeItem('profile_image');
-      setShowActionSheet(false);
+      // Call backend to remove photo (will delete from UploadThing)
+      const response = await apiFetch('/api/user/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          removePhoto: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to remove photo');
+      }
+
+      // Refresh user data
+      await refreshUser();
+      
     } catch (error) {
       console.error('Failed to remove profile image', error);
+      Alert.alert('Error', 'Failed to remove photo');
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const handleEditPhoto = () => {
     setShowActionSheet(true);
+  };
+
+  const handleEditName = () => {
+    setEditingName(displayName);
+    setShowNameModal(true);
+  };
+
+  const handleSaveName = async () => {
+    if (!token || !editingName.trim()) return;
+    
+    if (editingName.trim().length < 2) {
+      Alert.alert('Error', 'Name must be at least 2 characters');
+      return;
+    }
+    
+    setIsSavingName(true);
+    
+    try {
+      const response = await apiFetch('/api/user/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          fullName: editingName.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update name');
+      }
+
+      // Refresh user data
+      await refreshUser();
+      setShowNameModal(false);
+      
+    } catch (error) {
+      console.error('Failed to update name:', error);
+      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to update name');
+    } finally {
+      setIsSavingName(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -184,18 +285,19 @@ export default function Profile() {
               activeOpacity={0.8}
             >
               <View className="w-24 h-24 bg-white rounded-full items-center justify-center overflow-hidden">
-                {image ? (
+                {profileImage ? (
                   <Image
-                    source={{ uri: image }}
+                    source={{ uri: profileImage }}
                     style={{ width: 96, height: 96 }}
                     contentFit="cover"
+                    cachePolicy="none"
                   />
                 ) : (
                   <UserCircle color="#2563eb" size={64} strokeWidth={1.5} />
                 )}
                 {isUploading && (
                   <View className="absolute inset-0 bg-black/40 items-center justify-center">
-                    <Loader2 color="#ffffff" size={32} className="animate-spin" />
+                    <ActivityIndicator color="#ffffff" size="large" />
                   </View>
                 )}
               </View>
@@ -203,9 +305,16 @@ export default function Profile() {
                 <Camera color="#ffffff" size={14} strokeWidth={2} />
               </View>
             </TouchableOpacity>
-            <Text className="text-white text-2xl font-bold mb-1">
-              Traveler
-            </Text>
+            <TouchableOpacity 
+              onPress={handleEditName}
+              className="flex-row items-center mb-1"
+              activeOpacity={0.7}
+            >
+              <Text className="text-white text-2xl font-bold mr-2">
+                {displayName}
+              </Text>
+              <Pencil color="#ffffff" size={16} strokeWidth={2} />
+            </TouchableOpacity>
             <Text className="text-white/80 text-sm">
               Protected since today
             </Text>
@@ -520,7 +629,7 @@ export default function Profile() {
                 <Text className="text-base font-semibold text-neutral-900">Choose from Library</Text>
               </TouchableOpacity>
 
-              {image && (
+              {profileImage && (
                 <TouchableOpacity 
                   onPress={handleRemovePhoto}
                   className="flex-row items-center p-4 bg-red-50 rounded-2xl active:bg-red-100"
@@ -531,6 +640,55 @@ export default function Profile() {
                   <Text className="text-base font-semibold text-red-600">Remove Photo</Text>
                 </TouchableOpacity>
               )}
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Edit Name Modal */}
+      <Modal
+        visible={showNameModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowNameModal(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50 px-6">
+          <Animated.View 
+            entering={FadeIn.duration(200)}
+            className="bg-white rounded-2xl p-6 w-full max-w-sm"
+          >
+            <Text className="text-xl font-bold text-neutral-900 mb-4">Edit Name</Text>
+            
+            <TextInput
+              value={editingName}
+              onChangeText={setEditingName}
+              placeholder="Enter your name"
+              className="border border-neutral-200 rounded-xl px-4 py-3 text-base text-neutral-900 mb-4"
+              autoFocus
+              placeholderTextColor="#9ca3af"
+            />
+
+            <View className="flex-row space-x-3">
+              <TouchableOpacity
+                onPress={() => setShowNameModal(false)}
+                className="flex-1 bg-neutral-100 py-3 rounded-xl"
+                activeOpacity={0.7}
+              >
+                <Text className="text-neutral-700 text-center font-semibold">Cancel</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                onPress={handleSaveName}
+                disabled={isSavingName || !editingName.trim() || editingName.trim() === displayName}
+                className={`flex-1 py-3 rounded-xl ${isSavingName || !editingName.trim() || editingName.trim() === displayName ? 'bg-primary-300' : 'bg-primary-600'}`}
+                activeOpacity={0.7}
+              >
+                {isSavingName ? (
+                  <ActivityIndicator color="#ffffff" size="small" />
+                ) : (
+                  <Text className="text-white text-center font-semibold">Save</Text>
+                )}
+              </TouchableOpacity>
             </View>
           </Animated.View>
         </View>

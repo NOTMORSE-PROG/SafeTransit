@@ -109,13 +109,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!token) return;
 
     try {
-      const response = await fetch('/api/auth/verify', {
+      const response = await apiFetch('/api/auth/verify', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
+        // Update stored user data
+        await AsyncStorage.setItem('user_data', JSON.stringify(data.user));
       }
     } catch (error) {
       console.error('Failed to refresh user:', error);
