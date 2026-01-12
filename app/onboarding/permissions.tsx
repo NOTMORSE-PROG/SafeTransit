@@ -92,7 +92,7 @@ export default function Permissions() {
 
     if (locationGranted && notificationGranted) {
       setIsNavigating(true);
-      router.replace('/onboarding/tutorial'); // Use replace to avoid stacking
+      router.replace('/onboarding/contact-number'); // Use replace to avoid stacking
     } else {
       showAlert(
         'Permissions Required',
