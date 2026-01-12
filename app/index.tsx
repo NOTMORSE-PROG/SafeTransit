@@ -68,26 +68,18 @@ export default function Index() {
       delay: 500,
       useNativeDriver: true,
     }).start();
-
-    // Navigation logic after minimum display time
-    const navigationTimer = setTimeout(async () => {
-      if (!authLoading) {
-        await handleNavigation();
-      }
-    }, 2000); // Minimum 2 seconds
-
-    return () => clearTimeout(navigationTimer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, handleNavigation]);
+  }, []);
 
-  // Additional check when auth loading completes
+  // Single navigation effect that waits for auth and minimum display time
   useEffect(() => {
     if (!authLoading) {
-      const delayTimer = setTimeout(async () => {
-        await handleNavigation();
+      // Wait minimum 2 seconds before navigating
+      const navigationTimer = setTimeout(() => {
+        handleNavigation();
       }, 2000);
 
-      return () => clearTimeout(delayTimer);
+      return () => clearTimeout(navigationTimer);
     }
   }, [authLoading, handleNavigation]);
 

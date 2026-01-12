@@ -46,20 +46,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loadStoredAuth = async () => {
     try {
       const storedToken = await AsyncStorage.getItem('auth_token');
-      if (storedToken) {
-        // Verify token with backend
-        const response = await apiFetch('/api/auth/verify', {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
+      const storedUser = await AsyncStorage.getItem('user_data');
 
-        if (response.ok) {
-          const data = await response.json();
-          setToken(storedToken);
-          setUser(data.user);
-        } else {
-          // Token invalid, clear storage
-          await AsyncStorage.removeItem('auth_token');
-        }
+      if (storedToken && storedUser) {
+        // Trust local token immediately for offline support
+        const userData = JSON.parse(storedUser);
+        setToken(storedToken);
+        setUser(userData);
+
+        // Verify token in background (non-blocking)
+        verifyTokenInBackground(storedToken);
       }
     } catch (error) {
       console.error('Failed to load auth:', error);
@@ -68,14 +64,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const verifyTokenInBackground = async (storedToken: string) => {
+    try {
+      const response = await apiFetch('/api/auth/verify', {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+        // Update stored user data
+        await AsyncStorage.setItem('user_data', JSON.stringify(data.user));
+      } else if (response.status === 401) {
+        // Only clear auth if explicitly unauthorized (not network errors)
+        await AsyncStorage.removeItem('auth_token');
+        await AsyncStorage.removeItem('user_data');
+        setToken(null);
+        setUser(null);
+      }
+      // If network error or other issues, keep local auth
+    } catch (error) {
+      console.error('Background token verification failed:', error);
+      // Keep local auth on network errors
+    }
+  };
+
   const login = async (newToken: string, newUser: User) => {
     await AsyncStorage.setItem('auth_token', newToken);
+    await AsyncStorage.setItem('user_data', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
 
   const logout = async () => {
     await AsyncStorage.removeItem('auth_token');
+    await AsyncStorage.removeItem('user_data');
     setToken(null);
     setUser(null);
   };
