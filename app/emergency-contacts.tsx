@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
@@ -34,7 +34,6 @@ export default function EmergencyContacts() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { token } = useAuth();
-  const nameInputRefs = useRef<Record<string, TextInput | null>>({});
 
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,7 +74,7 @@ export default function EmergencyContacts() {
       if (response.ok) {
         const data = await response.json();
         if (data.contacts && data.contacts.length > 0) {
-          const mappedContacts = data.contacts.map((c: any) => ({
+          const mappedContacts = data.contacts.map((c: { id: string; name: string; phoneNumber?: string; phone_number?: string }) => ({
              id: c.id || String(Date.now() + Math.random()),
              name: c.name || '',
              phoneNumber: c.phoneNumber || c.phone_number || '', 
