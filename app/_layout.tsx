@@ -57,6 +57,12 @@ export default function RootLayout() {
               animation: 'slide_from_right'
             }}
           />
+          <Stack.Screen
+            name="emergency-contacts"
+            options={{
+              animation: 'slide_from_right'
+            }}
+          />
         </Stack>
         </AuthProvider>
       </GestureHandlerRootView>

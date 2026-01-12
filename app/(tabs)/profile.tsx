@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { FadeInDown, SlideInDown, SlideOutDown, FadeIn, FadeOut } from 'react-native-reanimated';
 import { UserCircle, Phone, ChevronRight, Camera, Loader2, Image as ImageIcon, Trash2, X, Chrome } from 'lucide-react-native';
@@ -10,6 +11,7 @@ import { Image } from 'expo-image';
 import { useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGoogleAuth } from '../../hooks/useGoogleAuth';
+import { apiFetch } from '../../utils/api';
 
 export default function Profile() {
   const router = useRouter();
@@ -23,10 +25,35 @@ export default function Profile() {
   const [isUploading, setIsUploading] = useState(false);
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [linkingGoogle, setLinkingGoogle] = useState(false);
+  const [contactCount, setContactCount] = useState(0);
 
   useEffect(() => {
     loadProfileImage();
   }, []);
+
+  const loadContactCount = useCallback(async () => {
+    try {
+      const response = await apiFetch('/api/contacts/emergency', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setContactCount(data.contacts?.length || 0);
+      }
+    } catch (error) {
+      console.error('Failed to load contact count', error);
+    }
+  }, [token]);
+
+  // Reload contact count when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadContactCount();
+    }, [loadContactCount])
+  );
 
   const loadProfileImage = async () => {
     try {
@@ -296,6 +323,7 @@ export default function Profile() {
               accessible={true}
               accessibilityLabel="Manage emergency contacts"
               accessibilityRole="button"
+              onPress={() => router.push('/emergency-contacts' as never)}
             >
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center flex-1">
@@ -307,7 +335,7 @@ export default function Profile() {
                       Manage Contacts
                     </Text>
                     <Text className="text-sm text-neutral-500">
-                      0 contacts added
+                      {contactCount} contact{contactCount !== 1 ? 's' : ''} added
                     </Text>
                   </View>
                 </View>
