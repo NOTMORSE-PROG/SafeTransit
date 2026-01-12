@@ -11,6 +11,8 @@ interface User {
   email: string;
   fullName: string;
   profileImageUrl: string | null;
+  phoneNumber: string | null;
+  onboardingCompleted: boolean;
   hasGoogleLinked: boolean;
   hasPasswordSet: boolean;
 }

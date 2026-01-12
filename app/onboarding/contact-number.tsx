@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -13,13 +13,21 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function ContactNumber() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedCountry, setSelectedCountry] = useState<Country>(DEFAULT_COUNTRY);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+
+  useEffect(() => {
+    if (user?.onboardingCompleted) {
+      router.replace('/');
+    } else if (user?.phoneNumber) {
+      router.replace('/onboarding/emergency-contacts');
+    }
+  }, [user, router]);
 
   const handlePhoneChange = (text: string) => {
     setPhoneNumber(text);

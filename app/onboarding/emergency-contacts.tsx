@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -20,7 +20,7 @@ interface Contact {
 export default function EmergencyContacts() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const [contacts, setContacts] = useState<Contact[]>([
     { id: '1', name: '', phoneNumber: '', country: DEFAULT_COUNTRY },
@@ -30,6 +30,12 @@ export default function EmergencyContacts() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+
+  useEffect(() => {
+    if (user?.onboardingCompleted) {
+      router.replace('/');
+    }
+  }, [user, router]);
 
   const addContact = () => {
     const newId = String(Date.now());
