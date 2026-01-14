@@ -11,7 +11,6 @@ import {
   MessageCircle,
   Cloud,
   AlertCircle,
-  BadgeCheck,
   Users,
   ChevronDown,
   ChevronUp,
@@ -233,40 +232,6 @@ const sections: Section[] = [
         'IMPORTANT: Set up emergency contacts FIRST in your Profile settings.',
         'Future update will also notify nearby SafeTransit helpers.',
         'Test the button (with confirmation) once to understand how it works.',
-      ],
-    },
-  },
-  {
-    id: 'verification',
-    icon: BadgeCheck,
-    iconBg: 'bg-primary-600',
-    title: 'Verification System',
-    content: {
-      subtitle: 'Building a Trusted Community',
-      paragraphs: [
-        'Verification ensures that community contributors are real, trustworthy users. It helps maintain the quality and reliability of safety information.',
-      ],
-      bullets: [
-        {
-          label: 'What is Verification',
-          description: 'A one-time process where you verify your identity using facial recognition and a Philippine government ID.',
-        },
-        {
-          label: 'Why It Matters',
-          description: 'Prevents spam, fake reports, and maintains community trust. Only verified users can post tips and vote.',
-        },
-        {
-          label: 'How to Get Verified',
-          description: 'Go to Profile > Verify Your Account > Follow the Face Scan + PH ID upload process. Usually approved within 24 hours.',
-        },
-        {
-          label: 'Benefits',
-          description: 'Add community tips, upvote/downvote tips, comment on reports, and earn a trusted member badge.',
-        },
-      ],
-      notes: [
-        'Your verification data is encrypted and securely stored.',
-        'Unverified users can still use all safety features (map, routes, protection, emergency button).',
       ],
     },
   },

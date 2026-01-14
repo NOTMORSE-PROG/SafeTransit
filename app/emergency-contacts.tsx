@@ -284,13 +284,24 @@ export default function EmergencyContacts() {
   };
 
   const removeContact = (id: string) => {
-    const isLastContact = contacts.filter(c => c.isExisting).length === 1;
+    const existingContacts = contacts.filter(c => c.isExisting);
+    const isLastContact = existingContacts.length === 1 && existingContacts[0].id === id;
+    
+    // Block deletion if this is the only contact
+    if (isLastContact) {
+      showAlert({
+        title: 'Cannot Delete',
+        message: 'You must have at least one emergency contact. Add another contact before removing this one.',
+        type: 'warning',
+        buttonText: 'OK',
+        onClose: hideAlert,
+      });
+      return;
+    }
     
     showAlert({
-      title: isLastContact ? 'Critical Warning' : 'Remove Contact',
-      message: isLastContact 
-        ? 'Deleting your only emergency contact will disable the Panic Button feature. Are you sure you want to proceed?'
-        : 'Are you sure you want to remove this emergency contact?',
+      title: 'Remove Contact',
+      message: 'Are you sure you want to remove this emergency contact?',
       type: 'error',
       buttonText: 'Remove',
       onClose: async () => {

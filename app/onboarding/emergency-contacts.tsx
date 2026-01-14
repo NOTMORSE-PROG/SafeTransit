@@ -10,6 +10,8 @@ import PhoneInput from '@/components/PhoneInput';
 import { DEFAULT_COUNTRY, Country } from '@/constants/countries';
 import { useAuth } from '@/contexts/AuthContext';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 interface Contact {
   id: string;
   name: string;
@@ -32,9 +34,14 @@ export default function EmergencyContacts() {
   const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
-    if (user?.onboardingCompleted) {
-      router.replace('/');
-    }
+    const checkOnboarding = async () => {
+      if (user?.onboardingCompleted) {
+        // User already completed onboarding, set flag and go to home
+        await AsyncStorage.setItem('hasOnboarded', 'true');
+        router.replace('/(tabs)');
+      }
+    };
+    checkOnboarding();
   }, [user, router]);
 
   const addContact = () => {
@@ -108,7 +115,7 @@ export default function EmergencyContacts() {
     if (!valid) return;
 
     if (filledContacts.length === 0) {
-      handleSkip();
+      setErrors({ general: 'Please add at least one emergency contact to continue' });
       return;
     }
 
@@ -151,11 +158,7 @@ export default function EmergencyContacts() {
     }
   };
 
-  const handleSkip = () => {
-    if (isNavigating) return;
-    setIsNavigating(true);
-    router.replace('/onboarding/tutorial');
-  };
+
 
   return (
     <View className="flex-1 bg-white">
@@ -169,7 +172,7 @@ export default function EmergencyContacts() {
             Emergency Contacts
           </Text>
           <Text className="text-base text-neutral-600 leading-6">
-            Add people who will be notified when you need help (optional)
+            Add at least one contact who will be notified when you need help
           </Text>
         </Animated.View>
 
@@ -266,21 +269,6 @@ export default function EmergencyContacts() {
         className="px-6 pt-4 bg-white border-t border-neutral-100"
         style={{ paddingBottom: Math.max(insets.bottom + 16, 32) }}
       >
-        <View className="flex-row gap-3">
-          <TouchableOpacity
-            onPress={handleSkip}
-            disabled={isNavigating}
-            className="flex-1 border-2 border-neutral-200 rounded-xl py-4 items-center justify-center"
-            activeOpacity={0.8}
-            accessible={true}
-            accessibilityLabel="Skip emergency contacts"
-            accessibilityRole="button"
-          >
-            <Text className="text-neutral-600 font-bold text-base">
-              Skip
-            </Text>
-          </TouchableOpacity>
-
           <TouchableOpacity
             onPress={handleSave}
             disabled={isLoading || isNavigating}
@@ -296,7 +284,6 @@ export default function EmergencyContacts() {
               {isNavigating ? 'Saving...' : 'Save & Continue'}
             </Text>
           </TouchableOpacity>
-        </View>
       </View>
     </View>
   );

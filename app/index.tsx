@@ -18,14 +18,20 @@ export default function Index() {
     try {
       if (user) {
         // User is authenticated
-        const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
-
-        if (hasOnboarded === "true") {
-          // Navigate to home
+        // Check database flag first (source of truth), then local storage
+        if (user.onboardingCompleted) {
+          // User completed onboarding - sync local flag and go to home
+          await AsyncStorage.setItem("hasOnboarded", "true");
           router.replace("/(tabs)" as Href);
         } else {
-          // Navigate to onboarding
-          router.replace("/onboarding/welcome" as Href);
+          // Check local storage as fallback
+          const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
+          if (hasOnboarded === "true") {
+            router.replace("/(tabs)" as Href);
+          } else {
+            // Navigate to onboarding
+            router.replace("/onboarding/welcome" as Href);
+          }
         }
       } else {
         // User is not authenticated - navigate to landing page
