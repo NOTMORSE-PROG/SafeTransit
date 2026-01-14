@@ -9,6 +9,7 @@ import { validatePhoneNumber } from '@/services/auth/validation';
 import PhoneInput from '@/components/PhoneInput';
 import { DEFAULT_COUNTRY, Country } from '@/constants/countries';
 import { useAuth } from '@/contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ContactNumber() {
   const router = useRouter();
@@ -22,11 +23,16 @@ export default function ContactNumber() {
   const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
-    if (user?.onboardingCompleted) {
-      router.replace('/');
-    } else if (user?.phoneNumber) {
-      router.replace('/onboarding/emergency-contacts');
-    }
+    const checkOnboarding = async () => {
+      if (user?.onboardingCompleted) {
+        // User already completed onboarding, set flag and go to home
+        await AsyncStorage.setItem('hasOnboarded', 'true');
+        router.replace('/(tabs)');
+      } else if (user?.phoneNumber) {
+        router.replace('/onboarding/emergency-contacts');
+      }
+    };
+    checkOnboarding();
   }, [user, router]);
 
   const handlePhoneChange = (text: string) => {
