@@ -1,0 +1,6 @@
+admin/
+backend/
+node_modules/
+.expo/
+.next/
+dist/

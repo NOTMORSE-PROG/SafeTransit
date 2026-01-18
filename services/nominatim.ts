@@ -1,6 +1,13 @@
 // Nominatim API Service for Location Search
-// Free geocoding service using OpenStreetMap data
-// No API key required, but please respect usage policy
+// Uses backend API for geocoding to handle rate limits and caching
+// Includes offline fallback for Grab-like offline support
+
+import { isOnline } from './offlineManager';
+import {
+  searchOfflineLocations,
+  cacheNearbyLocations,
+  getCachedNearbyLocations,
+} from './offlineLocationCache';
 
 export interface NominatimPlace {
   place_id: number;
@@ -33,206 +40,268 @@ export interface LocationSearchResult {
   latitude: number;
   longitude: number;
   type: string;
+  distance_km?: number;
 }
 
-const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
 
-// User agent required by Nominatim usage policy
-const USER_AGENT = 'SafeTransit/1.0';
+// In-memory cache for reverse geocode results (session-scoped)
+const reverseGeocodeCache = new Map<string, { result: LocationSearchResult; timestamp: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// Coordinate precision for cache key (~11m accuracy)
+const COORD_PRECISION = 4;
 
 /**
- * Search for locations using Nominatim geocoding
- * Focused on Philippines/Manila region
+ * Get cache key from coordinates
+ */
+function getCacheKey(latitude: number, longitude: number): string {
+  return `${latitude.toFixed(COORD_PRECISION)},${longitude.toFixed(COORD_PRECISION)}`;
+}
+
+/**
+ * Search for locations using SafeTransit Backend API
+ * Supports proximity-based search when user location is provided (Grab-like)
+ * Optionally accepts auth token for personalized ranking
+ * Falls back to offline cache when no network connection
  */
 export async function searchLocations(
   query: string,
-  limit: number = 5
+  userLocation?: { latitude: number; longitude: number },
+  limit: number = 10,
+  authToken?: string | null
 ): Promise<LocationSearchResult[]> {
+  // Check network status
+  const online = isOnline();
+
+  // If offline, use cached locations
+  if (!online) {
+    console.log('Offline mode: searching cached locations');
+    return searchOfflineLocations(query, limit);
+  }
+
   try {
-    // Focus search on Philippines (countrycodes=ph)
+    // Build URL with query parameters
     const params = new URLSearchParams({
       q: query,
-      format: 'json',
-      addressdetails: '1',
-      limit: (limit * 2).toString(), // Fetch more to filter/sort
-      countrycodes: 'ph', // Limit to Philippines
-      viewbox: '120.8,14.8,121.2,14.4', // Manila area bounding box
-      bounded: '0', // Allow results outside viewbox but prioritize within
     });
 
+    // Add user location for proximity-based ranking
+    if (userLocation) {
+      params.append('lat', userLocation.latitude.toString());
+      params.append('lon', userLocation.longitude.toString());
+    }
+
+    // Build headers with optional authentication
+    const headers: HeadersInit = {};
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+
+    // Call our backend API with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
     const response = await fetch(
-      `${NOMINATIM_BASE_URL}/search?${params.toString()}`,
+      `${API_BASE_URL}/api/locations/search?${params.toString()}`,
       {
-        headers: {
-          'User-Agent': USER_AGENT,
-        },
+        headers,
+        signal: controller.signal,
       }
     );
 
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
-      throw new Error(`Nominatim API error: ${response.statusText}`);
+      throw new Error(`Location search error: ${response.statusText}`);
     }
 
-    const data: NominatimPlace[] = await response.json();
+    const data = await response.json();
 
-    const results = data.map((place) => {
-      const name = getShortName(place);
-      return {
-        id: place.place_id.toString(),
-        name,
-        address: place.display_name,
-        latitude: parseFloat(place.lat),
-        longitude: parseFloat(place.lon),
-        type: place.type,
-        // Score for sorting (higher = better match)
-        score: calculateRelevanceScore(query, name, place.display_name),
-      };
-    });
+    // Map backend response to frontend interface
+    const results = data.slice(0, limit).map((item: {
+      id: string;
+      name: string;
+      address: string;
+      latitude: number;
+      longitude: number;
+      type: string;
+      distance_km?: number;
+    }) => ({
+      id: item.id,
+      name: item.name,
+      address: item.address,
+      latitude: item.latitude,
+      longitude: item.longitude,
+      type: item.type,
+      distance_km: item.distance_km,
+    }));
 
-    // Sort by relevance score and take top results
-    return results
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-      .map(({ score: _score, ...result }) => result);
+    // Cache results for offline use (if user location available)
+    if (userLocation && results.length > 0) {
+      cacheNearbyLocations(
+        userLocation.latitude,
+        userLocation.longitude,
+        results
+      ).catch(err => console.log('Failed to cache results:', err));
+    }
+
+    return results;
   } catch (error) {
-    console.error('Nominatim search error:', error);
-    return [];
-  }
-}
+    console.error('Location search error:', error);
 
-/**
- * Calculate relevance score for search results
- * Prioritizes matches in the name over matches in full address
- */
-function calculateRelevanceScore(query: string, name: string, fullAddress: string): number {
-  const queryLower = query.toLowerCase();
-  const nameLower = name.toLowerCase();
-  const addressLower = fullAddress.toLowerCase();
+    // Fallback to offline cache on network error
+    console.log('Network error, falling back to cached locations');
 
-  let score = 0;
-
-  // Exact match in name (highest priority)
-  if (nameLower === queryLower) {
-    score += 1000;
-  }
-
-  // Name starts with query (very high priority)
-  if (nameLower.startsWith(queryLower)) {
-    score += 500;
-  }
-
-  // Query appears in name (high priority)
-  if (nameLower.includes(queryLower)) {
-    score += 100;
-  }
-
-  // Name starts with any word in query
-  const queryWords = queryLower.split(' ');
-  for (const word of queryWords) {
-    if (word.length > 2 && nameLower.startsWith(word)) {
-      score += 50;
+    // Try to get cached nearby locations if user location available
+    if (userLocation) {
+      const cached = await getCachedNearbyLocations(
+        userLocation.latitude,
+        userLocation.longitude
+      );
+      if (cached.length > 0) {
+        return cached.slice(0, limit);
+      }
     }
+
+    // Otherwise search offline locations
+    return searchOfflineLocations(query, limit);
   }
-
-  // Query appears in address (lower priority)
-  if (addressLower.includes(queryLower)) {
-    score += 10;
-  }
-
-  // Prefer shorter names (more specific)
-  score -= name.length * 0.1;
-
-  return score;
 }
 
 /**
  * Reverse geocode: Get address from coordinates
+ * Uses backend API with fallback chain: Cache -> Photon -> Nominatim
  */
 export async function reverseGeocode(
   latitude: number,
   longitude: number
 ): Promise<LocationSearchResult | null> {
   try {
-    const params = new URLSearchParams({
-      lat: latitude.toString(),
-      lon: longitude.toString(),
-      format: 'json',
-      addressdetails: '1',
-    });
+    // Check in-memory cache first
+    const cacheKey = getCacheKey(latitude, longitude);
+    const cached = reverseGeocodeCache.get(cacheKey);
 
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return cached.result;
+    }
+
+    // Call backend API
     const response = await fetch(
-      `${NOMINATIM_BASE_URL}/reverse?${params.toString()}`,
+      `${API_BASE_URL}/api/locations/reverse?lat=${latitude}&lon=${longitude}`,
       {
         headers: {
-          'User-Agent': USER_AGENT,
+          'Accept': 'application/json',
         },
       }
     );
 
     if (!response.ok) {
-      throw new Error(`Nominatim reverse geocode error: ${response.statusText}`);
+      throw new Error(`Reverse geocode error: ${response.statusText}`);
     }
 
-    const place: NominatimPlace = await response.json();
+    const result: LocationSearchResult = await response.json();
 
-    return {
-      id: place.place_id.toString(),
-      name: getShortName(place),
-      address: place.display_name,
-      latitude: parseFloat(place.lat),
-      longitude: parseFloat(place.lon),
-      type: place.type,
-    };
+    // Cache the result
+    reverseGeocodeCache.set(cacheKey, { result, timestamp: Date.now() });
+
+    return result;
   } catch (error) {
-    console.error('Nominatim reverse geocode error:', error);
-    return null;
+    console.error('Reverse geocode error:', error);
+
+    // Return fallback instead of null for graceful degradation
+    return createFallbackLocation(latitude, longitude);
   }
 }
 
 /**
- * Get a short, user-friendly name from the place data
+ * Create a fallback location when geocoding fails
  */
-function getShortName(place: NominatimPlace): string {
-  // Get the first part of display_name (usually the most specific location)
-  const firstPart = place.display_name.split(',')[0].trim();
+function createFallbackLocation(latitude: number, longitude: number): LocationSearchResult {
+  return {
+    id: `fallback_${Date.now()}`,
+    name: 'Selected Location',
+    address: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`,
+    latitude,
+    longitude,
+    type: 'pin_drop'
+  };
+}
 
-  if (place.address) {
-    const {
-      road,
-      suburb,
-      city,
-      municipality,
-      building,
-      amenity,
-      shop,
-      tourism,
-      office
-    } = place.address;
+// Debounce state for reverse geocode
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+let pendingCoords: { latitude: number; longitude: number } | null = null;
+let pendingResolvers: {
+  resolve: (value: LocationSearchResult | null) => void;
+  reject: (error: Error) => void;
+}[] = [];
 
-    // Prioritize specific place names
-    if (building && building !== firstPart) return building;
-    if (amenity) return amenity;
-    if (shop) return shop;
-    if (tourism) return tourism;
-    if (office) return office;
+/**
+ * Debounced reverse geocode for map picker
+ * Prevents excessive API calls during map drag
+ * All pending requests will receive the same result
+ */
+export function reverseGeocodeDebounced(
+  latitude: number,
+  longitude: number,
+  delay: number = 500
+): Promise<LocationSearchResult | null> {
+  return new Promise((resolve, reject) => {
+    // Update pending coordinates to latest
+    pendingCoords = { latitude, longitude };
 
-    // Then roads with area context
-    if (road) {
-      const area = suburb || city || municipality;
-      if (area && area !== road) {
-        return `${road}, ${area}`;
-      }
-      return road;
+    // Cancel previous timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
     }
 
-    // Area names
-    if (suburb) return suburb;
-    if (city) return city;
-    if (municipality) return municipality;
-  }
+    // Add this resolver to pending list
+    pendingResolvers.push({ resolve, reject });
 
-  // Fallback to first part of display name
-  return firstPart;
+    debounceTimer = setTimeout(async () => {
+      const coords = pendingCoords;
+      const resolvers = [...pendingResolvers];
+
+      // Clear state
+      pendingCoords = null;
+      pendingResolvers = [];
+      debounceTimer = null;
+
+      if (!coords) {
+        resolvers.forEach(p => p.resolve(null));
+        return;
+      }
+
+      try {
+        const result = await reverseGeocode(coords.latitude, coords.longitude);
+        resolvers.forEach(p => p.resolve(result));
+      } catch {
+        // Even on error, provide fallback
+        const fallback = createFallbackLocation(coords.latitude, coords.longitude);
+        resolvers.forEach(p => p.resolve(fallback));
+      }
+    }, delay);
+  });
+}
+
+/**
+ * Cancel any pending debounced reverse geocode
+ */
+export function cancelPendingReverseGeocode(): void {
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+  pendingCoords = null;
+  pendingResolvers.forEach(p => p.resolve(null));
+  pendingResolvers = [];
+}
+
+/**
+ * Clear the reverse geocode cache
+ */
+export function clearReverseGeocodeCache(): void {
+  reverseGeocodeCache.clear();
 }
 
 /**
@@ -253,11 +322,26 @@ export async function getManilaPopularPlaces(): Promise<LocationSearchResult[]> 
   const results: LocationSearchResult[] = [];
 
   for (const place of popularPlaces.slice(0, 5)) {
-    const searchResults = await searchLocations(place, 1);
+    const searchResults = await searchLocations(place);
     if (searchResults.length > 0) {
       results.push(searchResults[0]);
     }
   }
 
   return results;
+}
+
+/**
+ * Format distance for display (Grab-like)
+ */
+export function formatDistanceDisplay(distanceKm: number | undefined): string {
+  if (distanceKm === undefined || distanceKm === null) {
+    return '';
+  }
+
+  if (distanceKm < 1) {
+    return `${Math.round(distanceKm * 1000)}m`;
+  }
+
+  return `${distanceKm.toFixed(1)}km`;
 }

@@ -1,8 +1,14 @@
 // Location Storage Service
 // Using AsyncStorage for local data persistence
-// Can be upgraded to sync with PostgreSQL backend later
+// Syncs with PostgreSQL backend for cloud backup (Grab-like architecture)
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  pushSavedPlaceToServer,
+  deleteSavedPlaceFromServer,
+  recordPlaceUse,
+  syncFromServer,
+} from './savedPlacesSync';
 
 export interface SavedPlace {
   id: string;
@@ -30,9 +36,19 @@ const MAX_RECENT_LOCATIONS = 20;
 
 /**
  * Get all saved places
+ * Optionally syncs from server first
  */
-export async function getSavedPlaces(): Promise<SavedPlace[]> {
+export async function getSavedPlaces(syncFirst: boolean = false): Promise<SavedPlace[]> {
   try {
+    // Sync from server if requested (e.g., on app launch)
+    if (syncFirst) {
+      try {
+        await syncFromServer();
+      } catch {
+        console.log('Sync from server failed, using local data');
+      }
+    }
+
     const data = await AsyncStorage.getItem(SAVED_PLACES_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
@@ -43,6 +59,7 @@ export async function getSavedPlaces(): Promise<SavedPlace[]> {
 
 /**
  * Save a place (Home, Work, or Favorite)
+ * Syncs to backend for cloud backup
  */
 export async function savePlace(place: Omit<SavedPlace, 'id' | 'createdAt'>): Promise<SavedPlace> {
   try {
@@ -65,6 +82,11 @@ export async function savePlace(place: Omit<SavedPlace, 'id' | 'createdAt'>): Pr
     places.push(newPlace);
     await AsyncStorage.setItem(SAVED_PLACES_KEY, JSON.stringify(places));
 
+    // Push to server for cloud sync (non-blocking)
+    pushSavedPlaceToServer(newPlace).catch((err) =>
+      console.log('Background sync to server failed:', err)
+    );
+
     return newPlace;
   } catch (error) {
     console.error('Error saving place:', error);
@@ -74,12 +96,18 @@ export async function savePlace(place: Omit<SavedPlace, 'id' | 'createdAt'>): Pr
 
 /**
  * Delete a saved place
+ * Syncs deletion to backend
  */
 export async function deleteSavedPlace(id: string): Promise<void> {
   try {
     const places = await getSavedPlaces();
     const filtered = places.filter((p) => p.id !== id);
     await AsyncStorage.setItem(SAVED_PLACES_KEY, JSON.stringify(filtered));
+
+    // Delete from server for cloud sync (non-blocking)
+    deleteSavedPlaceFromServer(id).catch((err) =>
+      console.log('Background delete from server failed:', err)
+    );
   } catch (error) {
     console.error('Error deleting saved place:', error);
     throw error;
@@ -88,11 +116,24 @@ export async function deleteSavedPlace(id: string): Promise<void> {
 
 /**
  * Get saved place by type
+ * Records usage for personalization
  */
-export async function getSavedPlaceByType(type: 'home' | 'work'): Promise<SavedPlace | null> {
+export async function getSavedPlaceByType(
+  type: 'home' | 'work',
+  trackUsage: boolean = true
+): Promise<SavedPlace | null> {
   try {
     const places = await getSavedPlaces();
-    return places.find((p) => p.type === type) || null;
+    const place = places.find((p) => p.type === type) || null;
+
+    // Record usage for personalization (non-blocking)
+    if (place && trackUsage) {
+      recordPlaceUse(place.id).catch((err) =>
+        console.log('Failed to record place use:', err)
+      );
+    }
+
+    return place;
   } catch (error) {
     console.error('Error getting saved place:', error);
     return null;

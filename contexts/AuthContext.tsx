@@ -5,6 +5,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiFetch } from '@/utils/api';
+import { prefetchOfflineLocations } from '@/services/offlineLocationCache';
+import { syncFromServer } from '@/services/savedPlacesSync';
 
 interface User {
   id: string;
@@ -54,6 +56,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Verify token in background (non-blocking)
         verifyTokenInBackground(storedToken);
+
+        // Prefetch offline locations and sync saved places (non-blocking)
+        prefetchOfflineLocations(userData.id).catch(err =>
+          console.log('Failed to prefetch offline locations:', err)
+        );
+        syncFromServer().catch(err =>
+          console.log('Failed to sync saved places:', err)
+        );
       }
     } catch (error) {
       console.error('Failed to load auth:', error);
@@ -96,6 +106,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await AsyncStorage.setItem('user_data', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
+
+    // Prefetch offline locations and sync saved places after login (non-blocking)
+    prefetchOfflineLocations(newUser.id).catch(err =>
+      console.log('Failed to prefetch offline locations:', err)
+    );
+    syncFromServer().catch(err =>
+      console.log('Failed to sync saved places:', err)
+    );
   };
 
   const logout = async () => {
