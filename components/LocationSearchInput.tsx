@@ -435,7 +435,11 @@ export default function LocationSearchInput({
               keyboardShouldPersistTaps="handled"
               contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 16) + 20 }}
               ListHeaderComponent={
-                searchQuery.trim().length === 0 ? (
+                searchQuery.trim().length > 0 ? (
+                  // Active search mode: Only show "Search Results" header
+                  searchResults.length > 0 ? renderSectionHeader('Search Results') : null
+                ) : (
+                  // Browse mode: Show tab-specific headers
                   <View>
                     {activeTab === 'recent' && recentLocations.length > 0 && (
                       renderSectionHeader('Recent Searches')
@@ -444,9 +448,7 @@ export default function LocationSearchInput({
                       renderSectionHeader('Saved Places')
                     )}
                   </View>
-                ) : searchResults.length > 0 ? (
-                  renderSectionHeader('Search Results')
-                ) : null
+                )
               }
               ListEmptyComponent={
                 !isLoading ? (

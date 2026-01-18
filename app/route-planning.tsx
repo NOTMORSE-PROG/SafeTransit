@@ -37,6 +37,8 @@ import {
 
 import LocationSearchInput from '../components/LocationSearchInput';
 import NavigationConfirmModal from '../components/NavigationConfirmModal';
+import PickupPointSelector from '../components/PickupPointSelector';
+import GrabStylePin from '../components/GrabStylePin';
 import { LocationSearchResult, reverseGeocode, reverseGeocodeDebounced, cancelPendingReverseGeocode } from '../services/nominatim';
 import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/osrm';
 import { getSavedPlaceByType, SavedPlace } from '../services/locationStorage';
@@ -104,6 +106,11 @@ export default function RoutePlanning() {
   const [selectedRoute, setSelectedRoute] = useState<RouteWithSafety | null>(null);
   const [isLoadingRoutes, setIsLoadingRoutes] = useState(false);
   const [showNavigationModal, setShowNavigationModal] = useState(false);
+
+  // Pickup points states (Grab-style multi-entrance)
+  const [selectedStartPickup, setSelectedStartPickup] = useState<string | null>(null);
+  const [selectedEndPickup, setSelectedEndPickup] = useState<string | null>(null);
+  const [showPickupSelector, setShowPickupSelector] = useState<'start' | 'end' | null>(null);
 
   // Enhanced Animations - Spring physics for Grab-like bounce
   const pinTranslateY = useSharedValue(0);
@@ -416,7 +423,7 @@ export default function RoutePlanning() {
     ],
   }));
 
-  const shadowStyle = useAnimatedStyle(() => ({
+  const _shadowStyle = useAnimatedStyle(() => ({
     transform: [{ scale: shadowScale.value }],
     opacity: shadowOpacity.value,
   }));
@@ -429,7 +436,7 @@ export default function RoutePlanning() {
     ]
   }));
 
-  const markerPulseStyle = useAnimatedStyle(() => ({
+  const _markerPulseStyle = useAnimatedStyle(() => ({
     transform: [{ scale: markerPulse.value }],
     opacity: interpolate(markerPulse.value, [1, 1.3], [0.6, 0])
   }));
@@ -496,11 +503,46 @@ export default function RoutePlanning() {
         }}
         onLocationSelect={(loc) => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+          console.log('[RoutePlanning] Selected location:', loc.name);
+          console.log('[RoutePlanning] Has pickup points?', loc.has_pickup_points);
+          console.log('[RoutePlanning] Pickup points:', loc.pickup_points);
+
           if (activeInput === 'start') {
             setStartLocation(loc);
             setUseCurrentAsStart(false);
           } else {
             setEndLocation(loc);
+          }
+
+          // Check if location has pickup points - show selector (Grab-style)
+          if (loc.has_pickup_points && loc.pickup_points && loc.pickup_points.length > 0) {
+            console.log('[RoutePlanning] Showing pickup selector with', loc.pickup_points.length, 'points');
+            // Auto-select first (closest/most popular) pickup point
+            const firstPickup = loc.pickup_points[0];
+            if (activeInput === 'start') {
+              setSelectedStartPickup(firstPickup.id);
+            } else {
+              setSelectedEndPickup(firstPickup.id);
+            }
+
+            // Show pickup selector for user to choose
+            setShowPickupSelector(activeInput);
+
+            // Update location coordinates to first pickup point
+            const updatedLoc: LocationSearchResult = {
+              ...loc,
+              latitude: firstPickup.latitude,
+              longitude: firstPickup.longitude,
+            };
+
+            if (activeInput === 'start') {
+              setStartLocation(updatedLoc);
+            } else {
+              setEndLocation(updatedLoc);
+            }
+
+            return; // Don't navigate yet, let user select pickup point first
           }
 
           // Navigate to next step
@@ -584,28 +626,19 @@ export default function RoutePlanning() {
         </Animated.View>
       )}
 
-      {/* Fixed Center Pin Container */}
+      {/* Fixed Center Pin Container - Grab-style teardrop */}
       <View
         className="absolute inset-0 items-center justify-center pointer-events-none"
-        style={{ paddingBottom: 120 }}
+        style={{ paddingBottom: 80 }}
       >
-        {/* Shadow (ellipse at ground level) */}
-        <Animated.View
-          style={[shadowStyle]}
-          className="absolute w-8 h-3 bg-black rounded-full"
-        />
-
         {/* Pin with animation */}
-        <Animated.View style={[pinStyle]} className="mb-10">
-          {activeInput === 'start' ? (
-            <View className="bg-primary-600 w-16 h-16 rounded-full border-4 border-white items-center justify-center shadow-2xl">
-              <Navigation color="#ffffff" size={30} strokeWidth={2.5} />
-            </View>
-          ) : (
-            <View className="bg-danger-600 w-16 h-16 rounded-full border-4 border-white items-center justify-center shadow-2xl">
-              <MapPin color="#ffffff" size={30} strokeWidth={2} />
-            </View>
-          )}
+        <Animated.View style={[pinStyle]}>
+          <GrabStylePin
+            Icon={activeInput === 'start' ? Navigation : MapPin}
+            color={activeInput === 'start' ? '#2563eb' : '#dc2626'}
+            size={52}
+            selected={!isMapMoving}
+          />
         </Animated.View>
       </View>
 
@@ -715,38 +748,68 @@ export default function RoutePlanning() {
         style={{ flex: 1 }}
         initialRegion={MANILA_REGION}
       >
-        {/* Start Marker with pulse */}
+        {/* Start Marker - Grab-style teardrop pin */}
         {startLocation && (
-          <>
-            <Marker coordinate={{ latitude: startLocation.latitude, longitude: startLocation.longitude }}>
-              <View className="items-center justify-center">
-                <Animated.View
-                  style={[markerPulseStyle]}
-                  className="absolute w-10 h-10 bg-primary-400 rounded-full"
-                />
-                <View className="bg-primary-600 w-8 h-8 rounded-full border-3 border-white items-center justify-center shadow-lg">
-                  <Navigation color="#ffffff" size={16} />
-                </View>
-              </View>
-            </Marker>
-          </>
+          <Marker
+            coordinate={{ latitude: startLocation.latitude, longitude: startLocation.longitude }}
+            anchor={{ x: 0.5, y: 1 }}
+          >
+            <GrabStylePin Icon={Navigation} color="#2563eb" size={44} selected={true} />
+          </Marker>
         )}
-        {/* End Marker with pulse */}
+
+        {/* End Marker - Grab-style teardrop pin */}
         {endLocation && (
-          <>
-            <Marker coordinate={{ latitude: endLocation.latitude, longitude: endLocation.longitude }}>
-              <View className="items-center justify-center">
-                <Animated.View
-                  style={[markerPulseStyle]}
-                  className="absolute w-10 h-10 bg-danger-400 rounded-full"
-                />
-                <View className="bg-danger-600 w-8 h-8 rounded-full border-3 border-white items-center justify-center shadow-lg">
-                  <MapPin color="#ffffff" size={16} />
-                </View>
-              </View>
-            </Marker>
-          </>
+          <Marker
+            coordinate={{ latitude: endLocation.latitude, longitude: endLocation.longitude }}
+            anchor={{ x: 0.5, y: 1 }}
+          >
+            <GrabStylePin Icon={MapPin} color="#dc2626" size={44} selected={true} />
+          </Marker>
         )}
+
+        {/* Pickup Points - Start Location (Green Dots - Grab Style) */}
+        {startLocation?.pickup_points?.map((point, index) => (
+          <Marker
+            key={`start-pickup-${point.id}`}
+            coordinate={{ latitude: point.latitude, longitude: point.longitude }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setSelectedStartPickup(point.id);
+              setShowPickupSelector('start');
+            }}
+          >
+            <View className="items-center justify-center">
+              <View className={`w-7 h-7 rounded-full border-2 border-white items-center justify-center shadow-lg ${
+                selectedStartPickup === point.id ? 'bg-primary-600' : 'bg-emerald-500'
+              }`}>
+                <Text className="text-white text-xs font-bold">{index + 1}</Text>
+              </View>
+            </View>
+          </Marker>
+        ))}
+
+        {/* Pickup Points - End Location (Green Dots - Grab Style) */}
+        {endLocation?.pickup_points?.map((point, index) => (
+          <Marker
+            key={`end-pickup-${point.id}`}
+            coordinate={{ latitude: point.latitude, longitude: point.longitude }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setSelectedEndPickup(point.id);
+              setShowPickupSelector('end');
+            }}
+          >
+            <View className="items-center justify-center">
+              <View className={`w-7 h-7 rounded-full border-2 border-white items-center justify-center shadow-lg ${
+                selectedEndPickup === point.id ? 'bg-danger-600' : 'bg-emerald-500'
+              }`}>
+                <Text className="text-white text-xs font-bold">{index + 1}</Text>
+              </View>
+            </View>
+          </Marker>
+        ))}
+
         {routes.map(r => (
           <Polyline
             key={r.id}
@@ -939,6 +1002,74 @@ export default function RoutePlanning() {
       {viewMode === 'search' && renderSearchMode()}
       {viewMode === 'map_picker' && renderMapPickerMode()}
       {viewMode === 'route_preview' && renderRoutePreviewMode()}
+
+      {/* Pickup Point Selector Modal - Rendered over all views (Grab-style) */}
+      {showPickupSelector && (
+        <PickupPointSelector
+          locationName={
+            showPickupSelector === 'start'
+              ? startLocation?.name || 'Start Location'
+              : endLocation?.name || 'End Location'
+          }
+          pickupPoints={
+            showPickupSelector === 'start'
+              ? startLocation?.pickup_points || []
+              : endLocation?.pickup_points || []
+          }
+          selectedPickupId={
+            showPickupSelector === 'start' ? selectedStartPickup : selectedEndPickup
+          }
+          onSelectPickup={(pickupId) => {
+            const location = showPickupSelector === 'start' ? startLocation : endLocation;
+            const selectedPoint = location?.pickup_points?.find(p => p.id === pickupId);
+
+            if (selectedPoint && location) {
+              // Update the location coordinates to the selected pickup point
+              const updatedLocation: LocationSearchResult = {
+                ...location,
+                latitude: selectedPoint.latitude,
+                longitude: selectedPoint.longitude,
+              };
+
+              if (showPickupSelector === 'start') {
+                setSelectedStartPickup(pickupId);
+                setStartLocation(updatedLocation);
+              } else {
+                setSelectedEndPickup(pickupId);
+                setEndLocation(updatedLocation);
+              }
+
+              // Close selector and navigate to next step
+              setShowPickupSelector(null);
+
+              // Navigate to next step or route preview
+              if (activeInput === 'start' && endLocation) {
+                setViewMode('route_preview');
+              } else if (activeInput === 'end' && startLocation) {
+                setViewMode('route_preview');
+              } else if (activeInput === 'start') {
+                setActiveInput('end');
+              } else if (activeInput === 'end' && !startLocation) {
+                setActiveInput('start');
+              } else {
+                setViewMode('route_preview');
+              }
+            }
+          }}
+          onClose={() => {
+            setShowPickupSelector(null);
+            // Navigate to next step when closing without selection
+            if (activeInput === 'start' && endLocation) {
+              setViewMode('route_preview');
+            } else if (activeInput === 'end' && startLocation) {
+              setViewMode('route_preview');
+            } else if (activeInput === 'start') {
+              setActiveInput('end');
+            }
+          }}
+          mode={showPickupSelector}
+        />
+      )}
     </View>
   );
 }

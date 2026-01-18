@@ -41,6 +41,17 @@ export interface LocationSearchResult {
   longitude: number;
   type: string;
   distance_km?: number;
+  pickup_points?: {
+    id: string;
+    latitude: number;
+    longitude: number;
+    type: 'entrance' | 'gate' | 'parking' | 'platform' | 'terminal' | 'main' | 'side';
+    name: string;
+    description?: string;
+    distance_meters?: number;
+    distance_km?: string;
+  }[];
+  has_pickup_points?: boolean;
 }
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
