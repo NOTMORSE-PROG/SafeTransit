@@ -16,7 +16,7 @@ export async function uploadProfileImage(
     const apiUrl = getApiUrl();
     
     // Step 1: Get presigned URL from our backend
-    const presignResponse = await fetch(`${apiUrl}/api/uploadthing/route`, {
+    const presignResponse = await fetch(`${apiUrl}/api/uploadthing`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

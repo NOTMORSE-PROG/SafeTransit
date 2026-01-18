@@ -73,7 +73,7 @@ export default function Profile() {
       });
 
       // Upload to backend
-      const uploadResponse = await apiFetch('/api/user/upload-image', {
+      const uploadResponse = await apiFetch('/api/user/profile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default function Profile() {
       console.log('Upload successful:', uploadResult.url);
 
       // Update profile with new image URL (backend will auto-delete old image)
-      const updateResponse = await apiFetch('/api/user/update-profile', {
+      const updateResponse = await apiFetch('/api/user/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export default function Profile() {
     
     try {
       // Call backend to remove photo (will delete from UploadThing)
-      const response = await apiFetch('/api/user/update-profile', {
+      const response = await apiFetch('/api/user/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -212,7 +212,7 @@ export default function Profile() {
     setIsSavingName(true);
     
     try {
-      const response = await apiFetch('/api/user/update-profile', {
+      const response = await apiFetch('/api/user/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

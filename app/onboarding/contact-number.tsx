@@ -57,7 +57,7 @@ export default function ContactNumber() {
 
     setIsLoading(true);
     try {
-      const response = await apiFetch('/api/user/update-phone', {
+      const response = await apiFetch('/api/user/profile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
