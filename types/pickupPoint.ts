@@ -1,9 +1,9 @@
 /**
- * Pickup Point Types
- * Based on Grab's multi-entrance pickup points system
+ * Safe Meeting Point Types
+ * Safety-focused meeting points for SafeTransit users
  */
 
-export interface PickupPoint {
+export interface SafeMeetingPoint {
   id: string;
   parent_location_id: string;
 
@@ -16,6 +16,18 @@ export interface PickupPoint {
   type: 'entrance' | 'gate' | 'parking' | 'platform' | 'terminal' | 'main' | 'side';
   name: string;
   description?: string;
+
+  // Safety Features
+  safety_rating: number;
+  has_security_guard: boolean;
+  has_cctv: boolean;
+  well_lit_at_night: boolean;
+  high_foot_traffic: boolean;
+  staffed_24_7: boolean;
+  safety_notes?: string;
+  user_safety_reports: number;
+  positive_safety_reports: number;
+  last_safety_check?: string;
 
   // Validation
   verified: boolean;
@@ -34,6 +46,9 @@ export interface PickupPoint {
   created_at: string;
   updated_at: string;
 }
+
+// Legacy alias for backwards compatibility
+export type PickupPoint = SafeMeetingPoint;
 
 export interface PickupPointInsert {
   parent_location_id: string;

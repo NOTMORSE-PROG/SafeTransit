@@ -1,10 +1,10 @@
 /**
- * Pickup Point Selector Component
- * Grab-style bottom sheet for selecting entrance/gate/parking pickup points
+ * Safe Meeting Point Selector
+ * Safety-focused meeting point selection for SafeTransit users
  */
 
 import { View, Text, TouchableOpacity, ScrollView, Modal, Pressable } from 'react-native';
-import { MapPin, Navigation, Crosshair } from 'lucide-react-native';
+import { MapPin, Navigation, Shield, Camera, Users, Clock } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
 interface PickupPoint {
