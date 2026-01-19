@@ -1,7 +1,7 @@
 // Forum Repository
 // Handles all database operations for forum posts, comments, votes, likes, and reports
 
-import { neon } from '@neondatabase/serverless';
+import { neon } from "@neondatabase/serverless";
 import type {
   ForumPost,
   ForumPostWithAuthor,
@@ -11,14 +11,14 @@ import type {
   ForumCommentInsert,
   ReportInsert,
   PostFlair,
-} from './types/forum';
-import type { QueryResult } from './types/database';
+} from "./types/forum";
+import type { QueryResult } from "./types/database";
 
 // Get database URL from environment
 const getDatabaseUrl = (): string => {
   const url = process.env.DATABASE_URL;
   if (!url) {
-    throw new Error('DATABASE_URL environment variable is not set');
+    throw new Error("DATABASE_URL environment variable is not set");
   }
   return url;
 };
@@ -36,22 +36,30 @@ export const ForumPostsRepository = {
   async getPosts(params: {
     page?: number;
     limit?: number;
-    sort?: 'recent' | 'popular';
+    sort?: "recent" | "popular";
     flair?: PostFlair;
     authorId?: string;
     userId?: string;
   }): Promise<{ posts: ForumPostWithAuthor[]; total: number }> {
-    const { page = 1, limit = 20, sort = 'recent', flair, authorId, userId } = params;
+    const {
+      page = 1,
+      limit = 20,
+      sort = "recent",
+      flair,
+      authorId,
+      userId,
+    } = params;
     const offset = (page - 1) * limit;
 
     const conditions = ["fp.status = 'visible'"];
     if (flair) conditions.push(`fp.flair = '${flair}'`);
     if (authorId) conditions.push(`fp.author_id = '${authorId}'`);
-    const whereClause = conditions.join(' AND ');
+    const whereClause = conditions.join(" AND ");
 
-    const orderBy = sort === 'popular'
-      ? '(fp.upvotes - fp.downvotes) DESC, fp.created_at DESC'
-      : 'fp.created_at DESC';
+    const orderBy =
+      sort === "popular"
+        ? "(fp.upvotes - fp.downvotes) DESC, fp.created_at DESC"
+        : "fp.created_at DESC";
 
     const postsQuery = userId
       ? sql`
@@ -85,12 +93,15 @@ export const ForumPostsRepository = {
     `;
 
     const [posts, countResult] = await Promise.all([postsQuery, countQuery]);
-    const total = parseInt(countResult[0]?.count || '0');
+    const total = parseInt(countResult[0]?.count || "0");
 
     return { posts: posts as ForumPostWithAuthor[], total };
   },
 
-  async getById(id: string, userId?: string): Promise<ForumPostWithAuthor | null> {
+  async getById(
+    id: string,
+    userId?: string,
+  ): Promise<ForumPostWithAuthor | null> {
     const result = userId
       ? await sql`
           SELECT 
@@ -127,21 +138,31 @@ export const ForumPostsRepository = {
     return result[0] as ForumPost;
   },
 
-  async update(id: string, authorId: string, data: Partial<Pick<ForumPost, 'title' | 'body' | 'flair' | 'location_tag'>>): Promise<ForumPost | null> {
-    const existing = await sql`SELECT id FROM forum_posts WHERE id = ${id} AND author_id = ${authorId}`;
+  async update(
+    id: string,
+    authorId: string,
+    data: Partial<Pick<ForumPost, "title" | "body" | "flair" | "location_tag">>,
+  ): Promise<ForumPost | null> {
+    const existing =
+      await sql`SELECT id FROM forum_posts WHERE id = ${id} AND author_id = ${authorId}`;
     if (existing.length === 0) return null;
 
     const updates: string[] = [];
-    if (data.title !== undefined) updates.push(`title = '${data.title.replace(/'/g, "''")}'`);
-    if (data.body !== undefined) updates.push(`body = '${data.body.replace(/'/g, "''")}'`);
+    if (data.title !== undefined)
+      updates.push(`title = '${data.title.replace(/'/g, "''")}'`);
+    if (data.body !== undefined)
+      updates.push(`body = '${data.body.replace(/'/g, "''")}'`);
     if (data.flair !== undefined) updates.push(`flair = '${data.flair}'`);
-    if (data.location_tag !== undefined) updates.push(`location_tag = ${data.location_tag ? `'${data.location_tag.replace(/'/g, "''")}'` : 'NULL'}`);
+    if (data.location_tag !== undefined)
+      updates.push(
+        `location_tag = ${data.location_tag ? `'${data.location_tag.replace(/'/g, "''")}'` : "NULL"}`,
+      );
 
     if (updates.length === 0) return this.getById(id);
 
     const result = await sql`
       UPDATE forum_posts
-      SET ${sql.unsafe(updates.join(', '))}
+      SET ${sql.unsafe(updates.join(", "))}
       WHERE id = ${id} AND author_id = ${authorId}
       RETURNING *
     `;
@@ -155,7 +176,14 @@ export const ForumPostsRepository = {
     return (result as unknown as QueryResult).count > 0;
   },
 
-  async vote(postId: string, userId: string, voteType: 'up' | 'down'): Promise<{ action: 'added' | 'removed' | 'changed'; newVote: 'up' | 'down' | null }> {
+  async vote(
+    postId: string,
+    userId: string,
+    voteType: "up" | "down",
+  ): Promise<{
+    action: "added" | "removed" | "changed";
+    newVote: "up" | "down" | null;
+  }> {
     const existing = await sql`
       SELECT vote_type FROM forum_post_votes WHERE post_id = ${postId} AND user_id = ${userId}
     `;
@@ -165,29 +193,29 @@ export const ForumPostsRepository = {
 
       if (oldVote === voteType) {
         await sql`DELETE FROM forum_post_votes WHERE post_id = ${postId} AND user_id = ${userId}`;
-        if (voteType === 'up') {
+        if (voteType === "up") {
           await sql`UPDATE forum_posts SET upvotes = upvotes - 1 WHERE id = ${postId}`;
         } else {
           await sql`UPDATE forum_posts SET downvotes = downvotes - 1 WHERE id = ${postId}`;
         }
-        return { action: 'removed', newVote: null };
+        return { action: "removed", newVote: null };
       } else {
         await sql`UPDATE forum_post_votes SET vote_type = ${voteType} WHERE post_id = ${postId} AND user_id = ${userId}`;
-        if (voteType === 'up') {
+        if (voteType === "up") {
           await sql`UPDATE forum_posts SET upvotes = upvotes + 1, downvotes = downvotes - 1 WHERE id = ${postId}`;
         } else {
           await sql`UPDATE forum_posts SET upvotes = upvotes - 1, downvotes = downvotes + 1 WHERE id = ${postId}`;
         }
-        return { action: 'changed', newVote: voteType };
+        return { action: "changed", newVote: voteType };
       }
     } else {
       await sql`INSERT INTO forum_post_votes (post_id, user_id, vote_type) VALUES (${postId}, ${userId}, ${voteType})`;
-      if (voteType === 'up') {
+      if (voteType === "up") {
         await sql`UPDATE forum_posts SET upvotes = upvotes + 1 WHERE id = ${postId}`;
       } else {
         await sql`UPDATE forum_posts SET downvotes = downvotes + 1 WHERE id = ${postId}`;
       }
-      return { action: 'added', newVote: voteType };
+      return { action: "added", newVote: voteType };
     }
   },
 };
@@ -197,10 +225,17 @@ export const ForumPostsRepository = {
 // ==============================================================================
 
 export const ForumCommentsRepository = {
-  async getByPostId(postId: string, userId?: string, sort: 'popular' | 'newest' | 'oldest' = 'newest'): Promise<ForumCommentWithAuthor[]> {
-    const orderBy = sort === 'popular' ? 'fc.likes DESC, fc.created_at DESC'
-      : sort === 'oldest' ? 'fc.created_at ASC'
-      : 'fc.created_at DESC';
+  async getByPostId(
+    postId: string,
+    userId?: string,
+    sort: "popular" | "newest" | "oldest" = "newest",
+  ): Promise<ForumCommentWithAuthor[]> {
+    const orderBy =
+      sort === "popular"
+        ? "fc.likes DESC, fc.created_at DESC"
+        : sort === "oldest"
+          ? "fc.created_at ASC"
+          : "fc.created_at DESC";
 
     const comments = userId
       ? await sql`
@@ -249,11 +284,12 @@ export const ForumCommentsRepository = {
   async create(data: ForumCommentInsert): Promise<ForumComment> {
     let depth = 0;
     if (data.parent_id) {
-      const parent = await sql`SELECT depth FROM forum_comments WHERE id = ${data.parent_id}`;
+      const parent =
+        await sql`SELECT depth FROM forum_comments WHERE id = ${data.parent_id}`;
       if (parent.length > 0) {
         depth = parent[0].depth + 1;
         if (depth > 1) {
-          throw new Error('Maximum reply depth exceeded (2 levels)');
+          throw new Error("Maximum reply depth exceeded (2 levels)");
         }
       }
     }
@@ -266,7 +302,10 @@ export const ForumCommentsRepository = {
     return result[0] as ForumComment;
   },
 
-  async toggleLike(commentId: string, userId: string): Promise<{ liked: boolean }> {
+  async toggleLike(
+    commentId: string,
+    userId: string,
+  ): Promise<{ liked: boolean }> {
     const existing = await sql`
       SELECT 1 FROM forum_comment_likes WHERE comment_id = ${commentId} AND user_id = ${userId}
     `;
@@ -295,7 +334,9 @@ export const ForumCommentsRepository = {
 // ==============================================================================
 
 export const ReportsRepository = {
-  async create(data: ReportInsert): Promise<{ success: boolean; alreadyReported: boolean }> {
+  async create(
+    data: ReportInsert,
+  ): Promise<{ success: boolean; alreadyReported: boolean }> {
     try {
       await sql`
         INSERT INTO reports (reporter_id, content_type, content_id, reason, additional_info)
@@ -303,14 +344,23 @@ export const ReportsRepository = {
       `;
       return { success: true, alreadyReported: false };
     } catch (error: unknown) {
-      if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code === "23505"
+      ) {
         return { success: false, alreadyReported: true };
       }
       throw error;
     }
   },
 
-  async hasReported(reporterId: string, contentType: string, contentId: string): Promise<boolean> {
+  async hasReported(
+    reporterId: string,
+    contentType: string,
+    contentId: string,
+  ): Promise<boolean> {
     const result = await sql`
       SELECT 1 FROM reports 
       WHERE reporter_id = ${reporterId} AND content_type = ${contentType} AND content_id = ${contentId}
