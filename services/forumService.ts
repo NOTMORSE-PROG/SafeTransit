@@ -299,9 +299,8 @@ export async function addComment(
 }
 
 /**
- * Reply to a comment
+ * Reply to a comment (supports nested replies)
  */
-// Reply to a comment - Supports nested replies up to 999 levels deep (Facebook-like threading)
 export async function replyToComment(
   commentId: string,
   content: string,

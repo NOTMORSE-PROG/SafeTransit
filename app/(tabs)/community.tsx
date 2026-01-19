@@ -78,14 +78,13 @@ export default function Community() {
     [sortBy, selectedFlair, token],
   );
 
-  // ✨ Load posts whenever sort, flair, or search query changes
+  // Load posts when filters change
   useEffect(() => {
     loadPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadPosts, sortBy, searchQuery]);
 
-  // Auto-refresh: Keep the community feed fresh with silent background updates every 15 seconds
-  // This ensures users always see the latest posts without manual refreshing
+  // Auto-refresh every 15 seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!isLoading && !isRefreshing) {
