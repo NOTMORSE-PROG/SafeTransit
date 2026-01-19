@@ -18,6 +18,12 @@ export interface LocationSuggestion {
   source: 'saved' | 'frequent' | 'time_pattern' | 'nearby';
 }
 
+interface SuggestionContext {
+  currentHour?: number;
+  dayOfWeek?: number;
+  currentLocation?: { lat: number; lon: number };
+}
+
 /**
  * Get personalized location suggestions for user
  * Grab-like smart suggestions based on:
@@ -25,6 +31,13 @@ export interface LocationSuggestion {
  * - Frequent locations
  * - Time-based patterns
  * - Nearby frequent places
+ */
+export async function getUserSuggestions(
+  userId: string,
+  context?: SuggestionContext,
+  limit: number = 10
+): Promise<LocationSuggestion[]> {
+  const suggestions: LocationSuggestion[] = [];
   const currentHour = context?.currentHour ?? new Date().getHours();
   const dayOfWeek = context?.dayOfWeek ?? new Date().getDay();
 
@@ -107,7 +120,9 @@ export interface LocationSuggestion {
           address: loc.location_address || `${loc.center_lat}, ${loc.center_lon}`,
           latitude: loc.center_lat,
           longitude: loc.center_lon,
-          reason: getTimeBasedReason(currentHour, loc.typical_hour),
+          reason: loc.typical_hour !== null
+            ? getTimeBasedReason(currentHour, loc.typical_hour)
+            : 'You visit here frequently',
           confidence: 0.7,
           source: 'time_pattern',
         });
@@ -250,4 +265,25 @@ function calculateHomeWorkConfidence(loc: FrequentLocation): number {
   if (loc.visit_count >= 10) return 0.8;
   if (loc.visit_count >= 5) return 0.7;
   return 0.6;
+}
+
+/**
+ * Generate a time-based reason message
+ */
+function getTimeBasedReason(currentHour: number, typicalHour: number): string {
+  const timeDiff = Math.abs(currentHour - typicalHour);
+  if (timeDiff <= 2) {
+    return 'You often visit here at this time';
+  }
+  return `You typically visit here around ${typicalHour}:00`;
+}
+
+/**
+ * Calculate distance from location
+ */
+function calculateDistance(loc: FrequentLocation): number {
+  // This is a placeholder - the actual distance calculation
+  // would use the Haversine formula with user's current location
+  // For now, return 0 as it will be calculated elsewhere if needed
+  return 0;
 }

@@ -33,7 +33,7 @@ export interface RankedLocation {
   type: string;
   latitude: number;
   longitude: number;
-  geohash: string;
+  geohash?: string;
   search_count: number;
   distance_km?: number;
 
@@ -131,6 +131,12 @@ function calculateUserScore(
 /**
  * Get user's frequent and saved places for personalization
  */
+interface UserSavedPlace {
+  id: string;
+  label: string;
+  use_count: number;
+}
+
 async function getUserPlacePreferences(userId: string): Promise<{
   frequentPlaces: Set<string>;
   savedPlaces: Set<string>;
@@ -141,16 +147,16 @@ async function getUserPlacePreferences(userId: string): Promise<{
       SELECT id, label, use_count
       FROM user_saved_places
       WHERE user_id = ${userId}
-    `;
+    ` as UserSavedPlace[];
 
-    const savedPlaces = new Set(savedPlacesResult.map((p: { id: string; label: string; use_count: number }) => p.id));
+    const savedPlaces = new Set(savedPlacesResult.map((p) => p.id));
 
     // For frequent places, we could track search history
     // For now, use saved places that are frequently used
     const frequentPlaces = new Set(
       savedPlacesResult
-        .filter((p: { id: string; label: string; use_count: number }) => p.use_count > 3)
-        .map((p: { id: string; label: string; use_count: number }) => p.id)
+        .filter((p) => p.use_count > 3)
+        .map((p) => p.id)
     );
 
     return { frequentPlaces, savedPlaces };
