@@ -1,216 +1,292 @@
-import { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+// Community Forum Screen
+// Main forum feed with posts, filtering, and sorting
+
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  RefreshControl,
+  ActivityIndicator,
+} from 'react-native';
+import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Search, LayoutGrid, Lightbulb, ShieldAlert, Bus, ThumbsUp, MapPin, SearchX } from 'lucide-react-native';
+import { Search, Plus, Filter, TrendingUp, Clock, SearchX } from 'lucide-react-native';
+import { useAuth } from '@/contexts/AuthContext';
+import { ForumPostCard } from '@/components/forum/ForumPostCard';
+import { getPosts, votePost, type ForumPostWithAuthor, type PostFlair } from '@/services/forumService';
+import { FLAIR_CONFIG } from '@/services/types/forum';
 
-const MOCK_COMMUNITY_TIPS = [
-  {
-    id: '1',
-    category: 'lighting',
-    title: 'Well-Lit MRT Exit',
-    location: 'Ayala Station, Exit 3',
-    message: 'Exit 3 is well-lit with security guards present until 11 PM. Safest option for evening commutes.',
-    upvotes: 45,
-    timeAgo: '2 hours ago'
-  },
-  {
-    id: '2',
-    category: 'safety',
-    title: 'Avoid After Dark',
-    location: 'P. Burgos Street',
-    message: 'Street lights are broken here. Use alternate route via Ayala Avenue after 8 PM.',
-    upvotes: 32,
-    timeAgo: '5 hours ago'
-  },
-  {
-    id: '3',
-    category: 'transit',
-    title: 'Safe Jeepney Route',
-    location: 'Buendia to Taft',
-    message: 'Board jeepney at Buendia corner Ayala. Driver is reliable and route is well-populated.',
-    upvotes: 28,
-    timeAgo: '1 day ago'
-  },
-  {
-    id: '4',
-    category: 'lighting',
-    title: 'Security Camera Zone',
-    location: 'Greenbelt Area',
-    message: 'Full CCTV coverage and roving security. Very safe for walking.',
-    upvotes: 67,
-    timeAgo: '2 days ago'
-  }
-];
-
-const CATEGORIES = [
-  { id: 'all', label: 'All', icon: 'LayoutGrid' },
-  { id: 'lighting', label: 'Lighting', icon: 'Lightbulb' },
-  { id: 'safety', label: 'Safety', icon: 'ShieldAlert' },
-  { id: 'transit', label: 'Transit', icon: 'Bus' }
-];
+const FLAIRS: (PostFlair | 'all')[] = ['all', 'general', 'routes', 'questions', 'experiences', 'tips_advice'];
 
 export default function Community() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const router = useRouter();
+  const { token } = useAuth();
+  
+  const [posts, setPosts] = useState<ForumPostWithAuthor[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedFlair, setSelectedFlair] = useState<PostFlair | 'all'>('all');
+  const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
   const [searchQuery, setSearchQuery] = useState('');
+  const [votingPostId, setVotingPostId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'lighting':
-        return Lightbulb;
-      case 'safety':
-        return ShieldAlert;
-      case 'transit':
-        return Bus;
-      default:
-        return LayoutGrid;
+  const loadPosts = useCallback(async (showRefresh = false) => {
+    try {
+      if (showRefresh) setIsRefreshing(true);
+      else setIsLoading(true);
+      setError(null);
+
+      const response = await getPosts({
+        sort: sortBy,
+        flair: selectedFlair === 'all' ? undefined : selectedFlair,
+        token: token || undefined,
+      });
+
+      setPosts(response.data);
+    } catch (err) {
+      console.error('Failed to load posts:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load posts');
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [sortBy, selectedFlair, token]);
+
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
+
+  const handleVote = async (postId: string, voteType: 'up' | 'down') => {
+    if (!token) {
+      router.push('/auth/login');
+      return;
+    }
+
+    setVotingPostId(postId);
+    try {
+      const result = await votePost(postId, voteType, token);
+      if (result.success) {
+        // Optimistically update the UI
+        setPosts((prev) =>
+          prev.map((post) => {
+            if (post.id !== postId) return post;
+
+            const wasUpvoted = post.user_vote === 'up';
+            const wasDownvoted = post.user_vote === 'down';
+            const newVote = result.data?.newVote;
+
+            let upvotes = post.upvotes;
+            let downvotes = post.downvotes;
+
+            // Adjust counts based on vote change
+            if (wasUpvoted) upvotes--;
+            if (wasDownvoted) downvotes--;
+            if (newVote === 'up') upvotes++;
+            if (newVote === 'down') downvotes++;
+
+            return { ...post, upvotes, downvotes, user_vote: newVote };
+          })
+        );
+      }
+    } catch (err) {
+      console.error('Vote failed:', err);
+    } finally {
+      setVotingPostId(null);
     }
   };
 
-  const filteredTips = MOCK_COMMUNITY_TIPS.filter(tip => {
-    const matchesCategory = selectedCategory === 'all' || tip.category === selectedCategory;
-    const matchesSearch = tip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tip.location.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+  const filteredPosts = posts.filter((post) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.body.toLowerCase().includes(query) ||
+      post.author_name.toLowerCase().includes(query)
+    );
   });
 
   return (
     <View className="flex-1 bg-neutral-50">
       {/* Header */}
       <View className="bg-white pt-14 pb-4 px-6 border-b border-neutral-100">
-        <Text className="text-3xl font-bold text-neutral-900 mb-4">
-          Community Tips
-        </Text>
+        <View className="flex-row items-center justify-between mb-4">
+          <Text className="text-3xl font-bold text-neutral-900">
+            Community
+          </Text>
+          {/* New Post FAB */}
+          <TouchableOpacity
+            onPress={() => router.push('/create-post' as never)}
+            className="bg-primary-600 w-10 h-10 rounded-full items-center justify-center shadow-medium"
+            activeOpacity={0.8}
+            accessibilityLabel="Create new post"
+            accessibilityRole="button"
+          >
+            <Plus color="#fff" size={24} strokeWidth={2} />
+          </TouchableOpacity>
+        </View>
 
         {/* Search */}
         <View className="bg-neutral-100 rounded-xl px-4 py-3 flex-row items-center mb-4">
           <Search color="#6b7280" size={20} strokeWidth={2} />
           <TextInput
-            placeholder="Search tips or locations..."
+            placeholder="Search posts..."
             value={searchQuery}
             onChangeText={setSearchQuery}
             className="flex-1 text-base text-neutral-900 ml-2"
             placeholderTextColor="#9CA3AF"
             accessible={true}
-            accessibilityLabel="Search community tips"
+            accessibilityLabel="Search forum posts"
           />
         </View>
 
-        {/* Category Filter */}
+        {/* Sort Toggle */}
+        <View className="flex-row items-center mb-3">
+          <TouchableOpacity
+            onPress={() => setSortBy('recent')}
+            className={`flex-row items-center px-3 py-2 rounded-lg mr-2 ${
+              sortBy === 'recent' ? 'bg-primary-100' : 'bg-neutral-100'
+            }`}
+            activeOpacity={0.7}
+          >
+            <Clock
+              color={sortBy === 'recent' ? '#2563eb' : '#6b7280'}
+              size={16}
+              strokeWidth={2}
+            />
+            <Text
+              className={`text-sm font-medium ml-1.5 ${
+                sortBy === 'recent' ? 'text-primary-600' : 'text-neutral-600'
+              }`}
+            >
+              Recent
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setSortBy('popular')}
+            className={`flex-row items-center px-3 py-2 rounded-lg ${
+              sortBy === 'popular' ? 'bg-primary-100' : 'bg-neutral-100'
+            }`}
+            activeOpacity={0.7}
+          >
+            <TrendingUp
+              color={sortBy === 'popular' ? '#2563eb' : '#6b7280'}
+              size={16}
+              strokeWidth={2}
+            />
+            <Text
+              className={`text-sm font-medium ml-1.5 ${
+                sortBy === 'popular' ? 'text-primary-600' : 'text-neutral-600'
+              }`}
+            >
+              Popular
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Flair Filter */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           className="flex-row -mx-6 px-6"
         >
-          {CATEGORIES.map((category) => {
-            const IconComponent = category.icon === 'LayoutGrid' ? LayoutGrid :
-                                  category.icon === 'Lightbulb' ? Lightbulb :
-                                  category.icon === 'ShieldAlert' ? ShieldAlert : Bus;
-            return (
-              <TouchableOpacity
-                key={category.id}
-                onPress={() => setSelectedCategory(category.id)}
-                className={`mr-3 px-4 py-2 rounded-full ${
-                  selectedCategory === category.id
-                    ? 'bg-primary-600'
-                    : 'bg-neutral-200'
-                }`}
-                activeOpacity={0.7}
-                accessible={true}
-                accessibilityLabel={`Filter by ${category.label}`}
-                accessibilityRole="button"
-              >
+          {FLAIRS.map((flair) => (
+            <TouchableOpacity
+              key={flair}
+              onPress={() => setSelectedFlair(flair)}
+              className={`mr-2 px-3 py-2 rounded-full ${
+                selectedFlair === flair ? 'bg-primary-600' : 'bg-neutral-200'
+              }`}
+              activeOpacity={0.7}
+            >
+              {flair === 'all' ? (
                 <View className="flex-row items-center">
-                  <IconComponent
-                    color={selectedCategory === category.id ? "#ffffff" : "#374151"}
-                    size={16}
+                  <Filter
+                    color={selectedFlair === 'all' ? '#fff' : '#374151'}
+                    size={14}
                     strokeWidth={2}
                   />
                   <Text
-                    className={`text-sm font-semibold ml-1.5 ${
-                      selectedCategory === category.id
-                        ? 'text-white'
-                        : 'text-neutral-700'
+                    className={`text-sm font-medium ml-1.5 ${
+                      selectedFlair === 'all' ? 'text-white' : 'text-neutral-700'
                     }`}
                   >
-                    {category.label}
+                    All
                   </Text>
                 </View>
-              </TouchableOpacity>
-            );
-          })}
+              ) : (
+                <View className="flex-row items-center">
+                  <Text className="text-sm mr-1">{FLAIR_CONFIG[flair].emoji}</Text>
+                  <Text
+                    className={`text-sm font-medium ${
+                      selectedFlair === flair ? 'text-white' : 'text-neutral-700'
+                    }`}
+                  >
+                    {FLAIR_CONFIG[flair].label}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       </View>
 
-      {/* Tips List */}
-      <ScrollView className="flex-1 px-6 py-4">
-        {filteredTips.map((tip, index) => {
-          const TipIcon = getCategoryIcon(tip.category);
-          return (
-            <Animated.View
-              key={tip.id}
-              entering={FadeInDown.delay(index * 100).duration(600)}
+      {/* Posts List */}
+      <ScrollView
+        className="flex-1 px-4 pt-4"
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={() => loadPosts(true)} />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        {isLoading ? (
+          <View className="items-center justify-center py-20">
+            <ActivityIndicator size="large" color="#2563eb" />
+            <Text className="text-neutral-500 mt-4">Loading posts...</Text>
+          </View>
+        ) : error ? (
+          <View className="items-center justify-center py-20">
+            <Text className="text-danger-600 text-base">{error}</Text>
+            <TouchableOpacity
+              onPress={() => loadPosts()}
+              className="mt-4 bg-primary-600 px-6 py-3 rounded-xl"
             >
-              <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
-                {/* Header */}
-                <View className="flex-row items-start justify-between mb-3">
-                  <View className="flex-row items-start flex-1">
-                    <View className="w-10 h-10 bg-primary-100 rounded-full items-center justify-center mr-3">
-                      <TipIcon color="#2563eb" size={20} strokeWidth={2} />
-                    </View>
-                    <View className="flex-1">
-                      <Text className="text-base font-bold text-neutral-900 mb-1">
-                        {tip.title}
-                      </Text>
-                      <View className="flex-row items-center">
-                        <MapPin color="#6b7280" size={12} strokeWidth={2} />
-                        <Text className="text-xs text-neutral-500 ml-1">
-                          {tip.location}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Message */}
-                <Text className="text-sm text-neutral-700 leading-5 mb-3">
-                  {tip.message}
-                </Text>
-
-                {/* Footer */}
-                <View className="flex-row items-center justify-between pt-3 border-t border-neutral-100">
-                  <View className="flex-row items-center">
-                    <TouchableOpacity
-                      className="flex-row items-center bg-primary-50 rounded-lg px-3 py-2"
-                      activeOpacity={0.7}
-                      accessible={true}
-                      accessibilityLabel={`Upvote tip, ${tip.upvotes} upvotes`}
-                      accessibilityRole="button"
-                    >
-                      <ThumbsUp color="#2563eb" size={16} strokeWidth={2} />
-                      <Text className="text-sm font-semibold text-primary-600 ml-1.5">
-                        {tip.upvotes}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Text className="text-xs text-neutral-400">
-                    {tip.timeAgo}
-                  </Text>
-                </View>
-              </View>
-            </Animated.View>
-          );
-        })}
-
-        {filteredTips.length === 0 && (
+              <Text className="text-white font-semibold">Retry</Text>
+            </TouchableOpacity>
+          </View>
+        ) : filteredPosts.length === 0 ? (
           <View className="items-center justify-center py-20">
             <SearchX color="#9ca3af" size={64} strokeWidth={1.5} />
             <Text className="text-neutral-500 text-base mt-4">
-              No tips found
+              {searchQuery ? 'No posts found' : 'No posts yet'}
             </Text>
+            {!searchQuery && (
+              <TouchableOpacity
+                onPress={() => router.push('/create-post' as never)}
+                className="mt-4 bg-primary-600 px-6 py-3 rounded-xl"
+              >
+                <Text className="text-white font-semibold">Create the first post</Text>
+              </TouchableOpacity>
+            )}
           </View>
+        ) : (
+          filteredPosts.map((post, index) => (
+            <Animated.View key={post.id} entering={FadeInDown.delay(index * 50).duration(400)}>
+              <ForumPostCard
+                post={post}
+                onPress={() => router.push(`/post-detail?id=${post.id}` as never)}
+                onVote={(voteType) => handleVote(post.id, voteType)}
+                isVoting={votingPostId === post.id}
+              />
+            </Animated.View>
+          ))
         )}
 
-        <View className="h-20" />
+        {/* Bottom padding */}
+        <View className="h-6" />
       </ScrollView>
     </View>
   );
