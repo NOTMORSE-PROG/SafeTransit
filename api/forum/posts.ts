@@ -82,7 +82,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // POST: Create post
     if (req.method === 'POST') {
       const user = requireAuth(req);
-      const { title, body, flair, location_tag, photo_url } = req.body;
+      const { title, body, flair, location_tag, photo_urls } = req.body;
 
       // Validation
       if (!title || typeof title !== 'string' || title.length > 100) {
@@ -94,6 +94,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!flair || !['general', 'routes', 'questions', 'experiences', 'tips_advice'].includes(flair)) {
         return res.status(400).json({ error: 'Valid flair is required' });
       }
+      if (photo_urls && (!Array.isArray(photo_urls) || photo_urls.length > 5)) {
+        return res.status(400).json({ error: 'photo_urls must be an array with max 5 items' });
+      }
 
       const postData: ForumPostInsert = {
         author_id: user.userId,
@@ -101,7 +104,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: body.trim(),
         flair: flair as PostFlair,
         location_tag: location_tag?.trim() || null,
-        photo_url: photo_url || null,
+        photo_urls: photo_urls && photo_urls.length > 0 ? photo_urls : null,
       };
 
       const post = await ForumPostsRepository.create(postData);

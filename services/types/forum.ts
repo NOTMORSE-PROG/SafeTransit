@@ -21,7 +21,7 @@ export interface ForumPost {
   body: string;
   flair: PostFlair;
   location_tag: string | null;
-  photo_url: string | null;
+  photo_urls: string[] | null;
   upvotes: number;
   downvotes: number;
   comment_count: number;
@@ -93,7 +93,7 @@ export interface Report {
 
 export type ForumPostInsert = Pick<ForumPost, 'author_id' | 'title' | 'body' | 'flair'> & {
   location_tag?: string | null;
-  photo_url?: string | null;
+  photo_urls?: string[] | null;
 };
 
 export type ForumCommentInsert = Pick<ForumComment, 'post_id' | 'author_id' | 'content'> & {
