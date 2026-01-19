@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { LocationRepository } from '../../services/repositories/locationRepository';
-import type { LocationInsert, Location } from '../../services/types/database';
+import { PickupPointRepository, type PickupPoint } from '../../services/repositories/pickupPointRepository';
+import type { Location } from '../../services/types/database';
 import { rankSearchResults } from '../../services/searchRanking';
 import { verifyToken } from '../../services/auth/jwt';
-import { PickupPointRepository } from '../../services/repositories/pickupPointRepository';
 
 // Nominatim API Types
 interface NominatimPlace {
@@ -89,7 +89,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         success: true,
         location_id,
         count: pickupPoints.length,
-        pickup_points: pickupPoints.map(p => ({
+        pickup_points: pickupPoints.map((p: PickupPoint & { distance_meters?: number }) => ({
           ...p,
           distance_km: p.distance_meters ? (p.distance_meters / 1000).toFixed(2) : undefined,
         })),
@@ -125,7 +125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (payload) {
         userId = payload.userId;
       }
-    } catch (error) {
+    } catch {
       // Non-critical: search works without auth, just no personalization
       console.log('Token verification failed, proceeding without personalization');
     }
@@ -170,7 +170,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (hasUserLocation) {
       allResults = allResults.map(result => {
         // Only calculate distance for results that don't have it
-        if (!(result as any).distance_km) {
+        if (!('distance_km' in result)) {
           const distance = haversineDistance(
             userLat!,
             userLon!,
@@ -193,29 +193,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       dayOfWeek: new Date().getDay(),
     });
 
-    // 6. Enrich results with pickup points (Grab-style multi-entrance support)
+    // 6. Return top results
     const topResults = rankedResults.slice(0, limit);
-    const enrichedResults = await Promise.all(
-      topResults.map(async (location) => {
-        // Get pickup points near this location by coordinates (within 100m)
-        const pickupPoints = await PickupPointRepository.findNearby(
-          location.latitude,
-          location.longitude,
-          100,
-          userLat ?? undefined,
-          userLon ?? undefined
-        );
-
-        return {
-          ...location,
-          pickup_points: pickupPoints.length > 0 ? pickupPoints.slice(0, 5) : undefined,
-          has_pickup_points: pickupPoints.length > 0,
-        };
-      })
-    );
-
-    // Return enriched results with pickup points
-    res.status(200).json(enrichedResults);
+    res.status(200).json(topResults);
 
   } catch (error) {
     console.error('Search error:', error);

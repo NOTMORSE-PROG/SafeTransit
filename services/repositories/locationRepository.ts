@@ -304,7 +304,7 @@ export const LocationRepository = {
         LIMIT ${limit}
       `;
       return result as LocationWithDistance[];
-    } catch (error) {
+    } catch {
       // Fallback to regular proximity search if PostGIS not available
       console.log('PostGIS query failed, falling back to Haversine');
       return this.searchWithProximity('', userLat, userLon, radiusMeters / 1000, limit);
@@ -333,7 +333,7 @@ export const LocationRepository = {
         LIMIT ${limit}
       `;
       return result as LocationWithDistance[];
-    } catch (error) {
+    } catch {
       console.log('PostGIS KNN query failed, falling back to regular search');
       return this.getPopularNearby(userLat, userLon, 20, limit);
     }
@@ -388,7 +388,7 @@ export const LocationRepository = {
       `;
 
       return result as LocationWithDistance[];
-    } catch (error) {
+    } catch {
       console.log('PostGIS search query failed, falling back to Haversine');
       return this.searchWithProximity(query, userLat, userLon, radiusKm, limit);
     }

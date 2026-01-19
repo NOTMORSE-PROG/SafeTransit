@@ -60,6 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   <h2>Endpoints</h2>
 
+  <h3>Authentication</h3>
   <div class="endpoint">
     <span class="method">POST</span>
     <span class="path">/api/auth/google</span>
@@ -73,57 +74,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   </div>
 
   <div class="endpoint">
-    <span class="method">POST</span>
-    <span class="path">/api/auth/signup</span>
-    <div class="desc">User Registration</div>
-  </div>
-
-  <div class="endpoint">
     <span class="method">GET</span>
     <span class="path">/api/auth/verify</span>
     <div class="desc">Verify JWT Token</div>
   </div>
 
-  <div class="endpoint">
-    <span class="method">POST</span>
-    <span class="path">/api/auth/link-google</span>
-    <div class="desc">Link Google to Account</div>
-  </div>
-
+  <h3>User</h3>
   <div class="endpoint">
     <span class="method">POST/PUT</span>
     <span class="path">/api/user/profile</span>
     <div class="desc">Update Profile (Name, Photo, Phone, Image Upload)</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">GET</span>
-    <span class="path">/api/contacts/emergency</span>
-    <div class="desc">Get Emergency Contacts</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">POST</span>
-    <span class="path">/api/contacts/emergency</span>
-    <div class="desc">Save Emergency Contacts</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">GET</span>
-    <span class="path">/api/locations/search</span>
-    <div class="desc">Search Locations (Proximity + Ranking + Pickup Points)</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">GET</span>
-    <span class="path">/api/locations/search?mode=pickup_points&location_id=...</span>
-    <div class="desc">Get Pickup Points for Location (Grab-style Multi-Entrance)</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">GET</span>
-    <span class="path">/api/locations/reverse</span>
-    <div class="desc">Reverse Geocoding</div>
   </div>
 
   <div class="endpoint">
@@ -132,18 +92,46 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     <div class="desc">User Saved Places (Home, Work, Favorites)</div>
   </div>
 
+  <h3>Contacts</h3>
+  <div class="endpoint">
+    <span class="method">GET/POST</span>
+    <span class="path">/api/contacts/emergency</span>
+    <div class="desc">Emergency Contacts</div>
+  </div>
+
+  <h3>Locations</h3>
   <div class="endpoint">
     <span class="method">GET</span>
-    <span class="path">/api/user/suggestions</span>
-    <div class="desc">Personalized Location Suggestions</div>
+    <span class="path">/api/locations/search</span>
+    <div class="desc">Search Locations (Proximity + Ranking + Pickup Points)</div>
+  </div>
+
+  <div class="endpoint">
+    <span class="method">GET</span>
+    <span class="path">/api/locations/reverse</span>
+    <div class="desc">Reverse Geocoding</div>
+  </div>
+
+  <h3>Forum</h3>
+  <div class="endpoint">
+    <span class="method">GET/POST</span>
+    <span class="path">/api/forum/posts</span>
+    <div class="desc">List & Create Forum Posts</div>
+  </div>
+
+  <div class="endpoint">
+    <span class="method">GET/PUT/DELETE</span>
+    <span class="path">/api/forum/posts/[id]</span>
+    <div class="desc">Single Post with Comments, Update, Delete</div>
   </div>
 
   <div class="endpoint">
     <span class="method">POST</span>
-    <span class="path">/api/user/track-location</span>
-    <div class="desc">Track User Location Actions</div>
+    <span class="path">/api/forum/interactions</span>
+    <div class="desc">Vote, Like, Comment, Reply, Report</div>
   </div>
 
+  <h3>Upload</h3>
   <div class="endpoint">
     <span class="method">POST</span>
     <span class="path">/api/uploadthing</span>

@@ -4,7 +4,7 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { verifyToken } from '../../services/auth/jwt';
-import { UserSavedPlacesRepository } from '../../services/repositories/userSavedPlacesRepository';
+import { UserSavedPlacesRepository, type UserSavedPlace } from '../../services/repositories/userSavedPlacesRepository';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -253,7 +253,7 @@ async function handleDelete(
  * Format saved place for API response
  * Converts snake_case to camelCase for frontend
  */
-function formatSavedPlace(place: any) {
+function formatSavedPlace(place: UserSavedPlace) {
   return {
     id: place.id,
     label: place.label,

@@ -3,6 +3,7 @@
 // Reference: Grab uses text relevance + proximity + popularity + user history
 
 import { neon } from '@neondatabase/serverless';
+import type { Location } from './types/database';
 
 const getDatabaseUrl = (): string => {
   const url = process.env.DATABASE_URL;
@@ -14,20 +15,7 @@ const getDatabaseUrl = (): string => {
 
 const sql = neon(getDatabaseUrl());
 
-/**
- * Calculate distance between two coordinates using Haversine formula
- */
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+
 
 export interface SearchContext {
   query: string;
@@ -61,7 +49,7 @@ export interface RankedLocation {
  * Calculate text relevance score using PostgreSQL similarity
  * Returns 0-1 where 1 is perfect match
  */
-function calculateTextScore(result: any, query: string): number {
+function calculateTextScore(result: Location & { text_similarity?: number }, query: string): number {
   // If we have similarity from SQL, use it
   if (result.text_similarity !== undefined) {
     return result.text_similarity;
@@ -119,7 +107,7 @@ function calculatePopularityScore(searchCount: number): number {
  * Returns 0-1 based on user's history with this location
  */
 function calculateUserScore(
-  result: any,
+  result: Location,
   userFrequentPlaces: Set<string>,
   userSavedPlaces: Set<string>
 ): number {
@@ -155,14 +143,14 @@ async function getUserPlacePreferences(userId: string): Promise<{
       WHERE user_id = ${userId}
     `;
 
-    const savedPlaces = new Set(savedPlacesResult.map((p: any) => p.id));
+    const savedPlaces = new Set(savedPlacesResult.map((p: { id: string; label: string; use_count: number }) => p.id));
 
     // For frequent places, we could track search history
     // For now, use saved places that are frequently used
     const frequentPlaces = new Set(
       savedPlacesResult
-        .filter((p: any) => p.use_count > 3)
-        .map((p: any) => p.id)
+        .filter((p: { id: string; label: string; use_count: number }) => p.use_count > 3)
+        .map((p: { id: string; label: string; use_count: number }) => p.id)
     );
 
     return { frequentPlaces, savedPlaces };
@@ -182,10 +170,10 @@ async function getUserPlacePreferences(userId: string): Promise<{
  * - User Personalization: 15%
  */
 export async function rankSearchResults(
-  results: any[],
+  results: (Location & { text_similarity?: number; distance_km?: number })[],
   context: SearchContext
 ): Promise<RankedLocation[]> {
-  const { query, userLat, userLon, userId } = context;
+  const { query, userId } = context;
 
   // Get user preferences if logged in
   const userPrefs = userId
@@ -240,19 +228,6 @@ export async function rankSearchResults(
 
 /**
  * Get personalized location suggestions for user
- * Returns frequently used locations at current time of day
- */
-export async function getPersonalizedSuggestions(
-  userId: string,
-  currentHour?: number,
-  userLat?: number,
-  userLon?: number,
-  limit: number = 5
-): Promise<any[]> {
-  try {
-    // Get user's saved places ordered by usage
-    const suggestions = await sql`
-      SELECT
         usp.*,
         CASE
           WHEN ${currentHour !== undefined} THEN

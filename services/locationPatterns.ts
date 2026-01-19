@@ -25,18 +25,6 @@ export interface LocationSuggestion {
  * - Frequent locations
  * - Time-based patterns
  * - Nearby frequent places
- */
-export async function getUserSuggestions(
-  userId: string,
-  context?: {
-    currentHour?: number;
-    currentLocation?: { lat: number; lon: number };
-    dayOfWeek?: number;
-  },
-  limit: number = 5
-): Promise<LocationSuggestion[]> {
-  const suggestions: LocationSuggestion[] = [];
-
   const currentHour = context?.currentHour ?? new Date().getHours();
   const dayOfWeek = context?.dayOfWeek ?? new Date().getDay();
 
@@ -252,30 +240,6 @@ export async function suggestHomeWorkLocations(userId: string): Promise<{
 }
 
 /**
- * Get reason text for time-based suggestion
- */
-function getTimeBasedReason(
-  currentHour: number,
-  typicalHour: number | null
-): string {
-  if (typicalHour === null) {
-    return 'Frequently visited';
-  }
-
-  if (Math.abs(currentHour - typicalHour) <= 1) {
-    return 'Usually visit around this time';
-  }
-
-  if (currentHour < 12) {
-    return 'Often visit in the morning';
-  } else if (currentHour < 17) {
-    return 'Often visit in the afternoon';
-  } else {
-    return 'Often visit in the evening';
-  }
-}
-
-/**
  * Calculate confidence score for home/work detection
  * Higher visit count = higher confidence
  */
@@ -286,14 +250,4 @@ function calculateHomeWorkConfidence(loc: FrequentLocation): number {
   if (loc.visit_count >= 10) return 0.8;
   if (loc.visit_count >= 5) return 0.7;
   return 0.6;
-}
-
-/**
- * Calculate distance from frequent location
- */
-function calculateDistance(loc: any): number | undefined {
-  if (loc.distance_km !== undefined) {
-    return loc.distance_km;
-  }
-  return undefined;
 }

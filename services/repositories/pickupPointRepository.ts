@@ -100,7 +100,7 @@ export const PickupPointRepository = {
   async findNearbyGeohash(
     lat: number,
     lon: number,
-    radiusKm: number = 0.5
+    _radiusKm: number = 0.5
   ): Promise<PickupPoint[]> {
     try {
       // Generate geohash for the coordinate (precision 5 = ~5km grid)
@@ -166,7 +166,7 @@ export const PickupPointRepository = {
   /**
    * Verify/confirm a pickup point (increment verification_count)
    */
-  async verify(id: string, userId: string): Promise<boolean> {
+  async verify(id: string, _userId: string): Promise<boolean> {
     try {
       await sql`
         UPDATE pickup_points
@@ -244,7 +244,7 @@ export const PickupPointRepository = {
     locationId: string,
     userLat?: number,
     userLon?: number
-  ): Promise<Array<PickupPoint & { distance_meters?: number }>> {
+  ): Promise<(PickupPoint & { distance_meters?: number })[]> {
     try {
       if (!userLat || !userLon) {
         return await this.getForLocation(locationId);
@@ -263,7 +263,7 @@ export const PickupPointRepository = {
         ORDER BY verified DESC, distance_meters ASC
       `;
 
-      return result as Array<PickupPoint & { distance_meters?: number }>;
+      return result as (PickupPoint & { distance_meters?: number })[];
     } catch (error) {
       console.error('[PickupPointRepository] Error fetching with distance:', error);
       return [];
@@ -280,7 +280,7 @@ export const PickupPointRepository = {
     radiusMeters: number = 100,
     userLat?: number,
     userLon?: number
-  ): Promise<Array<PickupPoint & { distance_meters?: number }>> {
+  ): Promise<(PickupPoint & { distance_meters?: number })[]> {
     try {
       const locationPoint = `POINT(${lon} ${lat})`;
       const userPoint = userLat && userLon ? `POINT(${userLon} ${userLat})` : null;
@@ -309,7 +309,7 @@ export const PickupPointRepository = {
         LIMIT 10
       `;
 
-      return result as Array<PickupPoint & { distance_meters?: number }>;
+      return result as (PickupPoint & { distance_meters?: number })[];
     } catch (error) {
       console.error('[PickupPointRepository] Error finding nearby:', error);
       return [];

@@ -16,6 +16,20 @@ interface ValidationResult {
   source: 'original' | 'road_snapped';
 }
 
+interface OverpassNode {
+  lat: number;
+  lon: number;
+}
+
+interface OverpassElement {
+  type: string;
+  geometry?: OverpassNode[];
+}
+
+interface OverpassResponse {
+  elements: OverpassElement[];
+}
+
 // POI-specific validation rules (based on Grab research)
 const VALIDATION_RULES: Record<string, ValidationRule> = {
   school: { maxSnapDistance: 100, strategy: 'Look for gate/entrance tags' },
@@ -102,7 +116,7 @@ export async function isOnRoad(
       return true; // Assume valid if API fails
     }
 
-    const data = await response.json();
+    const data = await response.json() as OverpassResponse;
     return data.elements && data.elements.length > 0;
   } catch (error) {
     console.warn('[CoordinateValidator] Error checking road:', error);
@@ -146,7 +160,7 @@ async function findNearestRoad(
       return null;
     }
 
-    const data = await response.json();
+    const data = await response.json() as OverpassResponse;
 
     if (!data.elements || data.elements.length === 0) {
       return null;
