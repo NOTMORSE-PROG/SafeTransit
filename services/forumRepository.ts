@@ -131,8 +131,8 @@ export const ForumPostsRepository = {
 
   async create(data: ForumPostInsert): Promise<ForumPost> {
     const result = await sql`
-      INSERT INTO forum_posts (author_id, title, body, flair, location_tag, photo_url)
-      VALUES (${data.author_id}, ${data.title}, ${data.body}, ${data.flair}, ${data.location_tag || null}, ${data.photo_url || null})
+      INSERT INTO forum_posts (author_id, title, body, flair, location_tag, photo_urls)
+      VALUES (${data.author_id}, ${data.title}, ${data.body}, ${data.flair}, ${data.location_tag || null}, ${data.photo_urls || null})
       RETURNING *
     `;
     return result[0] as ForumPost;
