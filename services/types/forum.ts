@@ -5,10 +5,20 @@
 // Enum Types
 // ==============================================================================
 
-export type PostFlair = 'general' | 'routes' | 'questions' | 'experiences' | 'tips_advice';
-export type ForumPostStatus = 'visible' | 'hidden' | 'flagged';
-export type ReportContentType = 'forum_post' | 'forum_comment' | 'map_tip';
-export type ReportReason = 'spam' | 'false_info' | 'harassment' | 'inappropriate' | 'outdated';
+export type PostFlair =
+  | "general"
+  | "routes"
+  | "questions"
+  | "experiences"
+  | "tips_advice";
+export type ForumPostStatus = "visible" | "hidden" | "flagged";
+export type ReportContentType = "forum_post" | "forum_comment" | "map_tip";
+export type ReportReason =
+  | "spam"
+  | "false_info"
+  | "harassment"
+  | "inappropriate"
+  | "outdated";
 
 // ==============================================================================
 // Forum Posts
@@ -34,13 +44,13 @@ export interface ForumPost {
 export interface ForumPostWithAuthor extends ForumPost {
   author_name: string;
   author_image_url: string | null;
-  user_vote?: 'up' | 'down' | null;
+  user_vote?: "up" | "down" | null;
 }
 
 export interface ForumPostVote {
   post_id: string; // UUID
   user_id: string; // UUID
-  vote_type: 'up' | 'down';
+  vote_type: "up" | "down";
   created_at: string; // ISO timestamp
 }
 
@@ -91,16 +101,25 @@ export interface Report {
 // Insert Types
 // ==============================================================================
 
-export type ForumPostInsert = Pick<ForumPost, 'author_id' | 'title' | 'body' | 'flair'> & {
+export type ForumPostInsert = Pick<
+  ForumPost,
+  "author_id" | "title" | "body" | "flair"
+> & {
   location_tag?: string | null;
   photo_urls?: string[] | null;
 };
 
-export type ForumCommentInsert = Pick<ForumComment, 'post_id' | 'author_id' | 'content'> & {
+export type ForumCommentInsert = Pick<
+  ForumComment,
+  "post_id" | "author_id" | "content"
+> & {
   parent_id?: string | null;
 };
 
-export type ReportInsert = Pick<Report, 'reporter_id' | 'content_type' | 'content_id' | 'reason'> & {
+export type ReportInsert = Pick<
+  Report,
+  "reporter_id" | "content_type" | "content_id" | "reason"
+> & {
   additional_info?: string | null;
 };
 
@@ -109,11 +128,11 @@ export type ReportInsert = Pick<Report, 'reporter_id' | 'content_type' | 'conten
 // ==============================================================================
 
 export const REPORT_REASONS: Record<ReportReason, string> = {
-  spam: 'Spam or misleading',
-  false_info: 'False information',
-  harassment: 'Harassment or bullying',
-  inappropriate: 'Inappropriate content',
-  outdated: 'Outdated information',
+  spam: "Spam or misleading",
+  false_info: "False information",
+  harassment: "Harassment or bullying",
+  inappropriate: "Inappropriate content",
+  outdated: "Outdated information",
 };
 
 // ==============================================================================
@@ -121,10 +140,10 @@ export const REPORT_REASONS: Record<ReportReason, string> = {
 // ==============================================================================
 
 export interface ForumInteractionRequest {
-  action: 'vote' | 'like' | 'report' | 'comment' | 'reply';
-  content_type: 'post' | 'comment';
+  action: "vote" | "like" | "report" | "comment" | "reply";
+  content_type: "post" | "comment";
   content_id: string;
-  vote_type?: 'up' | 'down';
+  vote_type?: "up" | "down";
   reason?: string;
   additional_info?: string;
   comment_content?: string;
