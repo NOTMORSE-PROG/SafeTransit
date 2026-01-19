@@ -1,34 +1,77 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as ImagePicker from 'expo-image-picker';
-import * as Haptics from 'expo-haptics';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Lightbulb, AlertTriangle, Construction, ShieldCheck, Bus, X, MapPin, Camera, CheckCircle, Info } from 'lucide-react-native';
+import { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Alert,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as ImagePicker from "expo-image-picker";
+import * as Haptics from "expo-haptics";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import {
+  Lightbulb,
+  AlertTriangle,
+  Construction,
+  ShieldCheck,
+  Bus,
+  X,
+  MapPin,
+  Camera,
+  CheckCircle,
+  Info,
+} from "lucide-react-native";
 
 const CATEGORIES = [
-  { id: 'lighting', label: 'Lighting', icon: 'Lightbulb', description: 'Well-lit or poorly lit areas' },
-  { id: 'harassment', label: 'Harassment', icon: 'AlertTriangle', description: 'Areas with harassment reports' },
-  { id: 'construction', label: 'Construction', icon: 'Construction', description: 'Construction zones or blocked paths' },
-  { id: 'safe_haven', label: 'Safe Haven', icon: 'ShieldCheck', description: 'Safe spaces and help points' },
-  { id: 'transit', label: 'Transit', icon: 'Bus', description: 'Transit tips and exit info' }
+  {
+    id: "lighting",
+    label: "Lighting",
+    icon: "Lightbulb",
+    description: "Well-lit or poorly lit areas",
+  },
+  {
+    id: "harassment",
+    label: "Harassment",
+    icon: "AlertTriangle",
+    description: "Areas with harassment reports",
+  },
+  {
+    id: "construction",
+    label: "Construction",
+    icon: "Construction",
+    description: "Construction zones or blocked paths",
+  },
+  {
+    id: "safe_haven",
+    label: "Safe Haven",
+    icon: "ShieldCheck",
+    description: "Safe spaces and help points",
+  },
+  {
+    id: "transit",
+    label: "Transit",
+    icon: "Bus",
+    description: "Transit tips and exit info",
+  },
 ];
 
 export default function AddTip() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
-  const [location, _setLocation] = useState('Current Location');
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [location, _setLocation] = useState("Current Location");
   const [hasPhoto, setHasPhoto] = useState(false);
 
   const handlePickImage = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.8,
@@ -41,21 +84,21 @@ export default function AddTip() {
 
   const handleSubmit = async () => {
     if (!selectedCategory || !title.trim() || !message.trim()) {
-      Alert.alert('Missing Information', 'Please fill in all required fields.');
+      Alert.alert("Missing Information", "Please fill in all required fields.");
       return;
     }
 
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
     Alert.alert(
-      'Tip Submitted',
-      'Your tip has been submitted for verification. Thank you for keeping our community safe!',
+      "Tip Submitted",
+      "Your tip has been submitted for verification. Thank you for keeping our community safe!",
       [
         {
-          text: 'OK',
-          onPress: () => router.back()
-        }
-      ]
+          text: "OK",
+          onPress: () => router.back(),
+        },
+      ],
     );
   };
 
@@ -99,7 +142,9 @@ export default function AddTip() {
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center flex-1">
                 <MapPin color="#6b7280" size={20} strokeWidth={2} />
-                <Text className="text-base text-neutral-900 ml-2">{location}</Text>
+                <Text className="text-base text-neutral-900 ml-2">
+                  {location}
+                </Text>
               </View>
               <Text className="text-primary-600 text-sm font-semibold">
                 Change
@@ -115,10 +160,16 @@ export default function AddTip() {
           </Text>
           <View className="mb-6">
             {CATEGORIES.map((category) => {
-              const IconComponent = category.icon === 'Lightbulb' ? Lightbulb :
-                                   category.icon === 'AlertTriangle' ? AlertTriangle :
-                                   category.icon === 'Construction' ? Construction :
-                                   category.icon === 'ShieldCheck' ? ShieldCheck : Bus;
+              const IconComponent =
+                category.icon === "Lightbulb"
+                  ? Lightbulb
+                  : category.icon === "AlertTriangle"
+                    ? AlertTriangle
+                    : category.icon === "Construction"
+                      ? Construction
+                      : category.icon === "ShieldCheck"
+                        ? ShieldCheck
+                        : Bus;
               return (
                 <TouchableOpacity
                   key={category.id}
@@ -128,8 +179,8 @@ export default function AddTip() {
                   }}
                   className={`mb-3 rounded-xl p-4 border-2 ${
                     selectedCategory === category.id
-                      ? 'border-primary-600 bg-primary-50'
-                      : 'border-neutral-200 bg-white'
+                      ? "border-primary-600 bg-primary-50"
+                      : "border-neutral-200 bg-white"
                   }`}
                   activeOpacity={0.8}
                   accessible={true}
@@ -140,12 +191,16 @@ export default function AddTip() {
                     <View
                       className={`w-12 h-12 rounded-full items-center justify-center mr-3 ${
                         selectedCategory === category.id
-                          ? 'bg-primary-600'
-                          : 'bg-neutral-100'
+                          ? "bg-primary-600"
+                          : "bg-neutral-100"
                       }`}
                     >
                       <IconComponent
-                        color={selectedCategory === category.id ? '#ffffff' : '#6b7280'}
+                        color={
+                          selectedCategory === category.id
+                            ? "#ffffff"
+                            : "#6b7280"
+                        }
                         size={24}
                         strokeWidth={2}
                       />
@@ -160,7 +215,11 @@ export default function AddTip() {
                     </View>
                     {selectedCategory === category.id && (
                       <View className="bg-primary-600 rounded-full p-1.5">
-                        <CheckCircle color="#ffffff" size={16} strokeWidth={2.5} />
+                        <CheckCircle
+                          color="#ffffff"
+                          size={16}
+                          strokeWidth={2.5}
+                        />
                       </View>
                     )}
                   </View>
@@ -215,12 +274,14 @@ export default function AddTip() {
             onPress={handlePickImage}
             className={`rounded-xl px-4 py-8 mb-6 border-2 border-dashed ${
               hasPhoto
-                ? 'border-success-500 bg-success-50'
-                : 'border-neutral-300 bg-neutral-50'
+                ? "border-success-500 bg-success-50"
+                : "border-neutral-300 bg-neutral-50"
             }`}
             activeOpacity={0.7}
             accessible={true}
-            accessibilityLabel={hasPhoto ? 'Photo added, tap to change' : 'Add photo'}
+            accessibilityLabel={
+              hasPhoto ? "Photo added, tap to change" : "Add photo"
+            }
             accessibilityRole="button"
           >
             <View className="items-center">
@@ -232,10 +293,12 @@ export default function AddTip() {
                 )}
               </View>
               <Text className="text-base font-semibold text-neutral-900 mb-1">
-                {hasPhoto ? 'Photo Added' : 'Add Photo'}
+                {hasPhoto ? "Photo Added" : "Add Photo"}
               </Text>
               <Text className="text-sm text-neutral-600">
-                {hasPhoto ? 'Tap to change' : 'Optional but helpful for verification'}
+                {hasPhoto
+                  ? "Tap to change"
+                  : "Optional but helpful for verification"}
               </Text>
             </View>
           </TouchableOpacity>
@@ -251,7 +314,9 @@ export default function AddTip() {
                   Privacy & Verification
                 </Text>
                 <Text className="text-xs text-primary-800 leading-5">
-                  Your tip will be reviewed by our verification team before being published. Your identity remains anonymous to other users.
+                  Your tip will be reviewed by our verification team before
+                  being published. Your identity remains anonymous to other
+                  users.
                 </Text>
               </View>
             </View>
@@ -260,14 +325,17 @@ export default function AddTip() {
       </ScrollView>
 
       {/* Submit Button */}
-      <View className="px-6 pt-4 bg-white border-t border-neutral-100" style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
+      <View
+        className="px-6 pt-4 bg-white border-t border-neutral-100"
+        style={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}
+      >
         <TouchableOpacity
           onPress={handleSubmit}
           disabled={!selectedCategory || !title.trim() || !message.trim()}
           className={`rounded-xl py-4 ${
             selectedCategory && title.trim() && message.trim()
-              ? 'bg-primary-600'
-              : 'bg-neutral-300'
+              ? "bg-primary-600"
+              : "bg-neutral-300"
           }`}
           activeOpacity={0.8}
           accessible={true}

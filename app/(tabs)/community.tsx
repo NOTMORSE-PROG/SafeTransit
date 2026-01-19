@@ -1,7 +1,7 @@
 // Community Forum Screen
 // Main forum feed with posts, filtering, and sorting
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,59 +10,95 @@ import {
   TextInput,
   RefreshControl,
   ActivityIndicator,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Search, Plus, Filter, TrendingUp, Clock, SearchX } from 'lucide-react-native';
-import { useAuth } from '@/contexts/AuthContext';
-import { ForumPostCard } from '@/components/forum/ForumPostCard';
-import { getPosts, votePost, type ForumPostWithAuthor, type PostFlair } from '@/services/forumService';
-import { FLAIR_CONFIG } from '@/services/types/forum';
+} from "react-native";
+import { useRouter } from "expo-router";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import {
+  Search,
+  Plus,
+  Filter,
+  TrendingUp,
+  Clock,
+  SearchX,
+} from "lucide-react-native";
+import { useAuth } from "@/contexts/AuthContext";
+import { ForumPostCard } from "@/components/forum/ForumPostCard";
+import {
+  getPosts,
+  votePost,
+  type ForumPostWithAuthor,
+  type PostFlair,
+} from "@/services/forumService";
+import { FLAIR_CONFIG } from "@/services/types/forum";
 
-const FLAIRS: (PostFlair | 'all')[] = ['all', 'general', 'routes', 'questions', 'experiences', 'tips_advice'];
+const FLAIRS: (PostFlair | "all")[] = [
+  "all",
+  "general",
+  "routes",
+  "questions",
+  "experiences",
+  "tips_advice",
+];
 
 export default function Community() {
   const router = useRouter();
   const { token } = useAuth();
-  
+
   const [posts, setPosts] = useState<ForumPostWithAuthor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedFlair, setSelectedFlair] = useState<PostFlair | 'all'>('all');
-  const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFlair, setSelectedFlair] = useState<PostFlair | "all">("all");
+  const [sortBy, setSortBy] = useState<"recent" | "popular">("recent");
+  const [searchQuery, setSearchQuery] = useState("");
   const [votingPostId, setVotingPostId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const loadPosts = useCallback(async (showRefresh = false) => {
-    try {
-      if (showRefresh) setIsRefreshing(true);
-      else setIsLoading(true);
-      setError(null);
+  const loadPosts = useCallback(
+    async (showRefresh = false) => {
+      try {
+        if (showRefresh) setIsRefreshing(true);
+        else setIsLoading(true);
+        setError(null);
 
-      const response = await getPosts({
-        sort: sortBy,
-        flair: selectedFlair === 'all' ? undefined : selectedFlair,
-        token: token || undefined,
-      });
+        const response = await getPosts({
+          sort: sortBy,
+          flair: selectedFlair === "all" ? undefined : selectedFlair,
+          token: token || undefined,
+        });
 
-      setPosts(response.data);
-    } catch (err) {
-      console.error('Failed to load posts:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load posts');
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  }, [sortBy, selectedFlair, token]);
+        setPosts(response.data);
+      } catch (err) {
+        console.error("Failed to load posts:", err);
+        setError(err instanceof Error ? err.message : "Failed to load posts");
+      } finally {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
+    },
+    [sortBy, selectedFlair, token],
+  );
 
+  // ✨ Load posts whenever sort, flair, or search query changes
   useEffect(() => {
     loadPosts();
-  }, [loadPosts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadPosts, sortBy, searchQuery]);
 
-  const handleVote = async (postId: string, voteType: 'up' | 'down') => {
+  // Auto-refresh: Keep the community feed fresh with silent background updates every 15 seconds
+  // This ensures users always see the latest posts without manual refreshing
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!isLoading && !isRefreshing) {
+        loadPosts(false); // Silent background refresh - no loading indicators
+      }
+    }, 15000); // 15 seconds
+
+    return () => clearInterval(intervalId);
+  }, [isLoading, isRefreshing, loadPosts]);
+
+  const handleVote = async (postId: string, voteType: "up" | "down") => {
     if (!token) {
-      router.push('/auth/login');
+      router.push("/auth/login");
       return;
     }
 
@@ -75,8 +111,8 @@ export default function Community() {
           prev.map((post) => {
             if (post.id !== postId) return post;
 
-            const wasUpvoted = post.user_vote === 'up';
-            const wasDownvoted = post.user_vote === 'down';
+            const wasUpvoted = post.user_vote === "up";
+            const wasDownvoted = post.user_vote === "down";
             const newVote = result.data?.newVote;
 
             let upvotes = post.upvotes;
@@ -85,15 +121,15 @@ export default function Community() {
             // Adjust counts based on vote change
             if (wasUpvoted) upvotes--;
             if (wasDownvoted) downvotes--;
-            if (newVote === 'up') upvotes++;
-            if (newVote === 'down') downvotes++;
+            if (newVote === "up") upvotes++;
+            if (newVote === "down") downvotes++;
 
             return { ...post, upvotes, downvotes, user_vote: newVote };
-          })
+          }),
         );
       }
     } catch (err) {
-      console.error('Vote failed:', err);
+      console.error("Vote failed:", err);
     } finally {
       setVotingPostId(null);
     }
@@ -114,12 +150,10 @@ export default function Community() {
       {/* Header */}
       <View className="bg-white pt-14 pb-4 px-6 border-b border-neutral-100">
         <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-3xl font-bold text-neutral-900">
-            Community
-          </Text>
+          <Text className="text-3xl font-bold text-neutral-900">Community</Text>
           {/* New Post FAB */}
           <TouchableOpacity
-            onPress={() => router.push('/create-post' as never)}
+            onPress={() => router.push("/create-post" as never)}
             className="bg-primary-600 w-10 h-10 rounded-full items-center justify-center shadow-medium"
             activeOpacity={0.8}
             accessibilityLabel="Create new post"
@@ -146,40 +180,40 @@ export default function Community() {
         {/* Sort Toggle */}
         <View className="flex-row items-center mb-3">
           <TouchableOpacity
-            onPress={() => setSortBy('recent')}
+            onPress={() => setSortBy("recent")}
             className={`flex-row items-center px-3 py-2 rounded-lg mr-2 ${
-              sortBy === 'recent' ? 'bg-primary-100' : 'bg-neutral-100'
+              sortBy === "recent" ? "bg-primary-100" : "bg-neutral-100"
             }`}
             activeOpacity={0.7}
           >
             <Clock
-              color={sortBy === 'recent' ? '#2563eb' : '#6b7280'}
+              color={sortBy === "recent" ? "#2563eb" : "#6b7280"}
               size={16}
               strokeWidth={2}
             />
             <Text
               className={`text-sm font-medium ml-1.5 ${
-                sortBy === 'recent' ? 'text-primary-600' : 'text-neutral-600'
+                sortBy === "recent" ? "text-primary-600" : "text-neutral-600"
               }`}
             >
               Recent
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setSortBy('popular')}
+            onPress={() => setSortBy("popular")}
             className={`flex-row items-center px-3 py-2 rounded-lg ${
-              sortBy === 'popular' ? 'bg-primary-100' : 'bg-neutral-100'
+              sortBy === "popular" ? "bg-primary-100" : "bg-neutral-100"
             }`}
             activeOpacity={0.7}
           >
             <TrendingUp
-              color={sortBy === 'popular' ? '#2563eb' : '#6b7280'}
+              color={sortBy === "popular" ? "#2563eb" : "#6b7280"}
               size={16}
               strokeWidth={2}
             />
             <Text
               className={`text-sm font-medium ml-1.5 ${
-                sortBy === 'popular' ? 'text-primary-600' : 'text-neutral-600'
+                sortBy === "popular" ? "text-primary-600" : "text-neutral-600"
               }`}
             >
               Popular
@@ -198,20 +232,22 @@ export default function Community() {
               key={flair}
               onPress={() => setSelectedFlair(flair)}
               className={`mr-2 px-3 py-2 rounded-full ${
-                selectedFlair === flair ? 'bg-primary-600' : 'bg-neutral-200'
+                selectedFlair === flair ? "bg-primary-600" : "bg-neutral-200"
               }`}
               activeOpacity={0.7}
             >
-              {flair === 'all' ? (
+              {flair === "all" ? (
                 <View className="flex-row items-center">
                   <Filter
-                    color={selectedFlair === 'all' ? '#fff' : '#374151'}
+                    color={selectedFlair === "all" ? "#fff" : "#374151"}
                     size={14}
                     strokeWidth={2}
                   />
                   <Text
                     className={`text-sm font-medium ml-1.5 ${
-                      selectedFlair === 'all' ? 'text-white' : 'text-neutral-700'
+                      selectedFlair === "all"
+                        ? "text-white"
+                        : "text-neutral-700"
                     }`}
                   >
                     All
@@ -219,10 +255,14 @@ export default function Community() {
                 </View>
               ) : (
                 <View className="flex-row items-center">
-                  <Text className="text-sm mr-1">{FLAIR_CONFIG[flair].emoji}</Text>
+                  <Text className="text-sm mr-1">
+                    {FLAIR_CONFIG[flair].emoji}
+                  </Text>
                   <Text
                     className={`text-sm font-medium ${
-                      selectedFlair === flair ? 'text-white' : 'text-neutral-700'
+                      selectedFlair === flair
+                        ? "text-white"
+                        : "text-neutral-700"
                     }`}
                   >
                     {FLAIR_CONFIG[flair].label}
@@ -238,7 +278,10 @@ export default function Community() {
       <ScrollView
         className="flex-1 px-4 pt-4"
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={() => loadPosts(true)} />
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() => loadPosts(true)}
+          />
         }
         showsVerticalScrollIndicator={false}
       >
@@ -261,23 +304,30 @@ export default function Community() {
           <View className="items-center justify-center py-20">
             <SearchX color="#9ca3af" size={64} strokeWidth={1.5} />
             <Text className="text-neutral-500 text-base mt-4">
-              {searchQuery ? 'No posts found' : 'No posts yet'}
+              {searchQuery ? "No posts found" : "No posts yet"}
             </Text>
             {!searchQuery && (
               <TouchableOpacity
-                onPress={() => router.push('/create-post' as never)}
+                onPress={() => router.push("/create-post" as never)}
                 className="mt-4 bg-primary-600 px-6 py-3 rounded-xl"
               >
-                <Text className="text-white font-semibold">Create the first post</Text>
+                <Text className="text-white font-semibold">
+                  Create the first post
+                </Text>
               </TouchableOpacity>
             )}
           </View>
         ) : (
           filteredPosts.map((post, index) => (
-            <Animated.View key={post.id} entering={FadeInDown.delay(index * 50).duration(400)}>
+            <Animated.View
+              key={post.id}
+              entering={FadeInDown.delay(index * 50).duration(400)}
+            >
               <ForumPostCard
                 post={post}
-                onPress={() => router.push(`/post-detail?id=${post.id}` as never)}
+                onPress={() =>
+                  router.push(`/post-detail?id=${post.id}` as never)
+                }
                 onVote={(voteType) => handleVote(post.id, voteType)}
                 isVoting={votingPostId === post.id}
               />

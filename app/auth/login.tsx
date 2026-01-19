@@ -57,7 +57,7 @@ export default function Login() {
     try {
       setIsLoading(true);
 
-      const response = await apiFetch('/api/auth/login', {
+      const response = await apiFetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
