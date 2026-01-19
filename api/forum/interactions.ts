@@ -58,11 +58,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { action, content_type, content_id } = body;
 
     if (!action || !content_type || !content_id) {
-      return res
-        .status(400)
-        .json({
-          error: "Missing required fields: action, content_type, content_id",
-        });
+      return res.status(400).json({
+        error: "Missing required fields: action, content_type, content_id",
+      });
     }
 
     // Handle different actions
@@ -156,11 +154,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             .json({ error: "Comments can only be added to posts" });
         }
         if (!body.comment_content || body.comment_content.length > 300) {
-          return res
-            .status(400)
-            .json({
-              error: "Comment is required and must be max 300 characters",
-            });
+          return res.status(400).json({
+            error: "Comment is required and must be max 300 characters",
+          });
         }
 
         const comment = await ForumCommentsRepository.create({
@@ -184,11 +180,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             .json({ error: "Replies can only be added to comments" });
         }
         if (!body.comment_content || body.comment_content.length > 300) {
-          return res
-            .status(400)
-            .json({
-              error: "Reply is required and must be max 300 characters",
-            });
+          return res.status(400).json({
+            error: "Reply is required and must be max 300 characters",
+          });
         }
         if (!body.parent_comment_id) {
           return res
@@ -208,10 +202,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           return res.status(404).json({ error: "Parent comment not found" });
         }
 
-        if (parentComment[0].depth >= 1) {
-          return res
-            .status(400)
-            .json({ error: "Maximum reply depth reached (2 levels)" });
+        if (parentComment[0].depth >= 999) {
+          return res.status(400).json({ error: "Maximum reply depth reached" });
         }
 
         const reply = await ForumCommentsRepository.create({
