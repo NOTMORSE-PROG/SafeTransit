@@ -31,6 +31,7 @@ import {
   X,
   Chrome,
   Pencil,
+  MessageSquare,
 } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system/legacy";
@@ -474,6 +475,39 @@ export default function Profile() {
                     <Text className="text-sm text-neutral-500">
                       {contactCount} contact{contactCount !== 1 ? "s" : ""}{" "}
                       added
+                    </Text>
+                  </View>
+                </View>
+                <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* My Posts */}
+          <Animated.View entering={FadeInDown.delay(320).duration(600)}>
+            <Text className="text-lg font-bold text-neutral-900 mb-3">
+              My Content
+            </Text>
+
+            <TouchableOpacity
+              className="bg-white rounded-2xl p-4 mb-6 shadow-sm"
+              activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="Manage my posts"
+              accessibilityRole="button"
+              onPress={() => router.push("/my-posts" as never)}
+            >
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center flex-1">
+                  <View className="w-12 h-12 bg-secondary-100 rounded-full items-center justify-center mr-3">
+                    <MessageSquare color="#0d9488" size={24} strokeWidth={2} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-base font-semibold text-neutral-900">
+                      My Posts
+                    </Text>
+                    <Text className="text-sm text-neutral-500">
+                      View and manage your forum posts
                     </Text>
                   </View>
                 </View>

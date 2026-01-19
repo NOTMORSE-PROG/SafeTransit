@@ -23,6 +23,9 @@ import {
   Clock,
   TrendingUp,
   ArrowDown,
+  MoreVertical,
+  Edit2,
+  Trash2,
 } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import { VoteButtons } from "@/components/forum/VoteButtons";
@@ -37,6 +40,7 @@ import {
   likeComment,
   replyToComment,
   reportContent,
+  deletePost,
   type ForumPostWithAuthor,
   type ForumCommentWithAuthor,
   type ReportReason,
@@ -62,7 +66,7 @@ export default function PostDetail() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const [post, setPost] = useState<ForumPostWithAuthor | null>(null);
   const [comments, setComments] = useState<ForumCommentWithAuthor[]>([]);
@@ -78,6 +82,8 @@ export default function PostDetail() {
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadPost = useCallback(
     async (showRefresh = false) => {
@@ -223,6 +229,43 @@ export default function PostDetail() {
     }
   };
 
+  const isAuthor = user?.id === post?.author_id;
+
+  const handleDeletePost = () => {
+    if (!token || !post) return;
+
+    Alert.alert(
+      "Delete Post",
+      "Are you sure you want to delete this post? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            setIsDeleting(true);
+            try {
+              await deletePost(post.id, token);
+              Alert.alert("Success", "Post deleted successfully", [
+                { text: "OK", onPress: () => router.back() },
+              ]);
+            } catch {
+              Alert.alert("Error", "Failed to delete post");
+            } finally {
+              setIsDeleting(false);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleEditPost = () => {
+    if (!post) return;
+    setShowOptionsMenu(false);
+    router.push(`/create-post?id=${post.id}` as never);
+  };
+
   if (isLoading) {
     return (
       <View className="flex-1 bg-white items-center justify-center">
@@ -260,13 +303,57 @@ export default function PostDetail() {
           <ArrowLeft color="#374151" size={24} strokeWidth={2} />
         </TouchableOpacity>
         <Text className="text-lg font-bold text-neutral-900">Post</Text>
-        <TouchableOpacity
-          onPress={() => setShowReportModal(true)}
-          className="p-2"
-        >
-          <Flag color="#6b7280" size={20} strokeWidth={2} />
-        </TouchableOpacity>
+        <View className="flex-row items-center">
+          {isAuthor ? (
+            <TouchableOpacity
+              onPress={() => setShowOptionsMenu(!showOptionsMenu)}
+              className="p-2"
+            >
+              <MoreVertical color="#6b7280" size={20} strokeWidth={2} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => setShowReportModal(true)}
+              className="p-2"
+            >
+              <Flag color="#6b7280" size={20} strokeWidth={2} />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
+
+      {/* Options Menu for Author */}
+      {showOptionsMenu && isAuthor && (
+        <View
+          className="absolute right-4 bg-white rounded-xl shadow-lg z-50 border border-neutral-200"
+          style={{ top: insets.top + 52 }}
+        >
+          <TouchableOpacity
+            onPress={handleEditPost}
+            className="flex-row items-center px-4 py-3 border-b border-neutral-100"
+          >
+            <Edit2 color="#4b5563" size={18} strokeWidth={2} />
+            <Text className="text-neutral-700 font-medium ml-3">Edit Post</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setShowOptionsMenu(false);
+              handleDeletePost();
+            }}
+            className="flex-row items-center px-4 py-3"
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <ActivityIndicator size="small" color="#dc2626" />
+            ) : (
+              <Trash2 color="#dc2626" size={18} strokeWidth={2} />
+            )}
+            <Text className="text-danger-600 font-medium ml-3">
+              Delete Post
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <ScrollView
         className="flex-1"
@@ -277,6 +364,7 @@ export default function PostDetail() {
           />
         }
         showsVerticalScrollIndicator={false}
+        onScrollBeginDrag={() => setShowOptionsMenu(false)}
       >
         {/* Post Content */}
         <View className="px-6 py-4">
