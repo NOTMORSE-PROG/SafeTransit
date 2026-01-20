@@ -288,8 +288,8 @@ export const ForumCommentsRepository = {
         await sql`SELECT depth FROM forum_comments WHERE id = ${data.parent_id}`;
       if (parent.length > 0) {
         depth = parent[0].depth + 1;
-        if (depth > 1) {
-          throw new Error("Maximum reply depth exceeded (2 levels)");
+        if (depth > 999) {
+          throw new Error("Maximum reply depth exceeded");
         }
       }
     }
