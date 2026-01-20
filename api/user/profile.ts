@@ -1,8 +1,9 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../services/auth/jwt';
-import { validatePhoneNumber } from '../../services/auth/validation';
-import { UserRepository } from '../../services/repositories/userRepository';
-import { UTApi } from 'uploadthing/server';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { verifyToken } from "../../services/auth/jwt";
+import { validatePhoneNumber } from "../../services/auth/validation";
+import { UserRepository } from "../../services/repositories/userRepository";
+import { UTApi } from "uploadthing/server";
+import { sanitizeText, isValidURL } from "../../services/auth/inputValidation";
 
 const utapi = new UTApi({
   token: process.env.UPLOADTHING_TOKEN,
@@ -11,7 +12,7 @@ const utapi = new UTApi({
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '5mb',
+      sizeLimit: "5mb",
     },
   },
 };
@@ -28,53 +29,81 @@ function extractFileKey(url: string): string | null {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'PUT' && req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  // Security headers
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+
+  if (req.method !== "PUT" && req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     const token = authHeader.substring(7);
     const payload = verifyToken(token);
 
     if (!payload) {
-      return res.status(401).json({ error: 'Invalid or expired token' });
+      return res.status(401).json({ error: "Invalid or expired token" });
     }
 
-    const { base64, fileName, mimeType, phoneNumber, fullName, profileImageUrl, removePhoto } = req.body;
+    const {
+      base64,
+      fileName,
+      mimeType,
+      phoneNumber,
+      fullName,
+      profileImageUrl,
+      removePhoto,
+    } = req.body;
+
+    // Sanitize text inputs
+    const sanitizedFullName = fullName
+      ? sanitizeText(fullName, 100)
+      : undefined;
+    const sanitizedProfileImageUrl =
+      profileImageUrl && isValidURL(profileImageUrl)
+        ? profileImageUrl
+        : undefined;
 
     if (base64 && fileName) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-      const fileType = mimeType || 'image/jpeg';
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/jpg",
+      ];
+      const fileType = mimeType || "image/jpeg";
       if (!allowedTypes.includes(fileType)) {
-        return res.status(400).json({ error: 'Invalid file type. Only JPEG, PNG, and WEBP are allowed.' });
+        return res
+          .status(400)
+          .json({
+            error: "Invalid file type. Only JPEG, PNG, and WEBP are allowed.",
+          });
       }
 
-      const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
+      const base64Data = base64.replace(/^data:image\/\w+;base64,/, "");
+      const buffer = Buffer.from(base64Data, "base64");
 
       if (buffer.length > 4 * 1024 * 1024) {
-        return res.status(400).json({ error: 'File size exceeds 4MB limit' });
+        return res.status(400).json({ error: "File size exceeds 4MB limit" });
       }
 
       const file = new File([buffer], fileName, { type: fileType });
-      console.log('Uploading file to UploadThing:', fileName, 'size:', buffer.length);
+      // File size validation passed
       const uploadResult = await utapi.uploadFiles([file]);
 
       if (!uploadResult[0] || uploadResult[0].error) {
-        console.error('UploadThing error:', uploadResult[0]?.error);
+        console.error("Upload service error");
         return res.status(500).json({
-          error: 'Failed to upload file',
-          details: uploadResult[0]?.error?.message
+          error: "Failed to upload file. Please try again.",
         });
       }
 
       const uploadedFile = uploadResult[0].data;
-      console.log('Upload successful:', uploadedFile.url);
 
       return res.status(200).json({
         success: true,
@@ -86,7 +115,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (phoneNumber) {
       const validation = validatePhoneNumber(phoneNumber);
       if (!validation.valid) {
-        return res.status(400).json({ error: validation.error || 'Invalid phone number' });
+        return res
+          .status(400)
+          .json({ error: validation.error || "Invalid phone number" });
       }
 
       const updatedUser = await UserRepository.updateProfile(payload.userId, {
@@ -94,7 +125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
 
       if (!updatedUser) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
 
       return res.status(200).json({
@@ -112,32 +143,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    if (fullName === undefined && profileImageUrl === undefined && !removePhoto) {
+    if (
+      fullName === undefined &&
+      profileImageUrl === undefined &&
+      !removePhoto
+    ) {
       return res.status(400).json({
-        error: 'At least one of fullName, profileImageUrl, phoneNumber, or removePhoto is required'
+        error:
+          "At least one of fullName, profileImageUrl, phoneNumber, or removePhoto is required",
       });
     }
 
     const currentUser = await UserRepository.findById(payload.userId);
     if (!currentUser) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const oldImageUrl = currentUser.profile_image_url;
-    const shouldDeleteOldImage = oldImageUrl && (
-      removePhoto ||
-      (profileImageUrl && profileImageUrl !== oldImageUrl)
-    );
+    const shouldDeleteOldImage =
+      oldImageUrl &&
+      (removePhoto || (profileImageUrl && profileImageUrl !== oldImageUrl));
 
     if (shouldDeleteOldImage && oldImageUrl) {
       const fileKey = extractFileKey(oldImageUrl);
       if (fileKey) {
         try {
-          console.log('Deleting old profile image:', fileKey);
+          console.log("Deleting old profile image:", fileKey);
           await utapi.deleteFiles([fileKey]);
-          console.log('Successfully deleted old profile image');
+          console.log("Successfully deleted old profile image");
         } catch (deleteError) {
-          console.error('Failed to delete old profile image:', deleteError);
+          console.error("Failed to delete old profile image:", deleteError);
         }
       }
     }
@@ -148,22 +183,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } = {};
 
     if (fullName !== undefined) {
-      if (typeof fullName !== 'string' || fullName.trim().length < 2) {
-        return res.status(400).json({ error: 'Name must be at least 2 characters' });
+      if (typeof fullName !== "string" || fullName.trim().length < 2) {
+        return res
+          .status(400)
+          .json({ error: "Name must be at least 2 characters" });
       }
-      updateData.full_name = fullName.trim();
+      updateData.full_name = sanitizedFullName || fullName.trim();
     }
 
     if (removePhoto) {
       updateData.profile_image_url = null;
     } else if (profileImageUrl !== undefined) {
-      updateData.profile_image_url = profileImageUrl;
+      updateData.profile_image_url =
+        sanitizedProfileImageUrl || profileImageUrl;
     }
 
-    const updatedUser = await UserRepository.updateProfile(payload.userId, updateData);
+    const updatedUser = await UserRepository.updateProfile(
+      payload.userId,
+      updateData,
+    );
 
     if (!updatedUser) {
-      return res.status(404).json({ error: 'Failed to update user' });
+      return res.status(404).json({ error: "Failed to update user" });
     }
 
     return res.status(200).json({
@@ -180,7 +221,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
     });
   } catch (error) {
-    console.error('Profile API error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error("Profile API error:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 }

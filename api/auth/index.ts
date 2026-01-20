@@ -2,11 +2,16 @@
 // Handles both email/password login and Google OAuth
 // Routes based on presence of googleToken in request body
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { UserRepository } from '../../services/repositories/userRepository';
-import { comparePassword } from '../../services/auth/password';
-import { validateEmail } from '../../services/auth/validation';
-import { generateToken } from '../../services/auth/jwt';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { UserRepository } from "../../services/repositories/userRepository";
+import { comparePassword } from "../../services/auth/password";
+import { validateEmail } from "../../services/auth/validation";
+import { generateToken } from "../../services/auth/jwt";
+import {
+  checkRateLimit,
+  getClientIdentifier,
+} from "../../services/auth/rateLimiter";
+import { sanitizeEmail } from "../../services/auth/inputValidation";
 
 interface GoogleUserInfo {
   id: string; // Google's user ID
@@ -18,17 +23,19 @@ interface GoogleUserInfo {
 /**
  * Verify Google ID token with Google's tokeninfo endpoint
  */
-async function verifyGoogleToken(token: string): Promise<GoogleUserInfo | null> {
+async function verifyGoogleToken(
+  token: string,
+): Promise<GoogleUserInfo | null> {
   try {
     const response = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
     );
 
     if (!response.ok) {
       return null;
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
       sub: string;
       email: string;
       name: string;
@@ -53,7 +60,7 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
   // Verify Google token and get user info
   const googleUserInfo = await verifyGoogleToken(googleToken);
   if (!googleUserInfo) {
-    return res.status(401).json({ error: 'Invalid Google token' });
+    return res.status(401).json({ error: "Invalid Google token" });
   }
 
   // Scenario 1: Check if user exists by Google ID (existing Google user)
@@ -74,7 +81,7 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
         phoneNumber: user.phone_number,
         onboardingCompleted: user.onboarding_completed,
         hasGoogleLinked: true,
-        hasPasswordSet: !!user.password_hash && user.password_hash !== '',
+        hasPasswordSet: !!user.password_hash && user.password_hash !== "",
       },
     });
   }
@@ -86,7 +93,7 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
     // Email exists but not linked to Google - auto-link
     if (user.google_id) {
       // This shouldn't happen, but handle it
-      return res.status(500).json({ error: 'Account configuration error' });
+      return res.status(500).json({ error: "Account configuration error" });
     }
 
     // Auto-link Google to existing account
@@ -113,7 +120,7 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
         phoneNumber: user.phone_number,
         onboardingCompleted: user.onboarding_completed,
         hasGoogleLinked: true,
-        hasPasswordSet: !!user.password_hash && user.password_hash !== '',
+        hasPasswordSet: !!user.password_hash && user.password_hash !== "",
       },
     });
   }
@@ -127,7 +134,7 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
     profile_image_url: googleUserInfo.picture || null,
     phone_number: null,
     is_verified: false,
-    verification_status: 'none',
+    verification_status: "none",
   });
 
   const token = generateToken({ userId: newUser.id, email: newUser.email });
@@ -155,42 +162,42 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
 async function handleEmailPasswordAuth(
   email: string,
   password: string,
-  res: VercelResponse
+  res: VercelResponse,
 ) {
   // Validate required fields
   if (!email || !password) {
-    return res.status(400).json({ error: 'Missing email or password' });
+    return res.status(400).json({ error: "Missing email or password" });
   }
 
   // Validate email format
   if (!validateEmail(email)) {
-    return res.status(400).json({ error: 'Invalid email format' });
+    return res.status(400).json({ error: "Invalid email format" });
   }
 
   // Find user by email
   const user = await UserRepository.findByEmail(email);
   if (!user) {
-    return res.status(401).json({ error: 'Invalid email or password' });
+    return res.status(401).json({ error: "Invalid email or password" });
   }
 
   // CRITICAL: Check if this is a Google-only account
   // If user has google_id but NO password_hash, they must use Google to login
-  if (user.google_id && (!user.password_hash || user.password_hash === '')) {
+  if (user.google_id && (!user.password_hash || user.password_hash === "")) {
     return res.status(403).json({
-      error: 'This email uses Google Sign-In. Please continue with Google.',
-      errorCode: 'GOOGLE_ONLY_ACCOUNT',
+      error: "This email uses Google Sign-In. Please continue with Google.",
+      errorCode: "GOOGLE_ONLY_ACCOUNT",
     });
   }
 
   // Verify password exists
-  if (!user.password_hash || user.password_hash === '') {
-    return res.status(401).json({ error: 'Invalid email or password' });
+  if (!user.password_hash || user.password_hash === "") {
+    return res.status(401).json({ error: "Invalid email or password" });
   }
 
   // Compare password with hash
   const isValidPassword = await comparePassword(password, user.password_hash);
   if (!isValidPassword) {
-    return res.status(401).json({ error: 'Invalid email or password' });
+    return res.status(401).json({ error: "Invalid email or password" });
   }
 
   // Generate JWT token
@@ -213,16 +220,50 @@ async function handleEmailPasswordAuth(
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Security headers
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains",
+  );
+
+  // Rate limiting - 10 attempts per 15 minutes per IP
+  const clientId = getClientIdentifier(req.headers);
+  const rateLimit = checkRateLimit(clientId, 10, 15 * 60 * 1000);
+
+  res.setHeader("X-RateLimit-Limit", "10");
+  res.setHeader("X-RateLimit-Remaining", rateLimit.remaining.toString());
+  res.setHeader(
+    "X-RateLimit-Reset",
+    new Date(rateLimit.resetTime).toISOString(),
+  );
+
+  if (!rateLimit.allowed) {
+    return res.status(429).json({
+      error: "Too many authentication attempts. Please try again later.",
+      retryAfter: Math.ceil((rateLimit.resetTime - Date.now()) / 1000),
+    });
+  }
+
   // Only allow POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     const { googleToken, email, password } = req.body;
 
+    // Sanitize email input
+    const sanitizedEmail = email ? sanitizeEmail(email) : undefined;
+
     // Route based on authentication type
     if (googleToken) {
+      // Google OAuth flow
+      return await handleGoogleAuth(googleToken, res);
+    } else if (sanitizedEmail && password) {
+      // Email/password flow
+      return await handleEmailPasswordAuth(sanitizedEmail, password, res);
       // Google OAuth flow
       return await handleGoogleAuth(googleToken, res);
     } else if (email && password) {
@@ -230,11 +271,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return await handleEmailPasswordAuth(email, password, res);
     } else {
       return res.status(400).json({
-        error: 'Invalid request. Provide either googleToken or email+password',
+        error: "Invalid request. Provide either googleToken or email+password",
       });
     }
   } catch (error) {
-    console.error('Authentication error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    // Log error server-side but don't expose details to client
+    console.error(
+      "Authentication error:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+    return res.status(500).json({
+      error:
+        "Authentication service temporarily unavailable. Please try again.",
+    });
   }
 }

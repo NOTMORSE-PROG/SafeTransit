@@ -6,6 +6,11 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import jwt from "jsonwebtoken";
 import { ForumPostsRepository } from "../../services/forumRepository";
 import type { PostFlair, ForumPostInsert } from "../../services/types/forum";
+import {
+  sanitizeText,
+  sanitizeURLArray,
+  sanitizePagination,
+} from "../../services/auth/inputValidation";
 
 interface JwtPayload {
   userId: string;
@@ -39,10 +44,12 @@ function requireAuth(req: VercelRequest): JwtPayload {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS headers
+  // CORS & Security headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -61,9 +68,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const user = getUserFromToken(req);
 
+      // Sanitize pagination
+      const { page: safePage, limit: safeLimit } = sanitizePagination(
+        page,
+        limit,
+      );
+
       const result = await ForumPostsRepository.getPosts({
-        page: parseInt(page as string),
-        limit: Math.min(parseInt(limit as string), 50), // Max 50 per page
+        page: safePage,
+        limit: Math.min(safeLimit, 50), // Max 50 per page
         sort: sort as "recent" | "popular",
         flair: flair as PostFlair | undefined,
         authorId: author_id as string | undefined,
@@ -74,10 +87,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         success: true,
         data: result.posts,
         pagination: {
-          page: parseInt(page as string),
-          limit: parseInt(limit as string),
+          page: safePage,
+          limit: safeLimit,
           total: result.total,
-          totalPages: Math.ceil(result.total / parseInt(limit as string)),
+          totalPages: Math.ceil(result.total / safeLimit),
         },
       });
     }
@@ -116,13 +129,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .json({ error: "photo_urls must be an array with max 5 items" });
       }
 
+      // Sanitize input to prevent XSS
+      const sanitizedTitle = sanitizeText(title, 100);
+      const sanitizedBody = sanitizeText(body, 2000);
+      const sanitizedLocationTag = location_tag
+        ? sanitizeText(location_tag, 100)
+        : null;
+      const sanitizedPhotoUrls = sanitizeURLArray(photo_urls, 5);
+
       const postData: ForumPostInsert = {
         author_id: user.userId,
-        title: title.trim(),
-        body: body.trim(),
+        title: sanitizedTitle,
+        body: sanitizedBody,
         flair: flair as PostFlair,
-        location_tag: location_tag?.trim() || null,
-        photo_urls: photo_urls && photo_urls.length > 0 ? photo_urls : null,
+        location_tag: sanitizedLocationTag,
+        photo_urls: sanitizedPhotoUrls.length > 0 ? sanitizedPhotoUrls : null,
       };
 
       const post = await ForumPostsRepository.create(postData);
