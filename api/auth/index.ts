@@ -5,13 +5,19 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { UserRepository } from "../../services/repositories/userRepository";
 import { comparePassword, hashPassword } from "../../services/auth/password";
-import { validateEmail, validatePassword } from "../../services/auth/validation";
+import {
+  validateEmail,
+  validatePassword,
+} from "../../services/auth/validation";
 import { generateToken } from "../../services/auth/jwt";
 import {
   checkRateLimit,
   getClientIdentifier,
 } from "../../services/auth/rateLimiter";
-import { sanitizeEmail, sanitizeText } from "../../services/auth/inputValidation";
+import {
+  sanitizeEmail,
+  sanitizeText,
+} from "../../services/auth/inputValidation";
 
 interface GoogleUserInfo {
   id: string; // Google's user ID
@@ -342,7 +348,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { googleToken, email, password, fullName } = req.body;
+    // Log request body for debugging
+    console.log("Request body:", JSON.stringify(req.body));
+    console.log("Request body keys:", Object.keys(req.body || {}));
+    
+    const { googleToken, email, password, fullName } = req.body || {};
 
     // Sanitize email input
     const sanitizedEmail = email ? sanitizeEmail(email) : undefined;
@@ -359,7 +369,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return await handleEmailPasswordAuth(sanitizedEmail, password, res);
     } else {
       return res.status(400).json({
-        error: "Invalid request. Provide either googleToken, or email+password (login), or email+password+fullName (signup)",
+        error:
+          "Invalid request. Provide either googleToken, or email+password (login), or email+password+fullName (signup)",
       });
     }
   } catch (error) {
@@ -368,13 +379,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (error instanceof Error) {
       console.error("Error stack:", error.stack);
     }
-    
+
     // Return more specific error in development, generic in production
-    const isDev = process.env.NODE_ENV !== 'production';
+    const isDev = process.env.NODE_ENV !== "production";
     return res.status(500).json({
-      error: isDev && error instanceof Error 
-        ? `Error: ${error.message}` 
-        : "Authentication service temporarily unavailable. Please try again.",
+      error:
+        isDev && error instanceof Error
+          ? `Error: ${error.message}`
+          : "Authentication service temporarily unavailable. Please try again.",
       ...(isDev && error instanceof Error && { details: error.stack }),
     });
   }

@@ -1,5 +1,5 @@
 // SafeTransit Backend API Homepage
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const html = `
@@ -139,6 +139,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 </html>
   `;
 
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader("Content-Type", "text/html");
   res.status(200).send(html);
 }
