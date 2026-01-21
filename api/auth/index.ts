@@ -171,8 +171,11 @@ async function handleSignup(
   fullName: string,
   res: VercelResponse,
 ) {
+  console.log("handleSignup called with:", { email, fullName });
+  
   // Validate required fields
   if (!email || !password || !fullName) {
+    console.log("Missing required fields");
     return res.status(400).json({
       error: "Missing required fields",
       details: ["Email, password, and full name are required"],
@@ -182,9 +185,12 @@ async function handleSignup(
   // Sanitize inputs
   const sanitizedEmail = sanitizeEmail(email);
   const sanitizedFullName = sanitizeText(fullName, 100);
+  
+  console.log("Sanitized:", { sanitizedEmail, sanitizedFullName });
 
   // Validate email format
   if (!validateEmail(sanitizedEmail)) {
+    console.log("Invalid email format");
     return res.status(400).json({
       error: "Invalid email format",
       details: ["Please provide a valid email address"],
@@ -351,8 +357,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Log request body for debugging
     console.log("Request body:", JSON.stringify(req.body));
     console.log("Request body keys:", Object.keys(req.body || {}));
-    
+
     const { googleToken, email, password, fullName } = req.body || {};
+
+    console.log("Parsed fields:", { 
+      hasGoogleToken: !!googleToken, 
+      hasEmail: !!email, 
+      hasPassword: !!password, 
+      hasFullName: !!fullName 
+    });
 
     // Sanitize email input
     const sanitizedEmail = email ? sanitizeEmail(email) : undefined;
@@ -360,14 +373,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Route based on authentication type
     if (googleToken) {
       // Google OAuth flow
+      console.log("Routing to Google OAuth");
       return await handleGoogleAuth(googleToken, res);
     } else if (fullName && sanitizedEmail && password) {
       // Signup flow (has fullName)
+      console.log("Routing to Signup flow");
       return await handleSignup(sanitizedEmail, password, fullName, res);
     } else if (sanitizedEmail && password) {
       // Login flow (no fullName)
+      console.log("Routing to Login flow");
       return await handleEmailPasswordAuth(sanitizedEmail, password, res);
     } else {
+      console.log("Invalid request - no valid fields");
       return res.status(400).json({
         error:
           "Invalid request. Provide either googleToken, or email+password (login), or email+password+fullName (signup)",
