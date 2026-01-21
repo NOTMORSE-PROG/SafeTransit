@@ -170,6 +170,42 @@ export const ForumPostsRepository = {
   },
 
   async delete(id: string, authorId: string): Promise<boolean> {
+    // First, get the post to check for photo_urls
+    const post = await sql`
+      SELECT photo_urls FROM forum_posts WHERE id = ${id} AND author_id = ${authorId}
+    `;
+    
+    if (post.length === 0) {
+      return false;
+    }
+    
+    // If post has photos, delete them from UploadThing
+    const photoUrls = post[0].photo_urls;
+    if (photoUrls && Array.isArray(photoUrls) && photoUrls.length > 0) {
+      try {
+        const { UTApi } = await import("uploadthing/server");
+        const utapi = new UTApi({ token: process.env.UPLOADTHING_TOKEN });
+        
+        // Extract file keys from URLs
+        // UploadThing URLs format: https://utfs.io/f/{fileKey}
+        const fileKeys = photoUrls
+          .map((url: string) => {
+            const match = url.match(/\/f\/([^\/]+)$/);
+            return match ? match[1] : null;
+          })
+          .filter((key): key is string => key !== null);
+        
+        if (fileKeys.length > 0) {
+          await utapi.deleteFiles(fileKeys);
+          console.log(`Deleted ${fileKeys.length} images from UploadThing`);
+        }
+      } catch (error) {
+        console.error("Error deleting images from UploadThing:", error);
+        // Continue with post deletion even if image deletion fails
+      }
+    }
+    
+    // Delete the post from database
     const result = await sql`
       DELETE FROM forum_posts WHERE id = ${id} AND author_id = ${authorId}
     `;
