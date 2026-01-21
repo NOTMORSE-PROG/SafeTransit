@@ -363,14 +363,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
   } catch (error) {
-    // Log error server-side but don't expose details to client
-    console.error(
-      "Authentication error:",
-      error instanceof Error ? error.message : "Unknown error",
-    );
+    // Log detailed error server-side for debugging
+    console.error("Authentication error:", error);
+    if (error instanceof Error) {
+      console.error("Error stack:", error.stack);
+    }
+    
+    // Return more specific error in development, generic in production
+    const isDev = process.env.NODE_ENV !== 'production';
     return res.status(500).json({
-      error:
-        "Authentication service temporarily unavailable. Please try again.",
+      error: isDev && error instanceof Error 
+        ? `Error: ${error.message}` 
+        : "Authentication service temporarily unavailable. Please try again.",
+      ...(isDev && error instanceof Error && { details: error.stack }),
     });
   }
 }
