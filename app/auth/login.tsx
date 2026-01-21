@@ -4,10 +4,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   Image,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { apiFetch } from "@/utils/api";
@@ -42,8 +42,8 @@ export default function Login() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const isEmailValid = emailRegex.test(email);
 
-
-  const canSubmit = email.length > 0 && password.length > 0 && isEmailValid && !isLoading;
+  const canSubmit =
+    email.length > 0 && password.length > 0 && isEmailValid && !isLoading;
 
   const handleLogin = async () => {
     setError(null);
@@ -57,9 +57,9 @@ export default function Login() {
     try {
       setIsLoading(true);
 
-      const response = await apiFetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await apiFetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -70,10 +70,10 @@ export default function Login() {
         router.replace("/onboarding/welcome");
       } else {
         // Check for Google-only account error
-        if (data.errorCode === 'GOOGLE_ONLY_ACCOUNT') {
+        if (data.errorCode === "GOOGLE_ONLY_ACCOUNT") {
           setShowGoogleOnlyModal(true);
         } else {
-          setError(data.error || 'Login failed');
+          setError(data.error || "Login failed");
         }
       }
     } catch {
@@ -93,7 +93,7 @@ export default function Login() {
       await login(result.token, result.user);
       router.replace("/onboarding/welcome");
     } else {
-      setError(result.error || 'Google sign-in failed');
+      setError(result.error || "Google sign-in failed");
     }
   };
 
@@ -148,25 +148,36 @@ export default function Login() {
       </View>
 
       {/* Whole Form */}
-      <ScrollView
+      <KeyboardAwareScrollView
         className="flex-1 px-8 pt-10"
         showsVerticalScrollIndicator={false}
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={100}
+        keyboardShouldPersistTaps="handled"
       >
         <Animated.View
           entering={FadeInDown.delay(100).duration(500)}
           className="mb-6"
         >
-          <Text className="text-[11px] uppercase tracking-[2px] font-bold text-neutral-400 mb-2 ml-1">Email Address</Text>
+          <Text className="text-[11px] uppercase tracking-[2px] font-bold text-neutral-400 mb-2 ml-1">
+            Email Address
+          </Text>
           <View className="relative justify-center">
-            <View className="absolute left-4 z-10"><Mail size={18} color="#9CA3AF" /></View>
+            <View className="absolute left-4 z-10">
+              <Mail size={18} color="#9CA3AF" />
+            </View>
             <TextInput
               value={email}
-              onChangeText={(text) => { setEmail(text); setSuccessMessage(null); }} 
+              onChangeText={(text) => {
+                setEmail(text);
+                setSuccessMessage(null);
+              }}
               keyboardType="email-address"
               autoCapitalize="none"
               placeholder="you@domain.com"
               placeholderTextColor="#9CA3AF"
-              className={`bg-neutral-50 border ${!isEmailValid && email.length > 0 ? 'border-red-400' : 'border-neutral-200'} rounded-xl pl-12 pr-4 py-4 text-base text-neutral-900`}
+              className={`bg-neutral-50 border ${!isEmailValid && email.length > 0 ? "border-red-400" : "border-neutral-200"} rounded-xl pl-12 pr-4 py-4 text-base text-neutral-900`}
             />
           </View>
           {!isEmailValid && email.length > 0 && (
@@ -219,7 +230,7 @@ export default function Login() {
             </Text>
           </TouchableOpacity>
         </Animated.View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       <View className="px-8 pb-10 pt-4 bg-white border-t border-neutral-50">
         {error && (
@@ -235,14 +246,16 @@ export default function Login() {
         )}
 
         {successMessage && (
-  <Animated.View entering={FadeInDown.duration(400)} className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3 flex-row items-center">
-    <View className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2" />
-    <Text className="text-green-700 text-[10px] font-black uppercase tracking-[1px] flex-1">
-      {successMessage}
-    </Text>
-  </Animated.View>
-)}
-
+          <Animated.View
+            entering={FadeInDown.duration(400)}
+            className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3 flex-row items-center"
+          >
+            <View className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2" />
+            <Text className="text-green-700 text-[10px] font-black uppercase tracking-[1px] flex-1">
+              {successMessage}
+            </Text>
+          </Animated.View>
+        )}
 
         {/* Buttons and redirects */}
         <TouchableOpacity

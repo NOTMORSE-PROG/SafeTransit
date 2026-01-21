@@ -173,7 +173,7 @@ export default function PostDetail() {
       post_id: post.id,
       parent_id: replyingTo?.id || null,
       author_id: user.id,
-      author_name: user.email?.split('@')[0] || "You",
+      author_name: user.email?.split("@")[0] || "You",
       author_image_url: user.profileImageUrl || null,
       content: commentText,
       likes: 0,

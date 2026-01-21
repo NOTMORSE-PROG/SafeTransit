@@ -91,7 +91,11 @@ export function CommentItem({
   };
 
   return (
-    <View className={indentClass} ref={(ref) => onRef?.(ref)} collapsable={false}>
+    <View
+      className={indentClass}
+      ref={(ref) => onRef?.(ref)}
+      collapsable={false}
+    >
       {/* Thread connector line for nested comments */}
       {isNested && (
         <View className="absolute left-4 top-0 bottom-0 w-0.5 bg-neutral-200" />

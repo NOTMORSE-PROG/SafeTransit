@@ -42,7 +42,7 @@ import { apiFetch } from "../../utils/api";
 
 export default function Profile() {
   const router = useRouter();
-  const { user, token, refreshUser } = useAuth();
+  const { user, token, refreshUser, logout } = useAuth();
   const { linkGoogleAccount, isLoading: googleLinking } = useGoogleAuth();
 
   const [backgroundAlerts, setBackgroundAlerts] = useState(true);
@@ -55,6 +55,8 @@ export default function Profile() {
   const [showNameModal, setShowNameModal] = useState(false);
   const [editingName, setEditingName] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Use profile image from user context (synced with database)
   const profileImage = user?.profileImageUrl || null;
@@ -275,18 +277,24 @@ export default function Profile() {
     }
   };
 
-  const handleLogout = async () => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Logout",
-        style: "destructive",
-        onPress: async () => {
-          await AsyncStorage.removeItem("hasOnboarded");
-          router.replace("/onboarding/welcome");
-        },
-      },
-    ]);
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      // Clear all auth data and onboarding flag
+      await AsyncStorage.removeItem("hasOnboarded");
+      await logout();
+      // Redirect to landing page
+      router.replace("/landing");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutModal(false);
+    }
   };
 
   const handleLinkGoogle = async () => {
@@ -778,6 +786,62 @@ export default function Profile() {
                 ) : (
                   <Text className="text-white text-center font-semibold">
                     Save
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        visible={showLogoutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowLogoutModal(false)}
+      >
+        <View className="flex-1 bg-neutral-900/80 justify-center items-center px-6">
+          <Animated.View
+            entering={FadeInDown.duration(300)}
+            className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl"
+          >
+            <View className="items-center mb-6">
+              <View className="w-16 h-16 rounded-full bg-red-100 items-center justify-center mb-4">
+                <Text className="text-3xl">👋</Text>
+              </View>
+              <Text className="text-xl font-bold text-neutral-900 mb-2">
+                Logout
+              </Text>
+              <Text className="text-sm text-neutral-500 text-center leading-5">
+                Are you sure you want to logout? You'll need to sign in again to
+                access your account.
+              </Text>
+            </View>
+
+            <View className="flex-row space-x-3">
+              <TouchableOpacity
+                onPress={() => setShowLogoutModal(false)}
+                disabled={isLoggingOut}
+                className="flex-1 bg-neutral-100 py-3.5 rounded-xl"
+                activeOpacity={0.7}
+              >
+                <Text className="text-neutral-700 text-center font-bold">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={confirmLogout}
+                disabled={isLoggingOut}
+                className="flex-1 bg-red-600 py-3.5 rounded-xl"
+                activeOpacity={0.7}
+              >
+                {isLoggingOut ? (
+                  <ActivityIndicator color="#ffffff" size="small" />
+                ) : (
+                  <Text className="text-white text-center font-bold">
+                    Logout
                   </Text>
                 )}
               </TouchableOpacity>
