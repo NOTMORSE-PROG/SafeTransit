@@ -61,9 +61,7 @@ export const UserRepository = {
         full_name,
         profile_image_url,
         phone_number,
-        google_id,
-        is_verified,
-        verification_status
+        google_id
       )
       VALUES (
         ${data.email},
@@ -71,9 +69,7 @@ export const UserRepository = {
         ${data.full_name},
         ${data.profile_image_url || null},
         ${data.phone_number || null},
-        ${data.google_id || null},
-        ${data.is_verified || false},
-        ${data.verification_status || 'none'}
+        ${data.google_id || null}
       )
       RETURNING *
     `;
@@ -122,32 +118,7 @@ export const UserRepository = {
     return (result as unknown as QueryResult).count > 0;
   },
 
-  /**
-   * Mark user as verified
-   */
-  async markAsVerified(id: string): Promise<boolean> {
-    const result = await sql`
-      UPDATE users
-      SET is_verified = TRUE, verification_status = 'approved'
-      WHERE id = ${id}
-    `;
-    return (result as unknown as QueryResult).count > 0;
-  },
 
-  /**
-   * Update verification status
-   */
-  async updateVerificationStatus(
-    id: string,
-    status: User['verification_status']
-  ): Promise<boolean> {
-    const result = await sql`
-      UPDATE users
-      SET verification_status = ${status}
-      WHERE id = ${id}
-    `;
-    return (result as unknown as QueryResult).count > 0;
-  },
 
   /**
    * Mark onboarding as completed

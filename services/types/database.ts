@@ -32,8 +32,6 @@ export interface User {
   full_name: string;
   profile_image_url: string | null;
   phone_number: string | null;
-  is_verified: boolean;
-  verification_status: VerificationStatus;
   google_id: string | null;
   onboarding_completed: boolean;
   created_at: string; // ISO timestamp
@@ -221,9 +219,7 @@ export interface Location {
 // Helper Types for Inserts (Omit auto-generated fields)
 // ==============================================================================
 
-export type UserInsert = Omit<User, 'id' | 'created_at' | 'updated_at' | 'is_verified' | 'verification_status' | 'onboarding_completed'> & {
-  is_verified?: boolean;
-  verification_status?: VerificationStatus;
+export type UserInsert = Omit<User, 'id' | 'created_at' | 'updated_at' | 'onboarding_completed'> & {
   onboarding_completed?: boolean;
 };
 

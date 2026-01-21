@@ -139,8 +139,6 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
     google_id: googleUserInfo.id,
     profile_image_url: googleUserInfo.picture || null,
     phone_number: null,
-    is_verified: false,
-    verification_status: "none",
   });
 
   const token = generateToken({ userId: newUser.id, email: newUser.email });
@@ -234,8 +232,6 @@ async function handleSignup(
     profile_image_url: null,
     phone_number: null,
     google_id: null,
-    is_verified: false,
-    verification_status: "none",
   });
 
   // Generate JWT token
