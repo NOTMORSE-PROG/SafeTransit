@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-  Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as Haptics from "expo-haptics";
@@ -79,14 +78,17 @@ export default function PostDetail() {
   const [commentSort, setCommentSort] = useState<CommentSort>("newest");
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  const [replyingTo, setReplyingTo] = useState<{id: string; name: string} | null>(null);
+  const [replyingTo, setReplyingTo] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+
   // Refs for auto-scroll functionality
   const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
@@ -161,17 +163,17 @@ export default function PostDetail() {
 
     const commentText = newComment.trim();
     const tempId = `temp_${Date.now()}`;
-    
+
     // Haptic feedback on submit
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    
+
     // Optimistic UI update - add comment immediately
     const optimisticComment: ForumCommentWithAuthor = {
       id: tempId,
       post_id: post.id,
       parent_id: replyingTo?.id || null,
       author_id: user.id,
-      author_name: (user as any).name || user.email?.split('@')[0] || "You",
+      author_name: user.email?.split('@')[0] || "You",
       author_image_url: user.profileImageUrl || null,
       content: commentText,
       likes: 0,
@@ -199,13 +201,16 @@ export default function PostDetail() {
               ...comment,
               replies: comment.replies.map((reply) =>
                 reply.id === replyingTo.id
-                  ? { ...reply, replies: [...(reply.replies || []), optimisticComment] }
-                  : reply
+                  ? {
+                      ...reply,
+                      replies: [...(reply.replies || []), optimisticComment],
+                    }
+                  : reply,
               ),
             };
           }
           return comment;
-        })
+        }),
       );
     } else {
       // Add as top-level comment
@@ -231,10 +236,12 @@ export default function PostDetail() {
       Alert.alert("Error", "Failed to add comment");
       // Remove optimistic comment on error
       setComments((prev) =>
-        prev.filter((c) => c.id !== tempId).map((c) => ({
-          ...c,
-          replies: c.replies?.filter((r) => r.id !== tempId),
-        }))
+        prev
+          .filter((c) => c.id !== tempId)
+          .map((c) => ({
+            ...c,
+            replies: c.replies?.filter((r) => r.id !== tempId),
+          })),
       );
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     } finally {
@@ -245,15 +252,15 @@ export default function PostDetail() {
   const handleReplyPress = (commentId: string, authorName: string) => {
     // Haptic feedback
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    
+
     // Set reply context
     setReplyingTo({ id: commentId, name: authorName });
-    
+
     // Focus input and open keyboard
     setTimeout(() => {
       textInputRef.current?.focus();
     }, 100);
-    
+
     // Scroll to the comment being replied to
     const commentView = commentRefs.current.get(commentId);
     if (commentView && scrollViewRef.current) {
@@ -491,30 +498,32 @@ export default function PostDetail() {
           {post.photo_urls && post.photo_urls.length > 0 && (
             <View className="mb-4">
               <View className="flex-row flex-wrap gap-2">
-              {post.photo_urls.map((photoUrl, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    setSelectedImageIndex(index);
-                    setShowImageZoom(true);
-                  }}
-                  activeOpacity={0.9}
-                  style={{ marginRight: post.photo_urls!.length > 1 ? 12 : 0 }}
-                >
-                  <Image
-                    source={{ uri: photoUrl }}
-                    className="rounded-xl bg-neutral-200"
-                    style={{
-                      width: post.photo_urls!.length === 1 ? 350 : 280,
-                      maxHeight: 400,
-                      minHeight: 200,
+                {post.photo_urls.map((photoUrl, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setSelectedImageIndex(index);
+                      setShowImageZoom(true);
                     }}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              ))}
+                    activeOpacity={0.9}
+                    style={{
+                      marginRight: post.photo_urls!.length > 1 ? 12 : 0,
+                    }}
+                  >
+                    <Image
+                      source={{ uri: photoUrl }}
+                      className="rounded-xl bg-neutral-200"
+                      style={{
+                        width: post.photo_urls!.length === 1 ? 350 : 280,
+                        maxHeight: 400,
+                        minHeight: 200,
+                      }}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
           )}
 
           {/* Location */}
@@ -615,43 +624,53 @@ export default function PostDetail() {
 
       {/* Top-Level Comment Input - Sticks to keyboard */}
       <View className="bg-white border-t border-neutral-200 px-4 py-3">
-          {replyingTo && (
-            <View className="flex-row items-center justify-between mb-2 px-2 py-1.5 bg-neutral-50 rounded-lg">
-              <Text className="text-xs text-neutral-600">
-                Replying to <Text className="font-semibold text-primary-600">@{replyingTo.name}</Text>
+        {replyingTo && (
+          <View className="flex-row items-center justify-between mb-2 px-2 py-1.5 bg-neutral-50 rounded-lg">
+            <Text className="text-xs text-neutral-600">
+              Replying to{" "}
+              <Text className="font-semibold text-primary-600">
+                @{replyingTo.name}
               </Text>
-              <TouchableOpacity onPress={() => setReplyingTo(null)} className="p-0.5">
-                <Text className="text-neutral-400 font-bold text-base">×</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          <View className="flex-row items-center">
-            <TextInput
-              ref={textInputRef}
-              value={newComment}
-              onChangeText={setNewComment}
-              placeholder={replyingTo ? `Reply to ${replyingTo.name}...` : "Write a comment..."}
-              placeholderTextColor="#9ca3af"
-              className="flex-1 bg-neutral-100 rounded-full px-4 py-2.5 text-sm text-neutral-900"
-              maxLength={300}
-              multiline
-            />
+            </Text>
             <TouchableOpacity
-              onPress={handleAddComment}
-              disabled={!newComment.trim() || isSubmittingComment}
-              className="ml-2"
+              onPress={() => setReplyingTo(null)}
+              className="p-0.5"
             >
-              {isSubmittingComment ? (
-                <ActivityIndicator size="small" color="#2563eb" />
-              ) : (
-                <Send
-                  color={newComment.trim() ? "#2563eb" : "#9ca3af"}
-                  size={22}
-                />
-              )}
+              <Text className="text-neutral-400 font-bold text-base">×</Text>
             </TouchableOpacity>
           </View>
+        )}
+        <View className="flex-row items-center">
+          <TextInput
+            ref={textInputRef}
+            value={newComment}
+            onChangeText={setNewComment}
+            placeholder={
+              replyingTo
+                ? `Reply to ${replyingTo.name}...`
+                : "Write a comment..."
+            }
+            placeholderTextColor="#9ca3af"
+            className="flex-1 bg-neutral-100 rounded-full px-4 py-2.5 text-sm text-neutral-900"
+            maxLength={300}
+            multiline
+          />
+          <TouchableOpacity
+            onPress={handleAddComment}
+            disabled={!newComment.trim() || isSubmittingComment}
+            className="ml-2"
+          >
+            {isSubmittingComment ? (
+              <ActivityIndicator size="small" color="#2563eb" />
+            ) : (
+              <Send
+                color={newComment.trim() ? "#2563eb" : "#9ca3af"}
+                size={22}
+              />
+            )}
+          </TouchableOpacity>
         </View>
+      </View>
 
       {/* Report Modal */}
       <ReportModal

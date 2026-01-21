@@ -16,11 +16,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import {
-  ThumbsUp,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react-native";
+import { ThumbsUp, ChevronDown, ChevronUp } from "lucide-react-native";
 import type { ForumCommentWithAuthor } from "@/services/types/forum";
 
 interface CommentItemProps {
@@ -56,11 +52,11 @@ export function CommentItem({
   onRef,
 }: CommentItemProps) {
   const [showReplies, setShowReplies] = useState(false);
-  
+
   // Animation for replies expand/collapse
   const repliesHeight = useSharedValue(0);
   const repliesOpacity = useSharedValue(0);
-  
+
   useEffect(() => {
     if (showReplies) {
       repliesHeight.value = withSpring(1, {
@@ -72,12 +68,12 @@ export function CommentItem({
       repliesHeight.value = withTiming(0, { duration: 200 });
       repliesOpacity.value = withTiming(0, { duration: 200 });
     }
-  }, [showReplies]);
-  
+  }, [showReplies, repliesHeight, repliesOpacity]);
+
   const animatedRepliesStyle = useAnimatedStyle(() => ({
     opacity: repliesOpacity.value,
     transform: [{ scaleY: repliesHeight.value }],
-    transformOrigin: 'top',
+    transformOrigin: "top",
   }));
 
   const avatarUri =
@@ -93,13 +89,9 @@ export function CommentItem({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setShowReplies(!showReplies);
   };
-  
+
   return (
-    <View 
-      className={indentClass}
-      ref={onRef as any}
-      collapsable={false}
-    >
+    <View className={indentClass} ref={(ref) => onRef?.(ref)} collapsable={false}>
       {/* Thread connector line for nested comments */}
       {isNested && (
         <View className="absolute left-4 top-0 bottom-0 w-0.5 bg-neutral-200" />
