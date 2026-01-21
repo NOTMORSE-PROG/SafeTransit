@@ -5,13 +5,23 @@
 // Enum Types
 // ==============================================================================
 
-export type VerificationStatus = 'none' | 'pending' | 'approved' | 'rejected';
-export type TipCategory = 'lighting' | 'safety' | 'transit' | 'harassment' | 'safe_haven';
-export type TimeRelevance = 'morning' | 'afternoon' | 'evening' | 'night' | '24/7';
-export type TipStatus = 'pending' | 'approved' | 'rejected' | 'expired';
-export type VoteType = 'up' | 'down';
-export type FamilyRole = 'creator' | 'member';
-export type VerificationRequestStatus = 'pending' | 'approved' | 'rejected';
+export type VerificationStatus = "none" | "pending" | "approved" | "rejected";
+export type TipCategory =
+  | "lighting"
+  | "safety"
+  | "transit"
+  | "harassment"
+  | "safe_haven";
+export type TimeRelevance =
+  | "morning"
+  | "afternoon"
+  | "evening"
+  | "night"
+  | "24/7";
+export type TipStatus = "pending" | "approved" | "rejected" | "expired";
+export type VoteType = "up" | "down";
+export type FamilyRole = "creator" | "member";
+export type VerificationRequestStatus = "pending" | "approved" | "rejected";
 
 // ==============================================================================
 // Query Result Types
@@ -219,26 +229,41 @@ export interface Location {
 // Helper Types for Inserts (Omit auto-generated fields)
 // ==============================================================================
 
-export type UserInsert = Omit<User, 'id' | 'created_at' | 'updated_at' | 'onboarding_completed'> & {
+export type UserInsert = Omit<
+  User,
+  "id" | "created_at" | "updated_at" | "onboarding_completed"
+> & {
   onboarding_completed?: boolean;
 };
 
-export type TipInsert = Omit<Tip, 'id' | 'created_at' | 'updated_at' | 'upvotes' | 'downvotes' | 'status'> & {
+export type TipInsert = Omit<
+  Tip,
+  "id" | "created_at" | "updated_at" | "upvotes" | "downvotes" | "status"
+> & {
   upvotes?: number;
   downvotes?: number;
   status?: TipStatus;
 };
 
-export type CommentInsert = Omit<Comment, 'id' | 'created_at' | 'updated_at' | 'likes'> & {
+export type CommentInsert = Omit<
+  Comment,
+  "id" | "created_at" | "updated_at" | "likes"
+> & {
   likes?: number;
 };
 
-export type FamilyInsert = Omit<Family, 'id' | 'created_at' | 'updated_at'>;
+export type FamilyInsert = Omit<Family, "id" | "created_at" | "updated_at">;
 
-export type NotificationInsert = Omit<Notification, 'id' | 'created_at' | 'is_read'> & {
+export type NotificationInsert = Omit<
+  Notification,
+  "id" | "created_at" | "is_read"
+> & {
   is_read?: boolean;
 };
 
-export type LocationInsert = Omit<Location, 'id' | 'created_at' | 'search_count'> & {
+export type LocationInsert = Omit<
+  Location,
+  "id" | "created_at" | "search_count"
+> & {
   search_count?: number;
 };

@@ -170,7 +170,7 @@ async function handleSignup(
   res: VercelResponse,
 ) {
   console.log("handleSignup called with:", { email, fullName });
-  
+
   // Validate required fields
   if (!email || !password || !fullName) {
     console.log("Missing required fields");
@@ -183,7 +183,7 @@ async function handleSignup(
   // Sanitize inputs
   const sanitizedEmail = sanitizeEmail(email);
   const sanitizedFullName = sanitizeText(fullName, 100);
-  
+
   console.log("Sanitized:", { sanitizedEmail, sanitizedFullName });
 
   // Validate email format
@@ -356,11 +356,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { googleToken, email, password, fullName } = req.body || {};
 
-    console.log("Parsed fields:", { 
-      hasGoogleToken: !!googleToken, 
-      hasEmail: !!email, 
-      hasPassword: !!password, 
-      hasFullName: !!fullName 
+    console.log("Parsed fields:", {
+      hasGoogleToken: !!googleToken,
+      hasEmail: !!email,
+      hasPassword: !!password,
+      hasFullName: !!fullName,
     });
 
     // Sanitize email input

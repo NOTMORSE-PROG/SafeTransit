@@ -1,14 +1,19 @@
 // User Repository
 // Handles all database operations for users and password reset tokens
 
-import { neon } from '@neondatabase/serverless';
-import type { User, UserInsert, PasswordResetToken, QueryResult } from '../types/database';
+import { neon } from "@neondatabase/serverless";
+import type {
+  User,
+  UserInsert,
+  PasswordResetToken,
+  QueryResult,
+} from "../types/database";
 
 // Get database URL from environment
 const getDatabaseUrl = (): string => {
   const url = process.env.DATABASE_URL;
   if (!url) {
-    throw new Error('DATABASE_URL environment variable is not set');
+    throw new Error("DATABASE_URL environment variable is not set");
   }
   return url;
 };
@@ -81,7 +86,9 @@ export const UserRepository = {
    */
   async updateProfile(
     id: string,
-    data: Partial<Pick<User, 'full_name' | 'phone_number' | 'profile_image_url'>>
+    data: Partial<
+      Pick<User, "full_name" | "phone_number" | "profile_image_url">
+    >,
   ): Promise<User | null> {
     if (Object.keys(data).length === 0) {
       return this.findById(id);
@@ -90,9 +97,14 @@ export const UserRepository = {
     const user = await this.findById(id);
     if (!user) return null;
 
-    const updatedFullName = data.full_name !== undefined ? data.full_name : user.full_name;
-    const updatedPhoneNumber = data.phone_number !== undefined ? data.phone_number : user.phone_number;
-    const updatedProfileImageUrl = data.profile_image_url !== undefined ? data.profile_image_url : user.profile_image_url;
+    const updatedFullName =
+      data.full_name !== undefined ? data.full_name : user.full_name;
+    const updatedPhoneNumber =
+      data.phone_number !== undefined ? data.phone_number : user.phone_number;
+    const updatedProfileImageUrl =
+      data.profile_image_url !== undefined
+        ? data.profile_image_url
+        : user.profile_image_url;
 
     const result = await sql`
       UPDATE users
@@ -117,8 +129,6 @@ export const UserRepository = {
     `;
     return (result as unknown as QueryResult).count > 0;
   },
-
-
 
   /**
    * Mark onboarding as completed
@@ -210,7 +220,7 @@ export const PasswordResetTokenRepository = {
   async create(
     userId: string,
     token: string,
-    expiresAt: Date
+    expiresAt: Date,
   ): Promise<PasswordResetToken> {
     const result = await sql`
       INSERT INTO password_reset_tokens (user_id, token, expires_at)
