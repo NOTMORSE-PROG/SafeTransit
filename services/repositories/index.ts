@@ -10,6 +10,13 @@ export {
 // Community Tips
 export { TipsRepository, TipVotesRepository } from './tipsRepository';
 
+// Forum
+export {
+  ForumPostsRepository,
+  ForumCommentsRepository,
+  ReportsRepository,
+} from './forumRepository';
+
 // Family Features
 export {
   FamilyRepository,
@@ -19,3 +26,5 @@ export {
 
 // Re-export types for convenience
 export type * from '../types/database';
+export type * from '../types/forum';
+

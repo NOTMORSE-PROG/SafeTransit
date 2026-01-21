@@ -1,9 +1,37 @@
 // JWT Token Generation and Verification
 // Handles creating and validating JSON Web Tokens for authentication
 
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt, { SignOptions } from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-dev-only';
+// Validate JWT secret strength
+const getJWTSecret = (): string => {
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret || secret.length < 32) {
+    throw new Error(
+      "JWT_SECRET must be set and at least 32 characters long for security",
+    );
+  }
+
+  // Reject common weak secrets in production
+  if (process.env.NODE_ENV === "production") {
+    const weakSecrets = [
+      "your-super-secret",
+      "change-this",
+      "secret",
+      "fallback",
+    ];
+    if (weakSecrets.some((weak) => secret.toLowerCase().includes(weak))) {
+      throw new Error(
+        "JWT_SECRET contains weak/default value. Generate a strong secret.",
+      );
+    }
+  }
+
+  return secret;
+};
+
+const JWT_SECRET = getJWTSecret();
 
 // Convert JWT_EXPIRES_IN to proper format
 // If it's a number string (like "7" for days), convert to seconds
@@ -11,11 +39,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-dev-only';
 // Otherwise default to '7d'
 const getExpiresIn = (): string | number => {
   const envValue = process.env.JWT_EXPIRES_IN;
-  if (!envValue) return '7d';
+  if (!envValue) return "7d";
 
   // For very long expiration like "100y", use a large number in seconds instead
   // 100 years ≈ 3,153,600,000 seconds
-  if (envValue === '100y') return 3153600000;
+  if (envValue === "100y") return 3153600000;
 
   return envValue;
 };
@@ -32,7 +60,7 @@ export const generateToken = (payload: JwtPayload): string => {
   const expiresIn = getExpiresIn();
   // Use type assertion to satisfy jwt.sign type requirements
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: expiresIn as SignOptions['expiresIn']
+    expiresIn: expiresIn as SignOptions["expiresIn"],
   });
 };
 

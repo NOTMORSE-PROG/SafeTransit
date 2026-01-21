@@ -4,12 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   Switch,
   Modal,
   ActivityIndicator,
   Image,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { apiFetch } from "@/utils/api";
@@ -80,9 +80,9 @@ export default function Signup() {
     try {
       setIsLoading(true);
 
-      const response = await apiFetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await apiFetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           password,
@@ -97,9 +97,9 @@ export default function Signup() {
         router.replace("/onboarding/welcome");
       } else {
         if (data.details && Array.isArray(data.details)) {
-          setError(data.details.join(', '));
+          setError(data.details.join(", "));
         } else {
-          setError(data.error || 'Signup failed');
+          setError(data.error || "Signup failed");
         }
       }
     } catch {
@@ -118,7 +118,7 @@ export default function Signup() {
       await login(result.token, result.user);
       router.replace("/onboarding/welcome");
     } else {
-      setError(result.error || 'Google sign-up failed');
+      setError(result.error || "Google sign-up failed");
     }
   };
 
@@ -158,9 +158,13 @@ export default function Signup() {
       </View>
 
       {/* Whole form */}
-      <ScrollView
+      <KeyboardAwareScrollView
         className="flex-1 px-8 pt-8"
         showsVerticalScrollIndicator={false}
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={120}
+        keyboardShouldPersistTaps="handled"
       >
         <Animated.View
           entering={FadeInDown.delay(100).duration(500)}
@@ -317,7 +321,7 @@ export default function Signup() {
             />
           </View>
         </Animated.View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       {/* Buttons and redirects */}
       <View className="px-8 pb-10 pt-4 bg-white border-t border-neutral-50">

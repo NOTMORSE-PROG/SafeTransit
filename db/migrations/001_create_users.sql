@@ -4,9 +4,6 @@
 -- Enable UUID extension for generating UUIDs
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Create verification_status enum type
-CREATE TYPE verification_status AS ENUM ('none', 'pending', 'approved', 'rejected');
-
 -- Drop existing tables if they exist (clean slate approach)
 DROP TABLE IF EXISTS password_reset_tokens CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
@@ -19,20 +16,18 @@ DROP TABLE IF EXISTS community_tips CASCADE;
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL,
+  password_hash TEXT,
   full_name VARCHAR(255) NOT NULL,
   profile_image_url TEXT,
   phone_number VARCHAR(20),
-  is_verified BOOLEAN DEFAULT FALSE NOT NULL,
-  verification_status verification_status DEFAULT 'none' NOT NULL,
   google_id VARCHAR(255) UNIQUE,
+  onboarding_completed BOOLEAN DEFAULT FALSE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 -- Create indexes for users table
 CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_verification_status ON users(verification_status);
 CREATE INDEX idx_users_google_id ON users(google_id) WHERE google_id IS NOT NULL;
 
 -- Create password_reset_tokens table
@@ -68,5 +63,6 @@ EXECUTE FUNCTION update_updated_at_column();
 -- Add comments for documentation
 COMMENT ON TABLE users IS 'User accounts with email/password authentication';
 COMMENT ON TABLE password_reset_tokens IS 'Tokens for password reset functionality';
-COMMENT ON COLUMN users.verification_status IS 'User verification status for identity verification';
 COMMENT ON COLUMN users.google_id IS 'Google OAuth ID for users who sign in with Google';
+COMMENT ON COLUMN users.password_hash IS 'Password hash (nullable for Google-only accounts)';
+COMMENT ON COLUMN users.onboarding_completed IS 'Whether user has completed onboarding flow';

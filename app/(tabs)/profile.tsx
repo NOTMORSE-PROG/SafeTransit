@@ -1,20 +1,48 @@
-import { useState, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Switch, Alert, Modal, Pressable, ActivityIndicator, TextInput } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Animated, { FadeInDown, SlideInDown, SlideOutDown, FadeIn, FadeOut } from 'react-native-reanimated';
-import { UserCircle, Phone, ChevronRight, Camera, Image as ImageIcon, Trash2, X, Chrome, Pencil } from 'lucide-react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system/legacy';
-import { Image } from 'expo-image';
-import { useAuth } from '../../contexts/AuthContext';
-import { useGoogleAuth } from '../../hooks/useGoogleAuth';
-import { apiFetch } from '../../utils/api';
+import { useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Switch,
+  Alert,
+  Modal,
+  Pressable,
+  ActivityIndicator,
+  TextInput,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Animated, {
+  FadeInDown,
+  SlideInDown,
+  SlideOutDown,
+  FadeIn,
+  FadeOut,
+} from "react-native-reanimated";
+import {
+  UserCircle,
+  Phone,
+  ChevronRight,
+  Camera,
+  Image as ImageIcon,
+  Trash2,
+  X,
+  Chrome,
+  Pencil,
+  MessageSquare,
+} from "lucide-react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system/legacy";
+import { Image } from "expo-image";
+import { useAuth } from "../../contexts/AuthContext";
+import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import { apiFetch } from "../../utils/api";
 
 export default function Profile() {
   const router = useRouter();
-  const { user, token, refreshUser } = useAuth();
+  const { user, token, refreshUser, logout } = useAuth();
   const { linkGoogleAccount, isLoading: googleLinking } = useGoogleAuth();
 
   const [backgroundAlerts, setBackgroundAlerts] = useState(true);
@@ -25,17 +53,19 @@ export default function Profile() {
   const [linkingGoogle, setLinkingGoogle] = useState(false);
   const [contactCount, setContactCount] = useState(0);
   const [showNameModal, setShowNameModal] = useState(false);
-  const [editingName, setEditingName] = useState('');
+  const [editingName, setEditingName] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Use profile image from user context (synced with database)
   const profileImage = user?.profileImageUrl || null;
-  const displayName = user?.fullName || 'Traveler';
+  const displayName = user?.fullName || "Traveler";
 
   const loadContactCount = useCallback(async () => {
     try {
-      const response = await apiFetch('/api/contacts/emergency', {
-        method: 'GET',
+      const response = await apiFetch("/api/contacts/emergency", {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +75,7 @@ export default function Profile() {
         setContactCount(data.contacts?.length || 0);
       }
     } catch (error) {
-      console.error('Failed to load contact count', error);
+      console.error("Failed to load contact count", error);
     }
   }, [token]);
 
@@ -53,13 +83,17 @@ export default function Profile() {
   useFocusEffect(
     useCallback(() => {
       loadContactCount();
-    }, [loadContactCount])
+    }, [loadContactCount]),
   );
 
   // Upload image to UploadThing via backend API
-  const uploadImage = async (file: { uri: string; name: string; type: string }) => {
+  const uploadImage = async (file: {
+    uri: string;
+    name: string;
+    type: string;
+  }) => {
     if (!token) {
-      Alert.alert('Error', 'Please log in to upload images');
+      Alert.alert("Error", "Please log in to upload images");
       return;
     }
 
@@ -69,14 +103,14 @@ export default function Profile() {
     try {
       // Read file as base64
       const base64 = await FileSystem.readAsStringAsync(file.uri, {
-        encoding: 'base64',
+        encoding: "base64",
       });
 
       // Upload to backend
-      const uploadResponse = await apiFetch('/api/user/upload-image', {
-        method: 'POST',
+      const uploadResponse = await apiFetch("/api/user/profile", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -88,17 +122,17 @@ export default function Profile() {
 
       if (!uploadResponse.ok) {
         const error = await uploadResponse.json();
-        throw new Error(error.error || 'Upload failed');
+        throw new Error(error.error || "Upload failed");
       }
 
       const uploadResult = await uploadResponse.json();
-      console.log('Upload successful:', uploadResult.url);
+      console.log("Upload successful:", uploadResult.url);
 
       // Update profile with new image URL (backend will auto-delete old image)
-      const updateResponse = await apiFetch('/api/user/update-profile', {
-        method: 'PUT',
+      const updateResponse = await apiFetch("/api/user/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -107,15 +141,17 @@ export default function Profile() {
       });
 
       if (!updateResponse.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
 
       // Refresh user data to show new image
       await refreshUser();
-      
     } catch (error) {
-      console.error('Upload error:', error);
-      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to upload image');
+      console.error("Upload error:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to upload image",
+      );
     } finally {
       setIsUploading(false);
     }
@@ -127,7 +163,7 @@ export default function Profile() {
       if (useCamera) {
         await ImagePicker.requestCameraPermissionsAsync();
         result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          mediaTypes: ["images"],
           allowsEditing: true,
           aspect: [1, 1],
           quality: 0.8,
@@ -135,7 +171,7 @@ export default function Profile() {
       } else {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
         result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          mediaTypes: ["images"],
           allowsEditing: true,
           aspect: [1, 1],
           quality: 0.8,
@@ -147,29 +183,29 @@ export default function Profile() {
         const file = {
           uri: selectedImage.uri,
           name: selectedImage.fileName || `profile_${Date.now()}.jpg`,
-          type: selectedImage.mimeType || 'image/jpeg',
+          type: selectedImage.mimeType || "image/jpeg",
         };
-        
+
         await uploadImage(file);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to pick image');
+      Alert.alert("Error", "Failed to pick image");
       console.error(error);
     }
   };
 
   const handleRemovePhoto = async () => {
     if (!token) return;
-    
+
     setShowActionSheet(false);
     setIsUploading(true);
-    
+
     try {
       // Call backend to remove photo (will delete from UploadThing)
-      const response = await apiFetch('/api/user/update-profile', {
-        method: 'PUT',
+      const response = await apiFetch("/api/user/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -178,15 +214,14 @@ export default function Profile() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to remove photo');
+        throw new Error("Failed to remove photo");
       }
 
       // Refresh user data
       await refreshUser();
-      
     } catch (error) {
-      console.error('Failed to remove profile image', error);
-      Alert.alert('Error', 'Failed to remove photo');
+      console.error("Failed to remove profile image", error);
+      Alert.alert("Error", "Failed to remove photo");
     } finally {
       setIsUploading(false);
     }
@@ -203,19 +238,19 @@ export default function Profile() {
 
   const handleSaveName = async () => {
     if (!token || !editingName.trim()) return;
-    
+
     if (editingName.trim().length < 2) {
-      Alert.alert('Error', 'Name must be at least 2 characters');
+      Alert.alert("Error", "Name must be at least 2 characters");
       return;
     }
-    
+
     setIsSavingName(true);
-    
+
     try {
-      const response = await apiFetch('/api/user/update-profile', {
-        method: 'PUT',
+      const response = await apiFetch("/api/user/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -225,37 +260,41 @@ export default function Profile() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to update name');
+        throw new Error(error.error || "Failed to update name");
       }
 
       // Refresh user data
       await refreshUser();
       setShowNameModal(false);
-      
     } catch (error) {
-      console.error('Failed to update name:', error);
-      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to update name');
+      console.error("Failed to update name:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to update name",
+      );
     } finally {
       setIsSavingName(false);
     }
   };
 
-  const handleLogout = async () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            await AsyncStorage.removeItem('hasOnboarded');
-            router.replace('/onboarding/welcome');
-          }
-        }
-      ]
-    );
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      // Clear all auth data and onboarding flag
+      await AsyncStorage.removeItem("hasOnboarded");
+      await logout();
+      // Redirect to landing page
+      router.replace("/landing");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutModal(false);
+    }
   };
 
   const handleLinkGoogle = async () => {
@@ -265,10 +304,10 @@ export default function Profile() {
     const result = await linkGoogleAccount(token);
 
     if (result.success) {
-      Alert.alert('Success', 'Google account linked successfully!');
+      Alert.alert("Success", "Google account linked successfully!");
       await refreshUser();
     } else {
-      Alert.alert('Error', result.error || 'Failed to link Google account');
+      Alert.alert("Error", result.error || "Failed to link Google account");
     }
     setLinkingGoogle(false);
   };
@@ -279,7 +318,7 @@ export default function Profile() {
         {/* Header */}
         <View className="bg-primary-600 pt-14 pb-8 px-6">
           <View className="items-center">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleEditPhoto}
               className="relative mb-4"
               activeOpacity={0.8}
@@ -305,7 +344,7 @@ export default function Profile() {
                 <Camera color="#ffffff" size={14} strokeWidth={2} />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleEditName}
               className="flex-row items-center mb-1"
               activeOpacity={0.7}
@@ -315,9 +354,7 @@ export default function Profile() {
               </Text>
               <Pencil color="#ffffff" size={16} strokeWidth={2} />
             </TouchableOpacity>
-            <Text className="text-white/80 text-sm">
-              Protected since today
-            </Text>
+            <Text className="text-white/80 text-sm">Protected since today</Text>
           </View>
         </View>
 
@@ -365,8 +402,8 @@ export default function Profile() {
                   <Switch
                     value={backgroundAlerts}
                     onValueChange={setBackgroundAlerts}
-                    trackColor={{ false: '#d1d5db', true: '#93c5fd' }}
-                    thumbColor={backgroundAlerts ? '#2563eb' : '#f3f4f6'}
+                    trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
+                    thumbColor={backgroundAlerts ? "#2563eb" : "#f3f4f6"}
                     accessible={true}
                     accessibilityLabel="Background alerts toggle"
                     accessibilityRole="switch"
@@ -387,8 +424,8 @@ export default function Profile() {
                   <Switch
                     value={vibrationAlerts}
                     onValueChange={setVibrationAlerts}
-                    trackColor={{ false: '#d1d5db', true: '#93c5fd' }}
-                    thumbColor={vibrationAlerts ? '#2563eb' : '#f3f4f6'}
+                    trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
+                    thumbColor={vibrationAlerts ? "#2563eb" : "#f3f4f6"}
                     accessible={true}
                     accessibilityLabel="Vibration alerts toggle"
                     accessibilityRole="switch"
@@ -409,8 +446,8 @@ export default function Profile() {
                   <Switch
                     value={soundAlerts}
                     onValueChange={setSoundAlerts}
-                    trackColor={{ false: '#d1d5db', true: '#93c5fd' }}
-                    thumbColor={soundAlerts ? '#2563eb' : '#f3f4f6'}
+                    trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
+                    thumbColor={soundAlerts ? "#2563eb" : "#f3f4f6"}
                     accessible={true}
                     accessibilityLabel="Sound alerts toggle"
                     accessibilityRole="switch"
@@ -432,7 +469,7 @@ export default function Profile() {
               accessible={true}
               accessibilityLabel="Manage emergency contacts"
               accessibilityRole="button"
-              onPress={() => router.push('/emergency-contacts' as never)}
+              onPress={() => router.push("/emergency-contacts" as never)}
             >
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center flex-1">
@@ -444,7 +481,41 @@ export default function Profile() {
                       Manage Contacts
                     </Text>
                     <Text className="text-sm text-neutral-500">
-                      {contactCount} contact{contactCount !== 1 ? 's' : ''} added
+                      {contactCount} contact{contactCount !== 1 ? "s" : ""}{" "}
+                      added
+                    </Text>
+                  </View>
+                </View>
+                <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* My Posts */}
+          <Animated.View entering={FadeInDown.delay(320).duration(600)}>
+            <Text className="text-lg font-bold text-neutral-900 mb-3">
+              My Content
+            </Text>
+
+            <TouchableOpacity
+              className="bg-white rounded-2xl p-4 mb-6 shadow-sm"
+              activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="Manage my posts"
+              accessibilityRole="button"
+              onPress={() => router.push("/my-posts" as never)}
+            >
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center flex-1">
+                  <View className="w-12 h-12 bg-secondary-100 rounded-full items-center justify-center mr-3">
+                    <MessageSquare color="#0d9488" size={24} strokeWidth={2} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-base font-semibold text-neutral-900">
+                      My Posts
+                    </Text>
+                    <Text className="text-sm text-neutral-500">
+                      View and manage your forum posts
                     </Text>
                   </View>
                 </View>
@@ -471,8 +542,8 @@ export default function Profile() {
                     </View>
                     <Text className="text-sm text-neutral-500">
                       {user?.hasGoogleLinked
-                        ? 'Connected - You can sign in with Google'
-                        : 'Not connected'}
+                        ? "Connected - You can sign in with Google"
+                        : "Not connected"}
                     </Text>
                   </View>
                   {!user?.hasGoogleLinked && (
@@ -485,13 +556,17 @@ export default function Profile() {
                       {linkingGoogle || googleLinking ? (
                         <ActivityIndicator color="#ffffff" size="small" />
                       ) : (
-                        <Text className="text-white font-bold text-sm">Link</Text>
+                        <Text className="text-white font-bold text-sm">
+                          Link
+                        </Text>
                       )}
                     </TouchableOpacity>
                   )}
                   {user?.hasGoogleLinked && (
                     <View className="bg-green-100 px-3 py-1 rounded-full">
-                      <Text className="text-green-700 font-bold text-xs">Linked</Text>
+                      <Text className="text-green-700 font-bold text-xs">
+                        Linked
+                      </Text>
                     </View>
                   )}
                 </View>
@@ -512,10 +587,12 @@ export default function Profile() {
                 accessible={true}
                 accessibilityLabel="How it works"
                 accessibilityRole="button"
-                onPress={() => router.push('/how-it-works')}
+                onPress={() => router.push("/how-it-works")}
               >
                 <View className="flex-row items-center justify-between">
-                  <Text className="text-base text-neutral-900">How It Works</Text>
+                  <Text className="text-base text-neutral-900">
+                    How It Works
+                  </Text>
                   <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
                 </View>
               </TouchableOpacity>
@@ -528,7 +605,9 @@ export default function Profile() {
                 accessibilityRole="button"
               >
                 <View className="flex-row items-center justify-between">
-                  <Text className="text-base text-neutral-900">Privacy Policy</Text>
+                  <Text className="text-base text-neutral-900">
+                    Privacy Policy
+                  </Text>
                   <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
                 </View>
               </TouchableOpacity>
@@ -541,7 +620,9 @@ export default function Profile() {
                 accessibilityRole="button"
               >
                 <View className="flex-row items-center justify-between">
-                  <Text className="text-base text-neutral-900">Terms of Service</Text>
+                  <Text className="text-base text-neutral-900">
+                    Terms of Service
+                  </Text>
                   <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
                 </View>
               </TouchableOpacity>
@@ -565,9 +646,7 @@ export default function Profile() {
           </Animated.View>
 
           <View className="items-center mb-8">
-            <Text className="text-neutral-400 text-xs">
-              SafeTransit v1.0.1
-            </Text>
+            <Text className="text-neutral-400 text-xs">SafeTransit v1.0.1</Text>
             <Text className="text-neutral-400 text-xs mt-1">
               Made with ❤️ by TIP Manila
             </Text>
@@ -584,23 +663,28 @@ export default function Profile() {
       >
         <View className="flex-1 justify-end">
           {/* Backdrop */}
-          <Animated.View 
+          <Animated.View
             entering={FadeIn}
             exiting={FadeOut}
             className="absolute inset-0 bg-black/50"
           >
-            <Pressable className="flex-1" onPress={() => setShowActionSheet(false)} />
+            <Pressable
+              className="flex-1"
+              onPress={() => setShowActionSheet(false)}
+            />
           </Animated.View>
 
           {/* Sheet */}
-          <Animated.View 
+          <Animated.View
             entering={SlideInDown.duration(300)}
             exiting={SlideOutDown.duration(300)}
             className="bg-white rounded-t-3xl p-6 pb-10"
           >
             <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-xl font-bold text-neutral-900">Profile Photo</Text>
-              <TouchableOpacity 
+              <Text className="text-xl font-bold text-neutral-900">
+                Profile Photo
+              </Text>
+              <TouchableOpacity
                 onPress={() => setShowActionSheet(false)}
                 className="bg-neutral-100 p-2 rounded-full"
               >
@@ -609,35 +693,41 @@ export default function Profile() {
             </View>
 
             <View className="space-y-4">
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => pickImage(true)}
                 className="flex-row items-center p-4 bg-neutral-50 rounded-2xl active:bg-neutral-100"
               >
                 <View className="w-10 h-10 bg-blue-100 rounded-full items-center justify-center mr-4">
                   <Camera size={20} color="#2563eb" />
                 </View>
-                <Text className="text-base font-semibold text-neutral-900">Take Photo</Text>
+                <Text className="text-base font-semibold text-neutral-900">
+                  Take Photo
+                </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => pickImage(false)}
                 className="flex-row items-center p-4 bg-neutral-50 rounded-2xl active:bg-neutral-100"
               >
                 <View className="w-10 h-10 bg-purple-100 rounded-full items-center justify-center mr-4">
                   <ImageIcon size={20} color="#9333ea" />
                 </View>
-                <Text className="text-base font-semibold text-neutral-900">Choose from Library</Text>
+                <Text className="text-base font-semibold text-neutral-900">
+                  Choose from Library
+                </Text>
               </TouchableOpacity>
 
               {profileImage && (
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={handleRemovePhoto}
                   className="flex-row items-center p-4 bg-red-50 rounded-2xl active:bg-red-100"
                 >
                   <View className="w-10 h-10 bg-red-100 rounded-full items-center justify-center mr-4">
                     <Trash2 size={20} color="#dc2626" />
                   </View>
-                  <Text className="text-base font-semibold text-red-600">Remove Photo</Text>
+                  <Text className="text-base font-semibold text-red-600">
+                    Remove Photo
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -653,12 +743,14 @@ export default function Profile() {
         onRequestClose={() => setShowNameModal(false)}
       >
         <View className="flex-1 justify-center items-center bg-black/50 px-6">
-          <Animated.View 
+          <Animated.View
             entering={FadeIn.duration(200)}
             className="bg-white rounded-2xl p-6 w-full max-w-sm"
           >
-            <Text className="text-xl font-bold text-neutral-900 mb-4">Edit Name</Text>
-            
+            <Text className="text-xl font-bold text-neutral-900 mb-4">
+              Edit Name
+            </Text>
+
             <TextInput
               value={editingName}
               onChangeText={setEditingName}
@@ -674,19 +766,83 @@ export default function Profile() {
                 className="flex-1 bg-neutral-100 py-3 rounded-xl"
                 activeOpacity={0.7}
               >
-                <Text className="text-neutral-700 text-center font-semibold">Cancel</Text>
+                <Text className="text-neutral-700 text-center font-semibold">
+                  Cancel
+                </Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 onPress={handleSaveName}
-                disabled={isSavingName || !editingName.trim() || editingName.trim() === displayName}
-                className={`flex-1 py-3 rounded-xl ${isSavingName || !editingName.trim() || editingName.trim() === displayName ? 'bg-primary-300' : 'bg-primary-600'}`}
+                disabled={
+                  isSavingName ||
+                  !editingName.trim() ||
+                  editingName.trim() === displayName
+                }
+                className={`flex-1 py-3 rounded-xl ${isSavingName || !editingName.trim() || editingName.trim() === displayName ? "bg-primary-300" : "bg-primary-600"}`}
                 activeOpacity={0.7}
               >
                 {isSavingName ? (
                   <ActivityIndicator color="#ffffff" size="small" />
                 ) : (
-                  <Text className="text-white text-center font-semibold">Save</Text>
+                  <Text className="text-white text-center font-semibold">
+                    Save
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        visible={showLogoutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowLogoutModal(false)}
+      >
+        <View className="flex-1 bg-neutral-900/80 justify-center items-center px-6">
+          <Animated.View
+            entering={FadeInDown.duration(300)}
+            className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl"
+          >
+            <View className="items-center mb-6">
+              <View className="w-16 h-16 rounded-full bg-red-100 items-center justify-center mb-4">
+                <Text className="text-3xl">👋</Text>
+              </View>
+              <Text className="text-xl font-bold text-neutral-900 mb-2">
+                Logout
+              </Text>
+              <Text className="text-sm text-neutral-500 text-center leading-5">
+                Are you sure you want to logout? You'll need to sign in again to
+                access your account.
+              </Text>
+            </View>
+
+            <View className="flex-row space-x-3">
+              <TouchableOpacity
+                onPress={() => setShowLogoutModal(false)}
+                disabled={isLoggingOut}
+                className="flex-1 bg-neutral-100 py-3.5 rounded-xl"
+                activeOpacity={0.7}
+              >
+                <Text className="text-neutral-700 text-center font-bold">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={confirmLogout}
+                disabled={isLoggingOut}
+                className="flex-1 bg-red-600 py-3.5 rounded-xl"
+                activeOpacity={0.7}
+              >
+                {isLoggingOut ? (
+                  <ActivityIndicator color="#ffffff" size="small" />
+                ) : (
+                  <Text className="text-white text-center font-bold">
+                    Logout
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>

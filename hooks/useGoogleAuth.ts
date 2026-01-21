@@ -118,7 +118,7 @@ export const useGoogleAuth = () => {
       }
 
       // Exchange Google token for our JWT
-      const response = await apiFetch('/api/auth/google', {
+      const response = await apiFetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ googleToken: idToken }),
