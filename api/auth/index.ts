@@ -1,17 +1,17 @@
 // Unified Authentication API Endpoint for Vercel
-// Handles both email/password login and Google OAuth
-// Routes based on presence of googleToken in request body
+// Handles email/password signup, email/password login, and Google OAuth
+// Routes based on request body fields
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { UserRepository } from "../../services/repositories/userRepository";
-import { comparePassword } from "../../services/auth/password";
-import { validateEmail } from "../../services/auth/validation";
+import { comparePassword, hashPassword } from "../../services/auth/password";
+import { validateEmail, validatePassword } from "../../services/auth/validation";
 import { generateToken } from "../../services/auth/jwt";
 import {
   checkRateLimit,
   getClientIdentifier,
 } from "../../services/auth/rateLimiter";
-import { sanitizeEmail } from "../../services/auth/inputValidation";
+import { sanitizeEmail, sanitizeText } from "../../services/auth/inputValidation";
 
 interface GoogleUserInfo {
   id: string; // Google's user ID
@@ -157,6 +157,96 @@ async function handleGoogleAuth(googleToken: string, res: VercelResponse) {
 }
 
 /**
+ * Handle email/password signup
+ */
+async function handleSignup(
+  email: string,
+  password: string,
+  fullName: string,
+  res: VercelResponse,
+) {
+  // Validate required fields
+  if (!email || !password || !fullName) {
+    return res.status(400).json({
+      error: "Missing required fields",
+      details: ["Email, password, and full name are required"],
+    });
+  }
+
+  // Sanitize inputs
+  const sanitizedEmail = sanitizeEmail(email);
+  const sanitizedFullName = sanitizeText(fullName, 100);
+
+  // Validate email format
+  if (!validateEmail(sanitizedEmail)) {
+    return res.status(400).json({
+      error: "Invalid email format",
+      details: ["Please provide a valid email address"],
+    });
+  }
+
+  // Validate password strength
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.valid) {
+    return res.status(400).json({
+      error: "Password does not meet requirements",
+      details: passwordValidation.errors || [],
+    });
+  }
+
+  // Validate full name length
+  if (sanitizedFullName.length < 2 || sanitizedFullName.length > 100) {
+    return res.status(400).json({
+      error: "Invalid full name",
+      details: ["Full name must be between 2 and 100 characters"],
+    });
+  }
+
+  // Check if user already exists
+  const existingUser = await UserRepository.findByEmail(sanitizedEmail);
+  if (existingUser) {
+    return res.status(409).json({
+      error: "Account already exists",
+      details: ["An account with this email already exists"],
+    });
+  }
+
+  // Hash password
+  const passwordHash = await hashPassword(password);
+
+  // Create new user
+  const newUser = await UserRepository.create({
+    email: sanitizedEmail,
+    password_hash: passwordHash,
+    full_name: sanitizedFullName,
+    profile_image_url: null,
+    phone_number: null,
+    google_id: null,
+    is_verified: false,
+    verification_status: "none",
+  });
+
+  // Generate JWT token
+  const token = generateToken({ userId: newUser.id, email: newUser.email });
+
+  // Return success response
+  return res.status(201).json({
+    success: true,
+    token,
+    user: {
+      id: newUser.id,
+      email: newUser.email,
+      fullName: newUser.full_name,
+      profileImageUrl: newUser.profile_image_url,
+      phoneNumber: newUser.phone_number,
+      onboardingCompleted: newUser.onboarding_completed,
+      hasGoogleLinked: false,
+      hasPasswordSet: true,
+    },
+  });
+}
+
+/**
  * Handle email/password authentication
  */
 async function handleEmailPasswordAuth(
@@ -252,7 +342,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { googleToken, email, password } = req.body;
+    const { googleToken, email, password, fullName } = req.body;
 
     // Sanitize email input
     const sanitizedEmail = email ? sanitizeEmail(email) : undefined;
@@ -261,17 +351,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (googleToken) {
       // Google OAuth flow
       return await handleGoogleAuth(googleToken, res);
+    } else if (fullName && sanitizedEmail && password) {
+      // Signup flow (has fullName)
+      return await handleSignup(sanitizedEmail, password, fullName, res);
     } else if (sanitizedEmail && password) {
-      // Email/password flow
+      // Login flow (no fullName)
       return await handleEmailPasswordAuth(sanitizedEmail, password, res);
-      // Google OAuth flow
-      return await handleGoogleAuth(googleToken, res);
-    } else if (email && password) {
-      // Email/password flow
-      return await handleEmailPasswordAuth(email, password, res);
     } else {
       return res.status(400).json({
-        error: "Invalid request. Provide either googleToken or email+password",
+        error: "Invalid request. Provide either googleToken, or email+password (login), or email+password+fullName (signup)",
       });
     }
   } catch (error) {

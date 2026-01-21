@@ -63,14 +63,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   <h3>Authentication</h3>
   <div class="endpoint">
     <span class="method">POST</span>
-    <span class="path">/api/auth/google</span>
-    <div class="desc">Google Sign-In/Sign-Up</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">POST</span>
-    <span class="path">/api/auth/login</span>
-    <div class="desc">Email/Password Login</div>
+    <span class="path">/api/auth</span>
+    <div class="desc">Unified Auth (Signup, Login, Google OAuth)</div>
   </div>
 
   <div class="endpoint">
