@@ -1,35 +1,35 @@
 // CommentItem Component
 // Display comment with likes, replies, and reply UI
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   Image,
-  TextInput,
   ActivityIndicator,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+} from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 import {
   ThumbsUp,
-  MessageCircle,
   ChevronDown,
   ChevronUp,
-  Send,
 } from "lucide-react-native";
 import type { ForumCommentWithAuthor } from "@/services/types/forum";
 
 interface CommentItemProps {
   comment: ForumCommentWithAuthor;
   onLike: (commentId: string) => Promise<void>;
-  onReply: (
-    commentId: string,
-    content: string,
-    _isReplying: boolean,
-  ) => Promise<void>;
+  onReplyPress: (commentId: string, authorName: string) => void;
   isLiking?: boolean;
-  isReplying?: boolean;
   isNested?: boolean;
+  onRef?: (ref: View | null) => void;
 }
 
 function formatTimeAgo(dateString: string): string {
@@ -50,44 +50,60 @@ function formatTimeAgo(dateString: string): string {
 export function CommentItem({
   comment,
   onLike,
-  onReply,
+  onReplyPress,
   isLiking = false,
-  isReplying: _isReplying = false,
   isNested = false,
+  onRef,
 }: CommentItemProps) {
   const [showReplies, setShowReplies] = useState(false);
-  const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyText, setReplyText] = useState("");
-  const [localIsReplying, setLocalIsReplying] = useState(false);
+  
+  // Animation for replies expand/collapse
+  const repliesHeight = useSharedValue(0);
+  const repliesOpacity = useSharedValue(0);
+  
+  useEffect(() => {
+    if (showReplies) {
+      repliesHeight.value = withSpring(1, {
+        damping: 20,
+        stiffness: 90,
+      });
+      repliesOpacity.value = withTiming(1, { duration: 300 });
+    } else {
+      repliesHeight.value = withTiming(0, { duration: 200 });
+      repliesOpacity.value = withTiming(0, { duration: 200 });
+    }
+  }, [showReplies]);
+  
+  const animatedRepliesStyle = useAnimatedStyle(() => ({
+    opacity: repliesOpacity.value,
+    transform: [{ scaleY: repliesHeight.value }],
+    transformOrigin: 'top',
+  }));
 
   const avatarUri =
     comment.author_image_url || "https://via.placeholder.com/32";
   const hasReplies = comment.replies && comment.replies.length > 0;
-  const canReply = comment.depth < 999; // Allow replying up to max depth (essentially unlimited like Facebook)
 
-  const handleSubmitReply = async () => {
-    if (!replyText.trim() || localIsReplying) return;
+  // Facebook-style indentation: only indent the first reply level, all deeper replies stay at same level
+  // Level 0 (top comment): no indent
+  // Level 1+ (all replies): ml-8 (stays same for all nested replies)
+  const indentClass = isNested ? "ml-8 mt-3" : "mt-4";
 
-    setLocalIsReplying(true);
-    try {
-      await onReply(comment.id, replyText.trim(), true);
-      setReplyText("");
-      setShowReplyInput(false);
-    } finally {
-      setLocalIsReplying(false);
-    }
+  const handleToggleReplies = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setShowReplies(!showReplies);
   };
-
-  // Dynamic indentation based on depth to prevent squashing on deep threads
-  // Top level: 0, First reply: ml-8 (32px), Subsequent: ml-4 (16px)
-  const indentClass = isNested
-    ? comment.depth > 1
-      ? "ml-3 mt-2 border-l-2 border-neutral-100 pl-3"
-      : "ml-8 mt-3"
-    : "mt-4";
-
+  
   return (
-    <View className={indentClass}>
+    <View 
+      className={indentClass}
+      ref={onRef as any}
+      collapsable={false}
+    >
+      {/* Thread connector line for nested comments */}
+      {isNested && (
+        <View className="absolute left-4 top-0 bottom-0 w-0.5 bg-neutral-200" />
+      )}
       <View className="flex-row">
         <Image
           source={{ uri: avatarUri }}
@@ -113,7 +129,10 @@ export function CommentItem({
           <View className="flex-row items-center mt-2">
             {/* Like Button */}
             <TouchableOpacity
-              onPress={() => onLike(comment.id)}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                onLike(comment.id);
+              }}
               disabled={isLiking}
               className="flex-row items-center mr-4"
               activeOpacity={0.7}
@@ -141,54 +160,19 @@ export function CommentItem({
               )}
             </TouchableOpacity>
 
-            {/* Reply Button (only for top-level) */}
-            {canReply && (
-              <TouchableOpacity
-                onPress={() => setShowReplyInput(!showReplyInput)}
-                className="flex-row items-center"
-                activeOpacity={0.7}
-              >
-                <MessageCircle color="#6b7280" size={16} strokeWidth={2} />
-                <Text className="text-xs font-medium text-neutral-500 ml-1">
-                  Reply
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* Reply Input */}
-          {showReplyInput && (
-            <View className="flex-row items-center mt-3 bg-neutral-50 rounded-xl px-3 py-2">
-              <Text className="text-xs text-primary-600 font-medium mr-2">
-                @{comment.author_name}
+            {/* Reply Button */}
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                onReplyPress(comment.id, comment.author_name);
+              }}
+              activeOpacity={0.7}
+            >
+              <Text className="text-xs font-semibold text-neutral-600">
+                Reply
               </Text>
-              <TextInput
-                value={replyText}
-                onChangeText={setReplyText}
-                placeholder="Write a reply..."
-                placeholderTextColor="#9ca3af"
-                className="flex-1 text-sm text-neutral-900"
-                maxLength={300}
-                multiline
-              />
-              <TouchableOpacity
-                onPress={handleSubmitReply}
-                disabled={!replyText.trim() || localIsReplying}
-                className={`p-2 rounded-full ${
-                  replyText.trim() ? "bg-primary-600" : "bg-neutral-200"
-                }`}
-              >
-                {localIsReplying ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <Send
-                    color={replyText.trim() ? "#fff" : "#9ca3af"}
-                    size={14}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-          )}
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -196,7 +180,7 @@ export function CommentItem({
       {hasReplies && (
         <View className="ml-8 mt-2">
           <TouchableOpacity
-            onPress={() => setShowReplies(!showReplies)}
+            onPress={handleToggleReplies}
             className="flex-row items-center py-1"
             activeOpacity={0.7}
           >
@@ -211,16 +195,20 @@ export function CommentItem({
             </Text>
           </TouchableOpacity>
 
-          {showReplies &&
-            comment.replies!.map((reply) => (
-              <CommentItem
-                key={reply.id}
-                comment={reply}
-                onLike={onLike}
-                onReply={onReply}
-                isNested
-              />
-            ))}
+          {showReplies && (
+            <Animated.View style={animatedRepliesStyle}>
+              {comment.replies!.map((reply) => (
+                <CommentItem
+                  key={reply.id}
+                  comment={reply}
+                  onLike={onLike}
+                  onReplyPress={onReplyPress}
+                  onRef={onRef}
+                  isNested
+                />
+              ))}
+            </Animated.View>
+          )}
         </View>
       )}
     </View>

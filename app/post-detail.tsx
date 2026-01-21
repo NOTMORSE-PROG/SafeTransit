@@ -1,18 +1,20 @@
 // Post Detail Screen
 // Full post view with comments, voting, and reporting
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   Image,
   TextInput,
   ActivityIndicator,
   Alert,
   RefreshControl,
+  Platform,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as Haptics from "expo-haptics";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -77,13 +79,18 @@ export default function PostDetail() {
   const [commentSort, setCommentSort] = useState<CommentSort>("newest");
   const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  const [likingCommentId, setLikingCommentId] = useState<string | null>(null);
+  const [replyingTo, setReplyingTo] = useState<{id: string; name: string} | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Refs for auto-scroll functionality
+  const scrollViewRef = useRef<KeyboardAwareScrollView>(null);
+  const textInputRef = useRef<TextInput>(null);
+  const commentRefs = useRef<Map<string, View>>(new Map());
 
   const loadPost = useCallback(
     async (showRefresh = false) => {
@@ -147,23 +154,115 @@ export default function PostDetail() {
   };
 
   const handleAddComment = async () => {
-    if (!token || !newComment.trim() || !post) {
+    if (!token || !newComment.trim() || !post || !user) {
       if (!token) router.push("/auth/login");
       return;
     }
 
+    const commentText = newComment.trim();
+    const tempId = `temp_${Date.now()}`;
+    
+    // Haptic feedback on submit
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    
+    // Optimistic UI update - add comment immediately
+    const optimisticComment: ForumCommentWithAuthor = {
+      id: tempId,
+      post_id: post.id,
+      parent_id: replyingTo?.id || null,
+      author_id: user.id,
+      author_name: (user as any).name || user.email?.split('@')[0] || "You",
+      author_image_url: user.profileImageUrl || null,
+      content: commentText,
+      likes: 0,
+      depth: replyingTo ? 1 : 0,
+      user_liked: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      replies: [],
+    };
+
+    // Update UI optimistically
+    if (replyingTo) {
+      // Add to replies of parent comment
+      setComments((prev) =>
+        prev.map((comment) => {
+          if (comment.id === replyingTo.id) {
+            return {
+              ...comment,
+              replies: [...(comment.replies || []), optimisticComment],
+            };
+          }
+          // Also check nested replies
+          if (comment.replies) {
+            return {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                reply.id === replyingTo.id
+                  ? { ...reply, replies: [...(reply.replies || []), optimisticComment] }
+                  : reply
+              ),
+            };
+          }
+          return comment;
+        })
+      );
+    } else {
+      // Add as top-level comment
+      setComments((prev) => [optimisticComment, ...prev]);
+    }
+
+    setNewComment("");
+    const previousReplyingTo = replyingTo;
+    setReplyingTo(null);
     setIsSubmittingComment(true);
+
     try {
-      const result = await addComment(post.id, newComment.trim(), token);
-      if (result.success) {
-        setNewComment("");
-        loadPost(true);
+      if (previousReplyingTo) {
+        await replyToComment(previousReplyingTo.id, commentText, token);
+      } else {
+        await addComment(post.id, commentText, token);
       }
+      // Reload to get actual data with proper IDs
+      await loadPost(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (err) {
       console.error("Failed to add comment:", err);
       Alert.alert("Error", "Failed to add comment");
+      // Remove optimistic comment on error
+      setComments((prev) =>
+        prev.filter((c) => c.id !== tempId).map((c) => ({
+          ...c,
+          replies: c.replies?.filter((r) => r.id !== tempId),
+        }))
+      );
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     } finally {
       setIsSubmittingComment(false);
+    }
+  };
+
+  const handleReplyPress = (commentId: string, authorName: string) => {
+    // Haptic feedback
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    
+    // Set reply context
+    setReplyingTo({ id: commentId, name: authorName });
+    
+    // Focus input and open keyboard
+    setTimeout(() => {
+      textInputRef.current?.focus();
+    }, 100);
+    
+    // Scroll to the comment being replied to
+    const commentView = commentRefs.current.get(commentId);
+    if (commentView && scrollViewRef.current) {
+      commentView.measure((fx, fy, width, height, px, py) => {
+        if (py) {
+          // Scroll to position with offset
+          scrollViewRef.current?.scrollToPosition(0, py - 100, true);
+        }
+      });
     }
   };
 
@@ -173,15 +272,12 @@ export default function PostDetail() {
       return;
     }
 
-    setLikingCommentId(commentId);
     try {
       await likeComment(commentId, token);
       // Optimistically update UI
       setComments((prev) => prev.map((c) => updateCommentLike(c, commentId)));
     } catch (err) {
       console.error("Failed to like comment:", err);
-    } finally {
-      setLikingCommentId(null);
     }
   };
 
@@ -203,16 +299,6 @@ export default function PostDetail() {
       };
     }
     return comment;
-  };
-
-  const handleReply = async (commentId: string, content: string) => {
-    if (!token) {
-      router.push("/auth/login");
-      return;
-    }
-
-    await replyToComment(commentId, content, token);
-    loadPost(true);
   };
 
   const handleReport = async (reason: ReportReason) => {
@@ -355,14 +441,20 @@ export default function PostDetail() {
         </View>
       )}
 
-      <ScrollView
-        className="flex-1"
+      <KeyboardAwareScrollView
+        ref={scrollViewRef}
+        className="flex-1 bg-white"
         refreshControl={
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={() => loadPost(true)}
+            tintColor="#2563eb"
           />
         }
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={100}
+        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         onScrollBeginDrag={() => setShowOptionsMenu(false)}
       >
@@ -397,12 +489,8 @@ export default function PostDetail() {
 
           {/* Photo */}
           {post.photo_urls && post.photo_urls.length > 0 && (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              className="mb-4 -mx-6"
-              contentContainerStyle={{ paddingHorizontal: 24 }}
-            >
+            <View className="mb-4">
+              <View className="flex-row flex-wrap gap-2">
               {post.photo_urls.map((photoUrl, index) => (
                 <TouchableOpacity
                   key={index}
@@ -425,7 +513,8 @@ export default function PostDetail() {
                   />
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </View>
+          </View>
           )}
 
           {/* Location */}
@@ -514,45 +603,55 @@ export default function PostDetail() {
                 key={comment.id}
                 comment={comment}
                 onLike={handleLikeComment}
-                onReply={handleReply}
-                isLiking={likingCommentId === comment.id}
+                onReplyPress={handleReplyPress}
+                onRef={(ref) => {
+                  if (ref) commentRefs.current.set(comment.id, ref);
+                }}
               />
             ))
           )}
         </View>
+      </KeyboardAwareScrollView>
 
-        {/* Bottom padding */}
-        <View className="h-24" />
-      </ScrollView>
-
-      {/* Comment Input */}
-      <View
-        className="px-4 py-3 bg-white border-t border-neutral-100 flex-row items-center"
-        style={{ paddingBottom: insets.bottom + 8 }}
-      >
-        <TextInput
-          value={newComment}
-          onChangeText={setNewComment}
-          placeholder="Write a comment..."
-          placeholderTextColor="#9ca3af"
-          className="flex-1 bg-neutral-100 rounded-xl px-4 py-3 text-base text-neutral-900"
-          maxLength={300}
-          multiline
-        />
-        <TouchableOpacity
-          onPress={handleAddComment}
-          disabled={!newComment.trim() || isSubmittingComment}
-          className={`ml-2 p-3 rounded-full ${
-            newComment.trim() ? "bg-primary-600" : "bg-neutral-200"
-          }`}
-        >
-          {isSubmittingComment ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Send color={newComment.trim() ? "#fff" : "#9ca3af"} size={20} />
+      {/* Top-Level Comment Input - Sticks to keyboard */}
+      <View className="bg-white border-t border-neutral-200 px-4 py-3">
+          {replyingTo && (
+            <View className="flex-row items-center justify-between mb-2 px-2 py-1.5 bg-neutral-50 rounded-lg">
+              <Text className="text-xs text-neutral-600">
+                Replying to <Text className="font-semibold text-primary-600">@{replyingTo.name}</Text>
+              </Text>
+              <TouchableOpacity onPress={() => setReplyingTo(null)} className="p-0.5">
+                <Text className="text-neutral-400 font-bold text-base">×</Text>
+              </TouchableOpacity>
+            </View>
           )}
-        </TouchableOpacity>
-      </View>
+          <View className="flex-row items-center">
+            <TextInput
+              ref={textInputRef}
+              value={newComment}
+              onChangeText={setNewComment}
+              placeholder={replyingTo ? `Reply to ${replyingTo.name}...` : "Write a comment..."}
+              placeholderTextColor="#9ca3af"
+              className="flex-1 bg-neutral-100 rounded-full px-4 py-2.5 text-sm text-neutral-900"
+              maxLength={300}
+              multiline
+            />
+            <TouchableOpacity
+              onPress={handleAddComment}
+              disabled={!newComment.trim() || isSubmittingComment}
+              className="ml-2"
+            >
+              {isSubmittingComment ? (
+                <ActivityIndicator size="small" color="#2563eb" />
+              ) : (
+                <Send
+                  color={newComment.trim() ? "#2563eb" : "#9ca3af"}
+                  size={22}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
 
       {/* Report Modal */}
       <ReportModal
