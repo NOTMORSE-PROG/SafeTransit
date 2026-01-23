@@ -13,6 +13,8 @@ import {
   RefreshControl,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardStickyView } from "react-native-keyboard-controller";
+import { UserAvatar } from "@/components/UserAvatar";
 import * as Haptics from "expo-haptics";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -566,9 +568,9 @@ export default function PostDetail() {
             </TouchableOpacity>
           </View>
 
-          {/* Sort Menu Dropdown */}
+          {/* Sort Menu Dropdown - Facebook Style Popup */}
           {showSortMenu && (
-            <View className="bg-neutral-50 rounded-xl mb-4 overflow-hidden">
+            <View className="absolute right-6 bg-white rounded-lg shadow-lg z-50 border border-neutral-200" style={{ top: 48 }}>
               {(["popular", "newest", "oldest"] as CommentSort[]).map(
                 (sort) => (
                   <TouchableOpacity
@@ -577,17 +579,18 @@ export default function PostDetail() {
                       setCommentSort(sort);
                       setShowSortMenu(false);
                     }}
-                    className={`px-4 py-3 flex-row items-center ${
+                    className={`px-3 py-2.5 flex-row items-center ${
                       commentSort === sort ? "bg-primary-50" : ""
                     }`}
+                    style={{ minWidth: 140 }}
                   >
                     {sort === "popular" && (
-                      <TrendingUp color="#6b7280" size={16} />
+                      <TrendingUp color="#6b7280" size={14} />
                     )}
-                    {sort === "newest" && <Clock color="#6b7280" size={16} />}
-                    {sort === "oldest" && <Clock color="#6b7280" size={16} />}
+                    {sort === "newest" && <Clock color="#6b7280" size={14} />}
+                    {sort === "oldest" && <Clock color="#6b7280" size={14} />}
                     <Text
-                      className={`ml-2 capitalize ${
+                      className={`ml-2 text-sm capitalize ${
                         commentSort === sort
                           ? "text-primary-600 font-semibold"
                           : "text-neutral-700"
@@ -616,61 +619,78 @@ export default function PostDetail() {
                 onRef={(ref) => {
                   if (ref) commentRefs.current.set(comment.id, ref);
                 }}
+                activeReplyId={replyingTo?.id || null}
               />
             ))
           )}
         </View>
       </KeyboardAwareScrollView>
 
-      {/* Top-Level Comment Input - Sticks to keyboard */}
-      <View className="bg-white border-t border-neutral-200 px-4 py-3">
-        {replyingTo && (
-          <View className="flex-row items-center justify-between mb-2 px-2 py-1.5 bg-neutral-50 rounded-lg">
-            <Text className="text-xs text-neutral-600">
-              Replying to{" "}
-              <Text className="font-semibold text-primary-600">
-                @{replyingTo.name}
+      {/* Facebook-style Comment Input - Fixed above keyboard */}
+      <KeyboardStickyView offset={{ closed: 0, opened: 0 }}>
+        <View
+          className="bg-white border-t border-neutral-200 px-4"
+          style={{ paddingTop: 12, paddingBottom: Math.max(insets.bottom, 12) }}
+        >
+          {replyingTo && (
+            <View className="flex-row items-center justify-between mb-2 px-2 py-1.5 bg-neutral-50 rounded-lg">
+              <Text className="text-xs text-neutral-600">
+                Replying to{" "}
+                <Text className="font-semibold text-primary-600">
+                  @{replyingTo.name}
+                </Text>
               </Text>
-            </Text>
+              <TouchableOpacity
+                onPress={() => setReplyingTo(null)}
+                className="p-0.5"
+              >
+                <Text className="text-neutral-400 font-bold text-base">×</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          <View className="flex-row items-center">
+            {/* User Avatar - Facebook Style */}
+            {user && (
+              <View className="mr-3">
+                <UserAvatar
+                  imageUrl={user.profileImageUrl}
+                  name={user.fullName || user.email}
+                  size={40}
+                />
+              </View>
+            )}
+            <TextInput
+              ref={textInputRef}
+              value={newComment}
+              onChangeText={setNewComment}
+              placeholder={
+                replyingTo
+                  ? `Reply to ${replyingTo.name}...`
+                  : "Write a comment..."
+              }
+              placeholderTextColor="#9ca3af"
+              className="flex-1 bg-neutral-100 rounded-3xl px-4 text-base text-neutral-900"
+              maxLength={300}
+              multiline
+              style={{ minHeight: 44, maxHeight: 120, paddingTop: 12, paddingBottom: 12 }}
+            />
             <TouchableOpacity
-              onPress={() => setReplyingTo(null)}
-              className="p-0.5"
+              onPress={handleAddComment}
+              disabled={!newComment.trim() || isSubmittingComment}
+              className="ml-2"
             >
-              <Text className="text-neutral-400 font-bold text-base">×</Text>
+              {isSubmittingComment ? (
+                <ActivityIndicator size="small" color="#2563eb" />
+              ) : (
+                <Send
+                  color={newComment.trim() ? "#2563eb" : "#9ca3af"}
+                  size={22}
+                />
+              )}
             </TouchableOpacity>
           </View>
-        )}
-        <View className="flex-row items-center">
-          <TextInput
-            ref={textInputRef}
-            value={newComment}
-            onChangeText={setNewComment}
-            placeholder={
-              replyingTo
-                ? `Reply to ${replyingTo.name}...`
-                : "Write a comment..."
-            }
-            placeholderTextColor="#9ca3af"
-            className="flex-1 bg-neutral-100 rounded-full px-4 py-2.5 text-sm text-neutral-900"
-            maxLength={300}
-            multiline
-          />
-          <TouchableOpacity
-            onPress={handleAddComment}
-            disabled={!newComment.trim() || isSubmittingComment}
-            className="ml-2"
-          >
-            {isSubmittingComment ? (
-              <ActivityIndicator size="small" color="#2563eb" />
-            ) : (
-              <Send
-                color={newComment.trim() ? "#2563eb" : "#9ca3af"}
-                size={22}
-              />
-            )}
-          </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardStickyView>
 
       {/* Report Modal */}
       <ReportModal
