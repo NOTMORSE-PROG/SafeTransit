@@ -268,7 +268,7 @@ export const ForumCommentsRepository = {
   ): Promise<ForumCommentWithAuthor[]> {
     const orderBy =
       sort === "popular"
-        ? "fc.likes DESC, fc.created_at DESC"
+        ? "(fc.likes + (SELECT COUNT(*) FROM forum_comments WHERE parent_id = fc.id)) DESC, fc.created_at DESC"
         : sort === "oldest"
           ? "fc.created_at ASC"
           : "fc.created_at DESC";
