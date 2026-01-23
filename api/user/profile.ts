@@ -33,22 +33,53 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
 
+  // Verify authentication for all methods
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const token = authHeader.substring(7);
+  const payload = verifyToken(token);
+
+  if (!payload) {
+    return res.status(401).json({ error: "Invalid or expired token" });
+  }
+
+  // Handle GET request - fetch user profile
+  if (req.method === "GET") {
+    try {
+      const user = await UserRepository.findById(payload.userId);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+          profile_image_url: user.profile_image_url,
+          phone_number: user.phone_number,
+          google_id: user.google_id,
+          password_hash: user.password_hash,
+          onboarding_completed: user.onboarding_completed,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+      return res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  }
+
+  // Only PUT and POST allowed for updates
   if (req.method !== "PUT" && req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const token = authHeader.substring(7);
-    const payload = verifyToken(token);
-
-    if (!payload) {
-      return res.status(401).json({ error: "Invalid or expired token" });
-    }
 
     const {
       base64,
