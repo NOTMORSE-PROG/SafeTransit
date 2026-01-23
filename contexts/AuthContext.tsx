@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     if (!token) return;
 
     try {
@@ -109,7 +109,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Failed to refresh user:', error);
     }
-  };
+  }, [token]);
+
+  // Refresh user data from server after loading from storage
+  useEffect(() => {
+    if (token && !isLoading) {
+      refreshUser();
+    }
+  }, [token, isLoading, refreshUser]);
 
   return (
     <AuthContext.Provider value={{ user, token, isLoading, login, logout, refreshUser }}>
