@@ -110,6 +110,14 @@ export default function EmergencyContacts() {
     return { valid: Object.keys(newErrors).length === 0, filledContacts };
   };
 
+  // Check if at least one contact is filled
+  const hasValidContact = () => {
+    return contacts.some(
+      (contact) =>
+        contact.name.trim().length > 0 && contact.phoneNumber.trim().length > 0
+    );
+  };
+
   const handleSave = async () => {
     const { valid, filledContacts } = validateContacts();
     if (!valid) return;
@@ -266,24 +274,32 @@ export default function EmergencyContacts() {
 
       {/* Bottom Buttons */}
       <View
-        className="px-6 pt-4 bg-white border-t border-neutral-100"
+        className="px-6 py-4 bg-white border-t border-neutral-100"
         style={{ paddingBottom: Math.max(insets.bottom + 16, 32) }}
       >
-          <TouchableOpacity
-            onPress={handleSave}
-            disabled={isLoading || isNavigating}
-            className={`flex-1 rounded-xl py-4 items-center justify-center ${
-              !isLoading && !isNavigating ? 'bg-primary-600' : 'bg-neutral-300'
+        <TouchableOpacity
+          onPress={handleSave}
+          disabled={!hasValidContact() || isLoading || isNavigating}
+          className={`rounded-xl py-4 items-center justify-center ${
+            hasValidContact() && !isLoading && !isNavigating
+              ? 'bg-primary-600'
+              : 'bg-neutral-300'
+          }`}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityLabel="Save emergency contacts and continue"
+          accessibilityRole="button"
+        >
+          <Text
+            className={`font-bold text-lg ${
+              hasValidContact() && !isLoading && !isNavigating
+                ? 'text-white'
+                : 'text-neutral-500'
             }`}
-            activeOpacity={0.8}
-            accessible={true}
-            accessibilityLabel="Save emergency contacts and continue"
-            accessibilityRole="button"
           >
-            <Text className="text-white font-bold text-base">
-              {isNavigating ? 'Saving...' : 'Save & Continue'}
-            </Text>
-          </TouchableOpacity>
+            {isLoading || isNavigating ? 'Saving...' : 'Save & Continue'}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
