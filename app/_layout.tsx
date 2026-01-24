@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { AuthProvider } from '../contexts/AuthContext';
 import '../global.css';
 
@@ -9,8 +10,9 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <AuthProvider>
-          <StatusBar style="light" />
+        <KeyboardProvider>
+          <AuthProvider>
+            <StatusBar style="light" />
           <Stack
             screenOptions={{
               headerShown: false,
@@ -64,7 +66,8 @@ export default function RootLayout() {
             }}
           />
         </Stack>
-        </AuthProvider>
+          </AuthProvider>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

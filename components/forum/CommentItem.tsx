@@ -1,22 +1,16 @@
 // CommentItem Component
 // Display comment with likes, replies, and reply UI
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSpring,
-} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { ThumbsUp, ChevronDown, ChevronUp } from "lucide-react-native";
+import { UserAvatar } from "../UserAvatar";
 import type { ForumCommentWithAuthor } from "@/services/types/forum";
 
 interface CommentItemProps {
@@ -26,6 +20,7 @@ interface CommentItemProps {
   isLiking?: boolean;
   isNested?: boolean;
   onRef?: (ref: View | null) => void;
+  activeReplyId?: string | null;
 }
 
 function formatTimeAgo(dateString: string): string {
@@ -50,35 +45,12 @@ export function CommentItem({
   isLiking = false,
   isNested = false,
   onRef,
+  activeReplyId,
 }: CommentItemProps) {
   const [showReplies, setShowReplies] = useState(false);
 
-  // Animation for replies expand/collapse
-  const repliesHeight = useSharedValue(0);
-  const repliesOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (showReplies) {
-      repliesHeight.value = withSpring(1, {
-        damping: 20,
-        stiffness: 90,
-      });
-      repliesOpacity.value = withTiming(1, { duration: 300 });
-    } else {
-      repliesHeight.value = withTiming(0, { duration: 200 });
-      repliesOpacity.value = withTiming(0, { duration: 200 });
-    }
-  }, [showReplies, repliesHeight, repliesOpacity]);
-
-  const animatedRepliesStyle = useAnimatedStyle(() => ({
-    opacity: repliesOpacity.value,
-    transform: [{ scaleY: repliesHeight.value }],
-    transformOrigin: "top",
-  }));
-
-  const avatarUri =
-    comment.author_image_url || "https://via.placeholder.com/32";
   const hasReplies = comment.replies && comment.replies.length > 0;
+  const isActiveReply = activeReplyId === comment.id;
 
   // Facebook-style indentation: only indent the first reply level, all deeper replies stay at same level
   // Level 0 (top comment): no indent
@@ -96,14 +68,23 @@ export function CommentItem({
       ref={(ref) => onRef?.(ref)}
       collapsable={false}
     >
-      {/* Thread connector line for nested comments */}
-      {isNested && (
-        <View className="absolute left-4 top-0 bottom-0 w-0.5 bg-neutral-200" />
-      )}
-      <View className="flex-row">
-        <Image
-          source={{ uri: avatarUri }}
-          className="w-8 h-8 rounded-full bg-neutral-200"
+      <View className="flex-row" style={{ position: "relative" }}>
+        {isNested && (
+          <View
+            style={{
+              position: "absolute",
+              left: -20,
+              top: 0,
+              bottom: 0,
+              width: 2,
+              backgroundColor: "rgba(107, 114, 128, 0.2)",
+            }}
+          />
+        )}
+        <UserAvatar
+          imageUrl={comment.author_image_url}
+          name={comment.author_name}
+          size={32}
         />
         <View className="flex-1 ml-3">
           {/* Author + Time */}
@@ -164,7 +145,11 @@ export function CommentItem({
               }}
               activeOpacity={0.7}
             >
-              <Text className="text-xs font-semibold text-neutral-600">
+              <Text
+                className={`text-xs font-semibold ${
+                  isActiveReply ? "text-primary-600" : "text-neutral-600"
+                }`}
+              >
                 Reply
               </Text>
             </TouchableOpacity>
@@ -192,7 +177,7 @@ export function CommentItem({
           </TouchableOpacity>
 
           {showReplies && (
-            <Animated.View style={animatedRepliesStyle}>
+            <View>
               {comment.replies!.map((reply) => (
                 <CommentItem
                   key={reply.id}
@@ -201,9 +186,10 @@ export function CommentItem({
                   onReplyPress={onReplyPress}
                   onRef={onRef}
                   isNested
+                  activeReplyId={activeReplyId}
                 />
               ))}
-            </Animated.View>
+            </View>
           )}
         </View>
       )}
