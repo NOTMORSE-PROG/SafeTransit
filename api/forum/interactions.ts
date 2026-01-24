@@ -8,6 +8,7 @@ import {
   ForumCommentsRepository,
   ReportsRepository,
 } from "../../services/forumRepository";
+import { TipsRepository } from "../../services/repositories/tipsRepository";
 import type {
   ForumInteractionRequest,
   ReportReason,
@@ -217,6 +218,133 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           success: true,
           data: reply,
           message: "Reply added successfully",
+        });
+      }
+
+      case "submit_tip": {
+        if (content_type !== "map_tip") {
+          return res.status(400).json({ error: "Invalid content_type for submit_tip" });
+        }
+
+        const { tip_data } = body;
+        if (!tip_data) {
+          return res.status(400).json({ error: "tip_data is required" });
+        }
+
+        // Validate required fields
+        if (!tip_data.title || tip_data.title.length > 500) {
+          return res.status(400).json({ error: "title is required and must be max 500 characters" });
+        }
+        if (!tip_data.message || tip_data.message.length > 2000) {
+          return res.status(400).json({ error: "message is required and must be max 2000 characters" });
+        }
+        if (!tip_data.category || !["lighting", "safety", "transit", "harassment", "safe_haven", "construction"].includes(tip_data.category)) {
+          return res.status(400).json({ error: "Valid category is required" });
+        }
+        if (tip_data.latitude === undefined || tip_data.longitude === undefined) {
+          return res.status(400).json({ error: "latitude and longitude are required" });
+        }
+        if (!tip_data.location_name) {
+          return res.status(400).json({ error: "location_name is required" });
+        }
+
+        // Create tip (auto-approved)
+        const tip = await TipsRepository.createTip({
+          author_id: user.userId,
+          title: tip_data.title.trim(),
+          message: tip_data.message.trim(),
+          category: tip_data.category,
+          latitude: tip_data.latitude,
+          longitude: tip_data.longitude,
+          location_name: tip_data.location_name.trim(),
+          time_relevance: tip_data.time_relevance || "24/7",
+          is_temporary: tip_data.is_temporary || false,
+          expires_at: tip_data.expires_at || null,
+          status: "approved", // Auto-approve
+          photo_url: tip_data.photo_url || null,
+        });
+
+        // TODO: Trigger real-time heatmap update
+        // await updateHeatmapForTip(tip.id);
+
+        return res.status(201).json({
+          success: true,
+          tip_id: tip.id,
+          status: "approved",
+          message: "Tip submitted and approved successfully",
+        });
+      }
+
+      case "follow_location": {
+        if (content_type !== "location") {
+          return res.status(400).json({ error: "Invalid content_type for follow_location" });
+        }
+
+        const { location_data } = body;
+        if (!location_data) {
+          return res.status(400).json({ error: "location_data is required" });
+        }
+
+        if (location_data.latitude === undefined || location_data.longitude === undefined) {
+          return res.status(400).json({ error: "latitude and longitude are required" });
+        }
+        if (!location_data.location_name) {
+          return res.status(400).json({ error: "location_name is required" });
+        }
+        if (!location_data.radius_meters || ![500, 1000, 5000].includes(location_data.radius_meters)) {
+          return res.status(400).json({ error: "radius_meters must be 500, 1000, or 5000" });
+        }
+
+        // Create followed location
+        const { neon } = await import("@neondatabase/serverless");
+        const sql = neon(process.env.DATABASE_URL || "");
+
+        const result = await sql`
+          INSERT INTO followed_locations (user_id, latitude, longitude, radius_meters, location_name)
+          VALUES (${user.userId}, ${location_data.latitude}, ${location_data.longitude}, ${location_data.radius_meters}, ${location_data.location_name})
+          ON CONFLICT (user_id, latitude, longitude) DO UPDATE
+          SET radius_meters = ${location_data.radius_meters}, location_name = ${location_data.location_name}
+          RETURNING *
+        `;
+
+        return res.status(201).json({
+          success: true,
+          followed_location: result[0],
+          message: "Location followed successfully",
+        });
+      }
+
+      case "analyze_route": {
+        if (content_type !== "route") {
+          return res.status(400).json({ error: "Invalid content_type for analyze_route" });
+        }
+
+        const { route_coordinates } = body;
+        if (!route_coordinates || !Array.isArray(route_coordinates) || route_coordinates.length === 0) {
+          return res.status(400).json({ error: "route_coordinates array is required" });
+        }
+
+        // Calculate route bounds
+        const lats = route_coordinates.map(([lat]: number[]) => lat);
+        const lons = route_coordinates.map(([, lon]: number[]) => lon);
+        const minLat = Math.min(...lats);
+        const maxLat = Math.max(...lats);
+        const minLon = Math.min(...lons);
+        const maxLon = Math.max(...lons);
+
+        // Fetch tips along route
+        const tips = await TipsRepository.getTips({
+          bounds: { minLat, maxLat, minLon, maxLon },
+          status: "approved",
+        });
+
+        // TODO: Implement full route safety scoring algorithm
+        // For now, return basic data
+        return res.status(200).json({
+          success: true,
+          tips_along_route: tips.length,
+          tips,
+          message: "Route analyzed successfully (basic implementation)",
         });
       }
 

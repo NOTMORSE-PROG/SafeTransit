@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { LocationRepository } from '../../services/repositories/locationRepository';
-import { PickupPointRepository, type PickupPoint } from '../../services/repositories/pickupPointRepository';
+import { TipsRepository } from '../../services/repositories/tipsRepository';
 import type { Location } from '../../services/types/database';
 import { rankSearchResults } from '../../services/searchRanking';
 import { verifyToken } from '../../services/auth/jwt';
@@ -71,32 +71,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { q, lat, lon, location_id, mode } = req.query;
+  const { q, lat, lon, location_id, mode, radius, category, time, bounds } = req.query;
 
-  // Mode 1: Get pickup points for a specific location
-  if (mode === 'pickup_points' && location_id && typeof location_id === 'string') {
+  // Mode 1: Get approved safety tips with spatial filtering
+  if (mode === 'tips') {
     try {
       const userLat = lat ? parseFloat(lat as string) : undefined;
       const userLon = lon ? parseFloat(lon as string) : undefined;
+      const radiusMeters = radius ? parseInt(radius as string) : undefined;
 
-      const pickupPoints = await PickupPointRepository.getForLocationWithDistance(
-        location_id,
-        userLat,
-        userLon
-      );
+      // Parse bounds if provided (format: "minLat,minLon,maxLat,maxLon")
+      let parsedBounds;
+      if (bounds && typeof bounds === 'string') {
+        const [minLat, minLon, maxLat, maxLon] = bounds.split(',').map(parseFloat);
+        if (!isNaN(minLat) && !isNaN(minLon) && !isNaN(maxLat) && !isNaN(maxLon)) {
+          parsedBounds = { minLat, minLon, maxLat, maxLon };
+        }
+      }
+
+      const tips = await TipsRepository.getTips({
+        latitude: userLat,
+        longitude: userLon,
+        radius: radiusMeters,
+        category: category as any,
+        time: time as any,
+        status: 'approved',
+        bounds: parsedBounds,
+        limit: 500,
+      });
 
       return res.status(200).json({
         success: true,
-        location_id,
-        count: pickupPoints.length,
-        pickup_points: pickupPoints.map((p: PickupPoint & { distance_meters?: number }) => ({
-          ...p,
-          distance_km: p.distance_meters ? (p.distance_meters / 1000).toFixed(2) : undefined,
-        })),
+        count: tips.length,
+        tips,
       });
     } catch (error) {
       return res.status(500).json({
-        error: 'Failed to fetch pickup points',
+        error: 'Failed to fetch tips',
         details: error instanceof Error ? error.message : 'Unknown error',
       });
     }
