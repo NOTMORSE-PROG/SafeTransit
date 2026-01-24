@@ -258,18 +258,20 @@ export default function PostDetail() {
     // Set reply context
     setReplyingTo({ id: commentId, name: authorName });
 
-    // Focus input and open keyboard
+    // Blur then focus to ensure keyboard always shows
+    textInputRef.current?.blur();
     setTimeout(() => {
       textInputRef.current?.focus();
-    }, 100);
+    }, 50);
 
     // Scroll to the comment being replied to
     const commentView = commentRefs.current.get(commentId);
     if (commentView && scrollViewRef.current) {
       commentView.measure((fx, fy, width, height, px, py) => {
-        if (py) {
-          // Scroll to position with offset
-          scrollViewRef.current?.scrollToPosition(0, py - 100, true);
+        if (py !== undefined) {
+          // Scroll to position with breathing room offset
+          const offset = Math.max(0, py - 80);
+          scrollViewRef.current?.scrollToPosition(0, offset, true);
         }
       });
     }

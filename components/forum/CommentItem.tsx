@@ -68,7 +68,19 @@ export function CommentItem({
       ref={(ref) => onRef?.(ref)}
       collapsable={false}
     >
-      <View className="flex-row">
+      <View className="flex-row" style={{ position: "relative" }}>
+        {isNested && (
+          <View
+            style={{
+              position: "absolute",
+              left: -20,
+              top: 0,
+              bottom: 0,
+              width: 2,
+              backgroundColor: "rgba(107, 114, 128, 0.2)",
+            }}
+          />
+        )}
         <UserAvatar
           imageUrl={comment.author_image_url}
           name={comment.author_name}
