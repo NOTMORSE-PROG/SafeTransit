@@ -227,7 +227,7 @@ export const TipsRepository = {
     }
 
     const setClauses: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
 
     if (updates.title !== undefined) {
       setClauses.push(`title = $${values.length + 1}`);

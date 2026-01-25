@@ -118,7 +118,7 @@ async function regenerateHeatmapCell(geohash: string): Promise<void> {
     let harassmentCount = 0;
     let lightingCount = 0;
 
-    tips.forEach((tip: any) => {
+    tips.forEach((tip: { category: string }) => {
       const severity = CATEGORY_SEVERITY[tip.category] || 5;
       severitySum += severity;
 
@@ -235,7 +235,7 @@ export async function generateHeatmapForRegion(bounds: {
 
     // Get unique geohashes
     const geohashes = new Set<string>();
-    tips.forEach((tip: any) => {
+    tips.forEach((tip: { latitude: number; longitude: number }) => {
       const geohash = Geohash.encode(tip.latitude, tip.longitude, 8);
       geohashes.add(geohash);
 

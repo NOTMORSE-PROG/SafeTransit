@@ -71,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { q, lat, lon, location_id, mode, radius, category, time, bounds } = req.query;
+  const { q, lat, lon, mode, radius, category, time, bounds } = req.query;
 
   // Mode 1: Get approved safety tips with spatial filtering
   if (mode === 'tips') {
@@ -93,8 +93,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         latitude: userLat,
         longitude: userLon,
         radius: radiusMeters,
-        category: category as any,
-        time: time as any,
+        category: category as string | undefined,
+        time: time as string | undefined,
         status: 'approved',
         bounds: parsedBounds,
         limit: 500,
