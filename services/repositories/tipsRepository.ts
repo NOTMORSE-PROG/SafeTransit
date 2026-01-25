@@ -119,23 +119,34 @@ export const TipsRepository = {
 
     const whereClause = conditions.join(" AND ");
 
-    const query = `
-      SELECT
-        t.*,
-        u.full_name as author_name,
-        u.profile_image_url as author_image
-      FROM tips t
-      INNER JOIN users u ON t.author_id = u.id
-      WHERE ${whereClause}
-      ORDER BY
-        ${latitude && longitude && radius ?
-          `ST_Distance(t.geom::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography)` :
-          't.created_at DESC'
-        }
-      LIMIT ${limit}
-    `;
+    // Build the query using tagged template literal
+    let result;
+    if (latitude !== undefined && longitude !== undefined && radius) {
+      result = await sql`
+        SELECT
+          t.*,
+          u.full_name as author_name,
+          u.profile_image_url as author_image
+        FROM tips t
+        INNER JOIN users u ON t.author_id = u.id
+        WHERE ${sql.unsafe(whereClause)}
+        ORDER BY ST_Distance(t.geom::geography, ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography)
+        LIMIT ${limit}
+      `;
+    } else {
+      result = await sql`
+        SELECT
+          t.*,
+          u.full_name as author_name,
+          u.profile_image_url as author_image
+        FROM tips t
+        INNER JOIN users u ON t.author_id = u.id
+        WHERE ${sql.unsafe(whereClause)}
+        ORDER BY t.created_at DESC
+        LIMIT ${limit}
+      `;
+    }
 
-    const result = await sql(query);
     return result as TipWithAuthor[];
   },
 
@@ -254,18 +265,33 @@ export const TipsRepository = {
       return (await sql`SELECT * FROM tips WHERE id = ${tipId}`)[0] as Tip;
     }
 
-    setClauses.push('updated_at = NOW()');
+    // Build dynamic update using tagged template
+    let result;
+    if (updates.title !== undefined && updates.message === undefined && updates.category === undefined && updates.time_relevance === undefined && updates.photo_url === undefined) {
+      result = await sql`UPDATE tips SET title = ${updates.title}, updated_at = NOW() WHERE id = ${tipId} RETURNING *`;
+    } else if (updates.message !== undefined && updates.title === undefined && updates.category === undefined && updates.time_relevance === undefined && updates.photo_url === undefined) {
+      result = await sql`UPDATE tips SET message = ${updates.message}, updated_at = NOW() WHERE id = ${tipId} RETURNING *`;
+    } else if (updates.category !== undefined && updates.title === undefined && updates.message === undefined && updates.time_relevance === undefined && updates.photo_url === undefined) {
+      result = await sql`UPDATE tips SET category = ${updates.category}, updated_at = NOW() WHERE id = ${tipId} RETURNING *`;
+    } else if (updates.time_relevance !== undefined && updates.title === undefined && updates.message === undefined && updates.category === undefined && updates.photo_url === undefined) {
+      result = await sql`UPDATE tips SET time_relevance = ${updates.time_relevance}, updated_at = NOW() WHERE id = ${tipId} RETURNING *`;
+    } else if (updates.photo_url !== undefined && updates.title === undefined && updates.message === undefined && updates.category === undefined && updates.time_relevance === undefined) {
+      result = await sql`UPDATE tips SET photo_url = ${updates.photo_url}, updated_at = NOW() WHERE id = ${tipId} RETURNING *`;
+    } else if (updates.title !== undefined && updates.message !== undefined) {
+      result = await sql`UPDATE tips SET title = ${updates.title}, message = ${updates.message}, updated_at = NOW() WHERE id = ${tipId} RETURNING *`;
+    } else {
+      // For multiple fields, construct the query
+      const setFields: string[] = [];
+      if (updates.title !== undefined) setFields.push(`title = '${updates.title}'`);
+      if (updates.message !== undefined) setFields.push(`message = '${updates.message}'`);
+      if (updates.category !== undefined) setFields.push(`category = '${updates.category}'`);
+      if (updates.time_relevance !== undefined) setFields.push(`time_relevance = '${updates.time_relevance}'`);
+      if (updates.photo_url !== undefined) setFields.push(`photo_url = '${updates.photo_url}'`);
+      setFields.push('updated_at = NOW()');
 
-    const query = `
-      UPDATE tips
-      SET ${setClauses.join(', ')}
-      WHERE id = $${values.length + 1}
-      RETURNING *
-    `;
+      result = await sql`UPDATE tips SET ${sql.unsafe(setFields.join(', '))} WHERE id = ${tipId} RETURNING *`;
+    }
 
-    values.push(tipId);
-
-    const result = await sql(query, values);
     return result.length > 0 ? (result[0] as Tip) : null;
   },
 
