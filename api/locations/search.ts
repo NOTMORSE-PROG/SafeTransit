@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { LocationRepository } from '../../services/repositories/locationRepository';
 import { TipsRepository } from '../../services/repositories/tipsRepository';
-import type { Location } from '../../services/types/database';
+import type { Location, TipCategory, TimeRelevance } from '../../services/types/database';
 import { rankSearchResults } from '../../services/searchRanking';
 import { verifyToken } from '../../services/auth/jwt';
 
@@ -136,12 +136,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       }
 
+      // Validate category and time if provided
+      const validCategories: TipCategory[] = ['lighting', 'safety', 'transit', 'harassment', 'safe_haven', 'construction'];
+      const validTimes: TimeRelevance[] = ['morning', 'afternoon', 'evening', 'night', '24/7'];
+
+      const validatedCategory = category && validCategories.includes(category as TipCategory)
+        ? (category as TipCategory)
+        : undefined;
+      const validatedTime = time && validTimes.includes(time as TimeRelevance)
+        ? (time as TimeRelevance)
+        : undefined;
+
       const tips = await TipsRepository.getTips({
         latitude: userLat,
         longitude: userLon,
         radius: radiusMeters,
-        category: category as string | undefined,
-        time: time as string | undefined,
+        category: validatedCategory,
+        time: validatedTime,
         status: 'approved',
         bounds: parsedBounds,
         limit: 500,

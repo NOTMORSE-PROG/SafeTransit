@@ -259,9 +259,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           location_name: tip_data.location_name.trim(),
           time_relevance: tip_data.time_relevance || "24/7",
           is_temporary: tip_data.is_temporary || false,
-          expires_at: tip_data.expires_at || null,
+          expires_at: tip_data.expires_at || undefined,
           status: "approved", // Auto-approve
-          photo_url: tip_data.photo_url || null,
+          photo_url: tip_data.photo_url || undefined,
         });
 
         // TODO: Trigger real-time heatmap update

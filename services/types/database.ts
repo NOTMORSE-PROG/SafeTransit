@@ -11,7 +11,8 @@ export type TipCategory =
   | "safety"
   | "transit"
   | "harassment"
-  | "safe_haven";
+  | "safe_haven"
+  | "construction";
 export type TimeRelevance =
   | "morning"
   | "afternoon"

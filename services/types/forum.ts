@@ -140,12 +140,32 @@ export const REPORT_REASONS: Record<ReportReason, string> = {
 // ==============================================================================
 
 export interface ForumInteractionRequest {
-  action: "vote" | "like" | "report" | "comment" | "reply";
-  content_type: "post" | "comment";
+  action: "vote" | "like" | "report" | "comment" | "reply" | "submit_tip" | "follow_location" | "analyze_route" | "helpful" | "confirm";
+  content_type: "post" | "comment" | "map_tip" | "location" | "route" | "tip";
   content_id: string;
   vote_type?: "up" | "down";
   reason?: string;
   additional_info?: string;
   comment_content?: string;
   parent_comment_id?: string;
+  tip_data?: {
+    title: string;
+    message: string;
+    category: "lighting" | "safety" | "transit" | "harassment" | "safe_haven" | "construction";
+    latitude: number;
+    longitude: number;
+    location_name: string;
+    time_relevance?: "morning" | "afternoon" | "evening" | "night" | "24/7";
+    photo_url?: string;
+    is_temporary?: boolean;
+    expires_at?: string | null;
+  };
+  location_data?: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    location_name?: string;
+    radius_meters?: number;
+  };
+  route_coordinates?: [number, number][];
 }

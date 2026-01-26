@@ -102,7 +102,7 @@ async function regenerateHeatmapCell(geohash: string): Promise<void> {
           ST_SetSRID(ST_MakePoint(${lon}, ${lat}), 4326)::geography,
           100
         )
-    `;
+    ` as { category: string; latitude: number; longitude: number }[];
 
     if (tips.length === 0) {
       // No tips nearby, delete the heatmap cell if it exists
@@ -118,7 +118,7 @@ async function regenerateHeatmapCell(geohash: string): Promise<void> {
     let harassmentCount = 0;
     let lightingCount = 0;
 
-    tips.forEach((tip: { category: string }) => {
+    tips.forEach((tip) => {
       const severity = CATEGORY_SEVERITY[tip.category] || 5;
       severitySum += severity;
 
@@ -229,13 +229,13 @@ export async function generateHeatmapForRegion(bounds: {
       WHERE status = 'approved'
         AND latitude BETWEEN ${bounds.minLat} AND ${bounds.maxLat}
         AND longitude BETWEEN ${bounds.minLon} AND ${bounds.maxLon}
-    `;
+    ` as { id: string; latitude: number; longitude: number; category: string }[];
 
     console.log(`Found ${tips.length} tips in region`);
 
     // Get unique geohashes
     const geohashes = new Set<string>();
-    tips.forEach((tip: { latitude: number; longitude: number }) => {
+    tips.forEach((tip) => {
       const geohash = Geohash.encode(tip.latitude, tip.longitude, 8);
       geohashes.add(geohash);
 
