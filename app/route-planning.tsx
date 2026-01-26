@@ -23,6 +23,7 @@ import LocationSearchInput from '../components/LocationSearchInput';
 import NavigationConfirmModal from '../components/NavigationConfirmModal';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
 import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/osrm';
+import { analyzeRouteSafety, getSafetyRating } from '../services/routeSafetyService';
 
 const TRAVEL_MODES = [
   { id: 'walk', label: 'Walk', icon: 'PersonStanding' },
@@ -134,24 +135,50 @@ export default function RoutePlanning() {
       const allModeRoutes = await getMultiModalRoutes(start, end, [selectedMode]);
       const modeRoutes = allModeRoutes.get(selectedMode) || [];
 
-      // Add safety assessment (mock for now)
+      // Add real safety assessment
       type RouteWithSafety = Route & {
         safety: string;
+        safetyScore: number;
         warnings: string[];
         color: string;
+        dangerZones: number;
       };
 
-      const routesWithSafety: RouteWithSafety[] = modeRoutes.map((route, index) => {
-        const safety = index === 0 ? 'high' : 'medium';
-        const warnings = safety === 'high' ? [] : ['Passes through 1 caution zone'];
+      const routesWithSafety: RouteWithSafety[] = await Promise.all(
+        modeRoutes.map(async (route) => {
+          try {
+            // Analyze route safety
+            const safetyAnalysis = await analyzeRouteSafety(route.coordinates);
+            const safetyRating = getSafetyRating(safetyAnalysis.overallScore);
 
-        return {
-          ...route,
-          safety,
-          warnings,
-          color: safety === 'high' ? '#22C55E' : '#F59E0B',
-        };
-      });
+            // Generate warnings based on danger zones
+            const warnings: string[] = [];
+            if (safetyAnalysis.dangerZones > 0) {
+              warnings.push(`Passes through ${safetyAnalysis.dangerZones} caution zone${safetyAnalysis.dangerZones > 1 ? 's' : ''}`);
+            }
+
+            return {
+              ...route,
+              safety: safetyRating.text,
+              safetyScore: safetyAnalysis.overallScore,
+              warnings,
+              color: safetyRating.color,
+              dangerZones: safetyAnalysis.dangerZones,
+            };
+          } catch (error) {
+            console.error('Error analyzing route safety:', error);
+            // Fallback to default values on error
+            return {
+              ...route,
+              safety: 'Unknown',
+              safetyScore: 50,
+              warnings: [],
+              color: '#9CA3AF',
+              dangerZones: 0,
+            };
+          }
+        })
+      );
 
       setRoutes(routesWithSafety as Route[]);
       setSelectedRoute(routesWithSafety[0] || null);

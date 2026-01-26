@@ -4,8 +4,9 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getApiUrl } from '@/utils/api';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://safetransit-backend.vercel.app';
+const getApiBaseUrl = () => getApiUrl();
 
 export type SafetyReportType =
   | 'unsafe_area'
@@ -61,9 +62,9 @@ export interface SafetyHeatmapPoint {
 export async function reportSafetyIncident(
   report: CreateSafetyReport
 ): Promise<SafetyReport> {
-  const token = await AsyncStorage.getItem('@auth_token');
+  const token = await AsyncStorage.getItem('auth_token');
 
-  const response = await fetch(`${API_BASE_URL}/api/safety/reports`, {
+  const response = await fetch(`${getApiBaseUrl()}/api/safety/reports`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -96,7 +97,7 @@ export async function getNearbyReports(
   });
 
   const response = await fetch(
-    `${API_BASE_URL}/api/safety/reports/nearby?${params}`
+    `${getApiBaseUrl()}/api/safety/reports/nearby?${params}`
   );
 
   if (!response.ok) {
@@ -123,7 +124,7 @@ export async function getSafetyHeatmap(bounds: {
   });
 
   const response = await fetch(
-    `${API_BASE_URL}/api/safety/heatmap?${params}`
+    `${getApiBaseUrl()}/api/safety/heatmap?${params}`
   );
 
   if (!response.ok) {
@@ -140,10 +141,10 @@ export async function voteOnReport(
   reportId: string,
   voteType: 'upvote' | 'downvote' | 'helpful'
 ): Promise<void> {
-  const token = await AsyncStorage.getItem('@auth_token');
+  const token = await AsyncStorage.getItem('auth_token');
 
   const response = await fetch(
-    `${API_BASE_URL}/api/safety/reports/${reportId}/vote`,
+    `${getApiBaseUrl()}/api/safety/reports/${reportId}/vote`,
     {
       method: 'POST',
       headers: {
@@ -163,9 +164,9 @@ export async function voteOnReport(
  * Get user's safety reports
  */
 export async function getUserReports(): Promise<SafetyReport[]> {
-  const token = await AsyncStorage.getItem('@auth_token');
+  const token = await AsyncStorage.getItem('auth_token');
 
-  const response = await fetch(`${API_BASE_URL}/api/safety/reports/user`, {
+  const response = await fetch(`${getApiBaseUrl()}/api/safety/reports/user`, {
     headers: {
       ...(token && { 'Authorization': `Bearer ${token}` })
     }

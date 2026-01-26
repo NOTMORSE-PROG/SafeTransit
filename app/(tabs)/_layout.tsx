@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Lightbulb, UserCircle, Bell, LucideIcon } from 'lucide-react-native';
 import PagerView from 'react-native-pager-view';
 import { MOCK_NOTIFICATIONS, getUnreadCount } from '../../services/notifications';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 import HomeScreen from './index';
 import CommunityScreen from './community';
@@ -79,7 +80,9 @@ export default function TabsLayout() {
       >
         {tabs.map((tab, index) => (
           <View key={String(index)} style={styles.page}>
-            <tab.screen />
+            <ErrorBoundary>
+              <tab.screen />
+            </ErrorBoundary>
           </View>
         ))}
       </PagerView>

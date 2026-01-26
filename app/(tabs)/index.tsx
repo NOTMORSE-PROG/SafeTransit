@@ -1,9 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
-import MapView, { Polygon, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
-import * as Location from 'expo-location';
-import * as Haptics from 'expo-haptics';
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
+import { useRouter } from "expo-router";
+import MapView, { Region, PROVIDER_DEFAULT } from "react-native-maps";
+import * as Location from "expo-location";
+import * as Haptics from "expo-haptics";
 import Animated, {
   FadeIn,
   FadeInDown,
@@ -12,109 +18,92 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   runOnJS,
-} from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+} from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   AlertOctagon,
   ShieldCheck,
   Cloud,
   Search,
   Lightbulb,
-  AlertTriangle
-} from 'lucide-react-native';
-import EmergencyAlertModal from '../../components/EmergencyAlertModal';
-import ProtectionEnabledModal from '../../components/ProtectionEnabledModal';
+  AlertTriangle,
+} from "lucide-react-native";
+import EmergencyAlertModal from "../../components/EmergencyAlertModal";
+import ProtectionEnabledModal from "../../components/ProtectionEnabledModal";
+import TipMarker from "../../components/map/TipMarker";
+import TipCluster from "../../components/map/TipCluster";
+import TipDetailCard from "../../components/map/TipDetailCard";
+import FilterChips, { FilterState } from "../../components/map/FilterChips";
+import SafetyHeatmap from "../../components/map/SafetyHeatmap";
+import SafetyStats from "../../components/map/SafetyStats";
+import { MarkerSkeletonGrid } from "../../components/map/MarkerSkeleton";
+import { Tip, fetchTips, cleanupExpiredCache } from "../../services/tipsService";
+import { HeatmapZone } from "../../services/heatmapCacheService";
+import {
+  createTipCluster,
+  getClustersForViewport,
+  isCluster,
+  calculateZoomFromDelta,
+  clearClusteringCaches,
+  performCacheCleanup,
+  TipCluster as TipClusterType,
+} from "../../services/clusteringService";
+import Supercluster from "supercluster";
+import { colors } from "../../constants/theme";
+import { useAuth } from "../../contexts/AuthContext";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 const SHEET_MIN_HEIGHT = 280;
 const SHEET_MAX_HEIGHT = 380;
 const SHEET_PEEK_HEIGHT = 40; // Height when collapsed (just showing handle)
 
-interface TipData {
-  id: string;
-  latitude: number;
-  longitude: number;
-  title: string;
-  message: string;
-  category: string;
-}
+const INITIAL_REGION = {
+  latitude: 14.5995, // Manila/Makati center
+  longitude: 120.9842,
+  latitudeDelta: 0.15, // Wider view to show more of Metro Manila
+  longitudeDelta: 0.15,
+};
 
-// Mock data for demonstration
-const MOCK_ZONES = [
-  {
-    id: '1',
-    coordinates: [
-      { latitude: 14.5995, longitude: 120.9842 },
-      { latitude: 14.5985, longitude: 120.9852 },
-      { latitude: 14.5975, longitude: 120.9842 },
-      { latitude: 14.5985, longitude: 120.9832 },
-    ],
-    risk_level: 3,
-    name: 'High Risk Area'
-  },
-  {
-    id: '2',
-    coordinates: [
-      { latitude: 14.6005, longitude: 120.9862 },
-      { latitude: 14.5995, longitude: 120.9872 },
-      { latitude: 14.5985, longitude: 120.9862 },
-      { latitude: 14.5995, longitude: 120.9852 },
-    ],
-    risk_level: 2,
-    name: 'Caution Area'
-  },
-  {
-    id: '3',
-    coordinates: [
-      { latitude: 14.6015, longitude: 120.9832 },
-      { latitude: 14.6005, longitude: 120.9842 },
-      { latitude: 14.5995, longitude: 120.9832 },
-      { latitude: 14.6005, longitude: 120.9822 },
-    ],
-    risk_level: 1,
-    name: 'Safe Area'
-  }
-];
-
-const MOCK_TIPS = [
-  {
-    id: '1',
-    latitude: 14.5995,
-    longitude: 120.9842,
-    title: 'Well-Lit Path',
-    message: 'Use Exit 3 after train - well-lit and has security',
-    category: 'lighting'
-  },
-  {
-    id: '2',
-    latitude: 14.6005,
-    longitude: 120.9862,
-    title: 'Caution',
-    message: 'Avoid this area after 8 PM',
-    category: 'safety'
-  }
-];
+// Removed old TipData interface - now using Tip from tipsService
 
 export default function Home() {
   const router = useRouter();
+  const { user: _user, token: _token, isLoading: _authLoading } = useAuth();
   const mapRef = useRef<MapView>(null);
   const [isProtectionOn, setIsProtectionOn] = useState(true);
-  const [_currentLocation, setCurrentLocation] = useState<Location.LocationObject | null>(null);
-  const [selectedTip, setSelectedTip] = useState<TipData | null>(null);
+  const [_currentLocation, setCurrentLocation] =
+    useState<Location.LocationObject | null>(null);
+  const [selectedTip, setSelectedTip] = useState<Tip | null>(null);
   const [_isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [isEmergencyModalVisible, setIsEmergencyModalVisible] = useState(false);
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
-  const [isProtectionModalVisible, setIsProtectionModalVisible] = useState(false);
+  const [isProtectionModalVisible, setIsProtectionModalVisible] =
+    useState(false);
+
+  // Tips & Clustering State
+  const [tips, setTips] = useState<Tip[]>([]);
+  const [isLoadingTips, setIsLoadingTips] = useState(false);
+  const [tipsError, setTipsError] = useState<string | null>(null);
+  const [mapRegion, setMapRegion] = useState<Region>(INITIAL_REGION);
+  const clusterRef = useRef<Supercluster | null>(null);
+
+  // Filter State
+  const [filters, setFilters] = useState<FilterState>({
+    categories: [],
+    radius: 5000,
+    timeRelevance: null,
+  });
+
+  // Heatmap State
+  const [showHeatmap, setShowHeatmap] = useState(false);
+  const [heatmapZones, setHeatmapZones] = useState<HeatmapZone[]>([]);
+
+  // UI State
+  const [showStats, _setShowStats] = useState(true);
 
   const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
   const startY = useSharedValue(0);
-
-  const INITIAL_REGION = {
-    latitude: 14.5995,
-    longitude: 120.9842,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  };
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const panGesture = Gesture.Pan()
     .onStart(() => {
@@ -154,51 +143,201 @@ export default function Home() {
     transform: [{ translateY: translateY.value }],
   }));
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
   const getCurrentLocation = async () => {
     try {
       const location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location);
     } catch (error) {
-      console.error('Error getting location:', error);
+      console.error("Error getting location:", error);
     }
   };
 
-  const getZoneColor = (riskLevel: number) => {
-    switch (riskLevel) {
-      case 3:
-        return 'rgba(239, 68, 68, 0.2)'; // Danger - lighter fill
-      case 2:
-        return 'rgba(245, 158, 11, 0.2)'; // Caution - lighter fill
-      case 1:
-        return 'rgba(34, 197, 94, 0.15)'; // Safe - lighter fill
-      default:
-        return 'rgba(156, 163, 175, 0.2)';
+  // Use refs to track latest values without causing re-renders
+  const filtersRef = useRef(filters);
+  const mapRegionRef = useRef(mapRegion);
+
+  useEffect(() => {
+    filtersRef.current = filters;
+    mapRegionRef.current = mapRegion;
+  }, [filters, mapRegion]);
+
+  const loadTips = useCallback(async () => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    try {
+      setIsLoadingTips(true);
+      setTipsError(null);
+
+      // Use refs to get latest values
+      const currentFilters = filtersRef.current;
+      const currentRegion = mapRegionRef.current;
+
+      const fetchedTips = await fetchTips({
+        lat: currentRegion.latitude,
+        lon: currentRegion.longitude,
+        radius: currentFilters.radius,
+        category:
+          currentFilters.categories.length === 1 ? currentFilters.categories[0] : undefined,
+        time: currentFilters.timeRelevance || undefined,
+      });
+
+      // Only update state if component is still mounted
+      if (!isMounted || controller.signal.aborted) return;
+
+      // Clear clustering caches when tips data changes
+      clearClusteringCaches();
+      setTips(fetchedTips);
+      console.log(`[Home] Successfully loaded ${fetchedTips.length} tips from API`);
+    } catch (error: unknown) {
+      // Ignore aborted requests
+      if (controller.signal.aborted) return;
+
+      if (!isMounted) return;
+
+      console.error("Error loading tips:", error);
+      // Display user-friendly error message
+      const err = error as { code?: string };
+      if (err.code === "NETWORK_ERROR") {
+        setTipsError(
+          "Unable to connect. Please check your internet connection.",
+        );
+      } else if (err.code === "AUTH_ERROR") {
+        setTipsError("Authentication failed. Please sign in again.");
+      } else {
+        setTipsError("Failed to load safety tips. Please try again.");
+      }
+    } finally {
+      if (isMounted) {
+        setIsLoadingTips(false);
+      }
     }
-  };
 
-  const getZoneStrokeColor = (riskLevel: number) => {
-    switch (riskLevel) {
-      case 3:
-        return '#EF4444'; // Danger red
-      case 2:
-        return '#F59E0B'; // Caution amber
-      case 1:
-        return '#22C55E'; // Safe green
-      default:
-        return '#9CA3AF';
+    // Return cleanup function
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []); // Empty deps - stable reference
+
+  // Initial load on mount
+  useEffect(() => {
+    getCurrentLocation();
+    loadTips();
+  }, [loadTips]);
+
+  // Create cluster when tips change
+  useEffect(() => {
+    if (tips.length > 0) {
+      clusterRef.current = createTipCluster(tips);
     }
+  }, [tips]);
+
+  // Request ID tracking to prevent race conditions
+  const requestIdRef = useRef(0);
+
+  // Consolidated debounced reload function
+  const triggerTipReload = useCallback(() => {
+    requestIdRef.current++;
+    const currentRequestId = requestIdRef.current;
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(async () => {
+      // Only execute if still the latest request
+      if (currentRequestId === requestIdRef.current) {
+        await loadTips();
+      }
+    }, 500);
+  }, [loadTips]);
+
+  // Reload tips when filters change
+  useEffect(() => {
+    triggerTipReload();
+  }, [filters, triggerTipReload]);
+
+  // Debounced map region change
+  const handleRegionChangeComplete = useCallback((region: Region) => {
+    // Only update if region changed significantly (prevent jitter)
+    const latChanged = Math.abs(region.latitude - mapRegion.latitude) > 0.0001;
+    const lonChanged = Math.abs(region.longitude - mapRegion.longitude) > 0.0001;
+    const deltaChanged = Math.abs(region.latitudeDelta - mapRegion.latitudeDelta) > 0.0001;
+
+    if (latChanged || lonChanged || deltaChanged) {
+      setMapRegion(region);
+      triggerTipReload();
+    }
+  }, [mapRegion, triggerTipReload]);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Periodic cache cleanup to prevent memory leaks
+  useEffect(() => {
+    const cleanupInterval = setInterval(() => {
+      performCacheCleanup(); // Clustering cache cleanup
+      cleanupExpiredCache();  // AsyncStorage cache cleanup
+    }, 60000); // Every 60 seconds
+
+    return () => clearInterval(cleanupInterval);
+  }, []);
+
+  // Memoize bounds calculation
+  const bounds = useMemo(
+    () => ({
+      west: mapRegion.longitude - mapRegion.longitudeDelta / 2,
+      south: mapRegion.latitude - mapRegion.latitudeDelta / 2,
+      east: mapRegion.longitude + mapRegion.longitudeDelta / 2,
+      north: mapRegion.latitude + mapRegion.latitudeDelta / 2,
+    }),
+    [
+      mapRegion.latitude,
+      mapRegion.longitude,
+      mapRegion.latitudeDelta,
+      mapRegion.longitudeDelta,
+    ],
+  );
+
+  // Memoize zoom calculation
+  const zoom = useMemo(
+    () => calculateZoomFromDelta(mapRegion.latitudeDelta),
+    [mapRegion.latitudeDelta],
+  );
+
+  // Calculate clusters for current viewport
+  const clustersOrPoints = useMemo(() => {
+    if (!clusterRef.current || tips.length === 0) {
+      console.log('[Home] No clusters:', { hasClusterRef: !!clusterRef.current, tipsCount: tips.length });
+      return [];
+    }
+    const clusters = getClustersForViewport(clusterRef.current, bounds, zoom);
+    console.log(`[Home] Calculated ${clusters.length} clusters/points from ${tips.length} tips`);
+    return clusters;
+  }, [tips, bounds, zoom]);
+
+  const handleTipPress = (tip: Tip) => {
+    setSelectedTip(tip);
   };
 
-  const getZoneStrokeWidth = (riskLevel: number) => {
-    return riskLevel === 3 ? 3 : 2.5; // Thicker for danger
-  };
-
-  const getZoneStrokeDash = (riskLevel: number) => {
-    return riskLevel === 2 ? [8, 4] : undefined; // Dashed for caution
+  const handleClusterPress = (cluster: TipClusterType) => {
+    // Zoom into the cluster
+    if (mapRef.current) {
+      const [longitude, latitude] = cluster.geometry.coordinates;
+      mapRef.current.animateToRegion({
+        latitude,
+        longitude,
+        latitudeDelta: mapRegion.latitudeDelta / 2,
+        longitudeDelta: mapRegion.longitudeDelta / 2,
+      });
+    }
   };
 
   const handleToggleProtection = async () => {
@@ -216,7 +355,7 @@ export default function Home() {
   };
 
   const handleQuickExit = () => {
-    router.push('/quick-exit');
+    router.push("/quick-exit");
   };
 
   return (
@@ -227,42 +366,94 @@ export default function Home() {
         provider={PROVIDER_DEFAULT}
         style={{ width, height }}
         initialRegion={INITIAL_REGION}
+        onRegionChangeComplete={handleRegionChangeComplete}
         showsUserLocation
         showsMyLocationButton={false}
         showsCompass={false}
+        mapPadding={{ top: 0, right: 0, bottom: 0, left: 0 }}
       >
-        {/* Safety Zones */}
-        {MOCK_ZONES.map((zone) => (
+        {/* Safety Zones - Temporarily disabled to isolate crash */}
+        {/* {MOCK_ZONES.map((zone) => (
           <Polygon
             key={zone.id}
             coordinates={zone.coordinates}
             fillColor={getZoneColor(zone.risk_level)}
             strokeColor={getZoneStrokeColor(zone.risk_level)}
             strokeWidth={getZoneStrokeWidth(zone.risk_level)}
-            lineDashPattern={getZoneStrokeDash(zone.risk_level)}
           />
-        ))}
+        ))} */}
 
-        {/* Community Tips */}
-        {MOCK_TIPS.map((tip) => (
-          <Marker
-            key={tip.id}
-            coordinate={{ latitude: tip.latitude, longitude: tip.longitude }}
-            onPress={() => setSelectedTip(tip)}
-            accessible={true}
-            accessibilityLabel={`${tip.title} - ${tip.category} tip`}
-            accessibilityHint="Double tap to read full tip"
-          >
-            <View className="bg-white rounded-full p-2 shadow-lg">
-              {tip.category === 'lighting' ? (
-                <Lightbulb color="#f59e0b" size={20} strokeWidth={2} />
-              ) : (
-                <AlertTriangle color="#ef4444" size={20} strokeWidth={2} />
-              )}
-            </View>
-          </Marker>
-        ))}
+        {/* Safety Heatmap Overlay - Now enabled with proper API integration and caching */}
+        <SafetyHeatmap
+          region={mapRegion}
+          visible={showHeatmap}
+          onZonesChange={setHeatmapZones}
+        />
+
+        {/* Loading Skeletons - Show during initial load */}
+        {isLoadingTips && tips.length === 0 && (
+          <MarkerSkeletonGrid region={mapRegion} count={12} />
+        )}
+
+        {/* Tips with Clustering */}
+        {clustersOrPoints.map((item) => {
+          if (isCluster(item)) {
+            return (
+              <TipCluster
+                key={`cluster-${item.properties.cluster_id}`}
+                cluster={item}
+                onPress={handleClusterPress}
+              />
+            );
+          } else {
+            return (
+              <TipMarker
+                key={`tip-${item.properties.id}`}
+                tip={item.properties}
+                onPress={handleTipPress}
+              />
+            );
+          }
+        })}
       </MapView>
+
+      {/* Error Message */}
+      {tipsError && !isLoadingTips && (
+        <Animated.View
+          entering={FadeInDown.duration(300)}
+          className="absolute top-32 left-6 right-6"
+        >
+          <View className="bg-danger-50 border-2 border-danger-500 rounded-xl px-4 py-3 shadow-lg">
+            <View className="flex-row items-start">
+              <AlertTriangle
+                size={20}
+                color={colors.danger[500]}
+                strokeWidth={2}
+              />
+              <View className="flex-1 ml-3">
+                <Text className="text-danger-700 font-semibold text-sm mb-1">
+                  Error Loading Tips
+                </Text>
+                <Text className="text-danger-600 text-xs">{tipsError}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={loadTips}
+                className="ml-2 bg-danger-600 px-3 py-1.5 rounded-lg"
+                activeOpacity={0.8}
+              >
+                <Text className="text-white text-xs font-semibold">Retry</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Animated.View>
+      )}
+
+      {/* Safety Stats Widget */}
+      {showStats && tips.length > 0 && !tipsError && (
+        <Animated.View entering={FadeIn.duration(300).delay(200)}>
+          <SafetyStats tips={tips} heatmapZones={heatmapZones} />
+        </Animated.View>
+      )}
 
       {/* Simple Top Bar */}
       <Animated.View
@@ -270,11 +461,13 @@ export default function Home() {
         className="absolute top-12 left-6 right-6 flex-row items-center justify-between"
       >
         {/* Status Badge */}
-        <View className={`px-4 py-2 rounded-full shadow-lg ${isProtectionOn ? 'bg-primary-600' : 'bg-neutral-500'}`}>
+        <View
+          className={`px-4 py-2 rounded-full shadow-lg ${isProtectionOn ? "bg-primary-600" : "bg-neutral-500"}`}
+        >
           <View className="flex-row items-center">
             <ShieldCheck color="#ffffff" size={16} strokeWidth={2.5} />
             <Text className="text-white text-sm font-semibold ml-2">
-              {isProtectionOn ? 'Protected' : 'Unprotected'}
+              {isProtectionOn ? "Protected" : "Unprotected"}
             </Text>
           </View>
         </View>
@@ -288,25 +481,64 @@ export default function Home() {
           accessibilityLabel="Quick exit to weather disguise"
           accessibilityRole="button"
         >
-          <Cloud color="#60a5fa" size={24} strokeWidth={2} />
+          <Cloud color={colors.primary[400]} size={24} strokeWidth={2} />
         </TouchableOpacity>
       </Animated.View>
 
       {/* Legend */}
-      <View className="absolute top-24 right-6 bg-white/95 rounded-xl p-3 shadow-md" style={{ marginTop: 40 }}>
+      <View
+        className="absolute top-24 right-6 bg-white/95 rounded-xl p-3 shadow-md"
+        style={{ marginTop: 40 }}
+      >
         <View className="flex-row items-center mb-1.5">
-          <View className="w-4 h-3 rounded bg-safe-500 mr-2" style={{ borderWidth: 1, borderColor: '#22C55E' }} />
+          <View
+            className="w-4 h-3 rounded bg-safe-500 mr-2"
+            style={{ borderWidth: 1, borderColor: colors.safe[500] }}
+          />
           <Text className="text-xs text-neutral-700">Safe</Text>
         </View>
         <View className="flex-row items-center mb-1.5">
-          <View className="w-4 h-3 rounded bg-caution-500/20 mr-2" style={{ borderWidth: 1, borderColor: '#F59E0B', borderStyle: 'dashed' }} />
+          <View
+            className="w-4 h-3 rounded bg-caution-500/20 mr-2"
+            style={{
+              borderWidth: 1,
+              borderColor: colors.caution[500],
+              borderStyle: "dashed",
+            }}
+          />
           <Text className="text-xs text-neutral-700">Caution</Text>
         </View>
         <View className="flex-row items-center">
-          <View className="w-4 h-3 rounded bg-danger-500 mr-2" style={{ borderWidth: 1.5, borderColor: '#EF4444' }} />
+          <View
+            className="w-4 h-3 rounded bg-danger-500 mr-2"
+            style={{ borderWidth: 1.5, borderColor: colors.danger[500] }}
+          />
           <Text className="text-xs text-neutral-700">Risk</Text>
         </View>
       </View>
+
+      {/* Heatmap Toggle */}
+      <TouchableOpacity
+        onPress={() => {
+          setShowHeatmap(!showHeatmap);
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }}
+        className="absolute top-24 right-6 bg-white/95 rounded-xl px-3 py-2 shadow-md"
+        style={{ marginTop: 160 }}
+        activeOpacity={0.7}
+      >
+        <Text
+          className="text-xs font-semibold"
+          style={{
+            color: showHeatmap ? colors.primary[600] : colors.neutral[700],
+          }}
+        >
+          {showHeatmap ? "✓ " : ""}Heatmap
+        </Text>
+      </TouchableOpacity>
+
+      {/* Filter Chips */}
+      <FilterChips filters={filters} onFiltersChange={setFilters} />
 
       {/* Bottom Sheet */}
       <Animated.View
@@ -316,9 +548,9 @@ export default function Home() {
           {
             bottom: 0,
             paddingBottom: 80,
-            height: SHEET_MAX_HEIGHT
+            height: SHEET_MAX_HEIGHT,
           },
-          sheetStyle
+          sheetStyle,
         ]}
       >
         <View className="px-6 pt-6">
@@ -326,12 +558,14 @@ export default function Home() {
           <GestureDetector gesture={panGesture}>
             <Animated.View className="items-center py-3 mb-2">
               <View className="w-16 h-1.5 bg-neutral-400 rounded-full" />
-              <Text style={{
-                fontSize: 11,
-                color: '#9ca3af',
-                marginTop: 6,
-                opacity: 0.7,
-              }}>
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: "#9ca3af",
+                  marginTop: 6,
+                  opacity: 0.7,
+                }}
+              >
                 Drag to expand or collapse
               </Text>
             </Animated.View>
@@ -340,7 +574,7 @@ export default function Home() {
           {/* Protection Toggle */}
           <TouchableOpacity
             onPress={handleToggleProtection}
-            className={`rounded-2xl p-4 mb-4 ${isProtectionOn ? 'bg-primary-50 border-2 border-primary-600' : 'bg-neutral-100 border-2 border-neutral-300'}`}
+            className={`rounded-2xl p-4 mb-4 ${isProtectionOn ? "bg-primary-50 border-2 border-primary-600" : "bg-neutral-100 border-2 border-neutral-300"}`}
             activeOpacity={0.7}
             accessible={true}
             accessibilityLabel="Background protection toggle"
@@ -348,27 +582,37 @@ export default function Home() {
           >
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center flex-1">
-                <View className={`w-12 h-12 rounded-full items-center justify-center mr-3 ${isProtectionOn ? 'bg-primary-600' : 'bg-neutral-400'}`}>
+                <View
+                  className={`w-12 h-12 rounded-full items-center justify-center mr-3 ${isProtectionOn ? "bg-primary-600" : "bg-neutral-400"}`}
+                >
                   <ShieldCheck color="#ffffff" size={24} strokeWidth={2} />
                 </View>
                 <View className="flex-1">
                   <Text className="text-base font-bold text-neutral-900 mb-1">
                     Background Protection
                   </Text>
-                  <Text className={`text-xs ${isProtectionOn ? 'text-primary-700' : 'text-neutral-500'}`}>
-                    {isProtectionOn ? 'Monitoring your location' : 'Tap to enable protection'}
+                  <Text
+                    className={`text-xs ${isProtectionOn ? "text-primary-700" : "text-neutral-500"}`}
+                  >
+                    {isProtectionOn
+                      ? "Monitoring your location"
+                      : "Tap to enable protection"}
                   </Text>
                 </View>
               </View>
-              <View className={`w-12 h-7 rounded-full justify-center ${isProtectionOn ? 'bg-primary-600' : 'bg-neutral-300'}`}>
-                <View className={`w-5 h-5 rounded-full bg-white shadow ${isProtectionOn ? 'ml-6' : 'ml-1'}`} />
+              <View
+                className={`w-12 h-7 rounded-full justify-center ${isProtectionOn ? "bg-primary-600" : "bg-neutral-300"}`}
+              >
+                <View
+                  className={`w-5 h-5 rounded-full bg-white shadow ${isProtectionOn ? "ml-6" : "ml-1"}`}
+                />
               </View>
             </View>
           </TouchableOpacity>
 
           {/* Search Destination */}
           <TouchableOpacity
-            onPress={() => router.push('/route-planning')}
+            onPress={() => router.push("/route-planning")}
             className="bg-neutral-100 rounded-2xl p-4 mb-4"
             activeOpacity={0.7}
             accessible={true}
@@ -388,7 +632,7 @@ export default function Home() {
 
           {/* Quick Actions */}
           <TouchableOpacity
-            onPress={() => router.push('/add-tip')}
+            onPress={() => router.push("/add-tip")}
             className="bg-primary-600 rounded-2xl py-4"
             activeOpacity={0.8}
             accessible={true}
@@ -397,50 +641,25 @@ export default function Home() {
           >
             <View className="items-center">
               <Lightbulb color="#ffffff" size={28} strokeWidth={2} />
-              <Text className="text-white font-bold text-sm mt-1">Add Safety Tip</Text>
+              <Text className="text-white font-bold text-sm mt-1">
+                Add Safety Tip
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
       </Animated.View>
 
-      {/* Selected Tip Card */}
+      {/* Selected Tip Detail Card */}
       {selectedTip && (
         <Animated.View
           entering={SlideInUp.duration(400)}
-          className="absolute left-6 right-6"
+          className="absolute left-0 right-0"
           style={{ bottom: height * 0.38 }}
         >
-          <View className="bg-white rounded-2xl p-4 shadow-2xl border border-neutral-100">
-            <View className="flex-row items-start justify-between">
-              <View className="flex-1 mr-2">
-                <View className="flex-row items-center mb-2">
-                  <View className="mr-2">
-                    {selectedTip.category === 'lighting' ? (
-                      <Lightbulb color="#f59e0b" size={20} strokeWidth={2} />
-                    ) : (
-                      <AlertTriangle color="#ef4444" size={20} strokeWidth={2} />
-                    )}
-                  </View>
-                  <Text className="text-base font-bold text-neutral-900 flex-1">
-                    {selectedTip.title}
-                  </Text>
-                </View>
-                <Text className="text-sm text-neutral-600 leading-5">
-                  {selectedTip.message}
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => setSelectedTip(null)}
-                className="bg-neutral-100 rounded-full w-8 h-8 items-center justify-center"
-                activeOpacity={0.7}
-                accessible={true}
-                accessibilityLabel="Close tip"
-                accessibilityRole="button"
-              >
-                <Text className="text-neutral-600 text-2xl font-light">×</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <TipDetailCard
+            tip={selectedTip}
+            onClose={() => setSelectedTip(null)}
+          />
         </Animated.View>
       )}
 
@@ -453,13 +672,15 @@ export default function Home() {
         <TouchableOpacity
           onLongPress={async () => {
             await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+            await Haptics.notificationAsync(
+              Haptics.NotificationFeedbackType.Warning,
+            );
             handlePanicPress();
           }}
           onPress={() => setIsConfirmModalVisible(true)}
           className="w-18 h-18 rounded-full bg-danger-600 items-center justify-center"
           style={{
-            shadowColor: '#dc2626',
+            shadowColor: "#dc2626",
             shadowOffset: { width: 0, height: 12 },
             shadowOpacity: 0.25,
             shadowRadius: 16,
