@@ -5,6 +5,7 @@ import type { Location, TipCategory, TimeRelevance } from '../../services/types/
 import { rankSearchResults } from '../../services/searchRanking';
 import { verifyToken } from '../../services/auth/jwt';
 
+
 // Nominatim API Types
 interface NominatimPlace {
   place_id: number;
@@ -55,10 +56,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
   );
 
   if (req.method === 'OPTIONS') {
@@ -66,12 +67,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  const { q, lat, lon, mode, radius, category, time, bounds } = req.query;
+
+
+
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
-
-  const { q, lat, lon, mode, radius, category, time, bounds } = req.query;
 
   // Mode 1: Get safety heatmap zones for viewport
   if (mode === 'heatmap') {
