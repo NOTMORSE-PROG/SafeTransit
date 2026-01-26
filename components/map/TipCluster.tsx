@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { TipCluster as TipClusterType } from '@/services/clusteringService';
@@ -10,6 +10,14 @@ interface TipClusterProps {
 }
 
 const TipCluster: React.FC<TipClusterProps> = ({ cluster, onPress }) => {
+  const [tracksViewChanges, setTracksViewChanges] = useState(true);
+
+  // After initial render, disable tracking for performance
+  useEffect(() => {
+    const timer = setTimeout(() => setTracksViewChanges(false), 200);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Critical: Validate cluster data to prevent crashes
   if (!cluster?.properties?.point_count || !cluster?.geometry?.coordinates) {
     console.warn('[TipCluster] Invalid cluster data:', cluster);
@@ -42,7 +50,7 @@ const TipCluster: React.FC<TipClusterProps> = ({ cluster, onPress }) => {
         longitude,
       }}
       onPress={() => onPress(cluster)}
-      tracksViewChanges={false} // Performance: prevent unnecessary re-renders
+      tracksViewChanges={tracksViewChanges}
       accessible={true}
       accessibilityLabel={`Cluster of ${point_count} tips`}
       accessibilityHint="Double tap to expand cluster"

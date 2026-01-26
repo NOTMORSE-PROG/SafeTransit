@@ -127,7 +127,7 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
   const severityInfo = getSeverityInfo(tip.severity);
 
   return (
-    <View className="bg-white rounded-t-3xl shadow-2xl" style={{ minHeight: 200, maxHeight: 450 }}>
+    <View className="bg-white rounded-3xl shadow-2xl" style={{ maxHeight: '85%', flexShrink: 1 }}>
       {/* Severity Banner */}
       {(tip.severity === 'critical' || tip.severity === 'high') && (
         <View
@@ -178,7 +178,7 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="px-4 pb-4" showsVerticalScrollIndicator={false}>
+      <ScrollView className="px-4 pb-4" showsVerticalScrollIndicator={true} style={{ flexGrow: 0, flexShrink: 1 }}>
         {/* Verification Badge */}
         {tip.verified && (
           <View className="flex-row items-center mb-3 bg-green-50 px-3 py-2 rounded-lg">

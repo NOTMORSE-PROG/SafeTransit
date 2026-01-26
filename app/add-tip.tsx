@@ -102,9 +102,28 @@ export default function AddTip() {
       }
 
       const location = await Location.getCurrentPositionAsync({});
-      setLatitude(location.coords.latitude);
-      setLongitude(location.coords.longitude);
-      setLocationName(`${location.coords.latitude.toFixed(4)}, ${location.coords.longitude.toFixed(4)}`);
+      const { latitude: lat, longitude: lon } = location.coords;
+      setLatitude(lat);
+      setLongitude(lon);
+
+      // Get place name using reverse geocoding
+      try {
+        const results = await Location.reverseGeocodeAsync({ latitude: lat, longitude: lon });
+        if (results && results.length > 0) {
+          const place = results[0];
+          const parts = [
+            place.street,
+            place.district,
+            place.city || place.subregion,
+          ].filter(Boolean);
+          setLocationName(parts.length > 0 ? parts.join(', ') : `${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+        } else {
+          setLocationName(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+        }
+      } catch (geoError) {
+        console.error('Error reverse geocoding:', geoError);
+        setLocationName(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+      }
     } catch (error) {
       console.error('Error getting location:', error);
       setLocationName('Tap to select location');

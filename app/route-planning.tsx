@@ -22,8 +22,9 @@ import {
 import LocationSearchInput from '../components/LocationSearchInput';
 import NavigationConfirmModal from '../components/NavigationConfirmModal';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
-import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/osrm';
+import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/locationIQRouting';
 import { analyzeRouteSafety, getSafetyRating } from '../services/routeSafetyService';
+import { familyLocationService, FamilyMember } from '../services/familyLocationService';
 
 const TRAVEL_MODES = [
   { id: 'walk', label: 'Walk', icon: 'PersonStanding' },
@@ -60,11 +61,25 @@ export default function RoutePlanning() {
   const [mapRegion, setMapRegion] = useState<Region>(MANILA_REGION);
   const [showNavigationModal, setShowNavigationModal] = useState(false);
 
-  // Get current location on mount
+  // Family locations
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
+  const [showFamilyDestinations, setShowFamilyDestinations] = useState(false);
+
+  // Get current location and family members on mount
   useEffect(() => {
     getCurrentLocation();
+    loadFamilyMembers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loadFamilyMembers = async () => {
+    try {
+      const members = await familyLocationService.getFamilyLocations();
+      setFamilyMembers(members);
+    } catch (error) {
+      console.error('Error loading family members:', error);
+    }
+  };
 
   // Fetch routes when both locations and mode are selected
   useEffect(() => {
@@ -131,9 +146,13 @@ export default function RoutePlanning() {
         longitude: endLocation.longitude,
       };
 
-      // Get routes for all modes
+      // Get routes using LocationIQ
       const allModeRoutes = await getMultiModalRoutes(start, end, [selectedMode]);
       const modeRoutes = allModeRoutes.get(selectedMode) || [];
+
+      if (modeRoutes.length === 0) {
+        throw new Error('No routes found');
+      }
 
       // Add real safety assessment
       type RouteWithSafety = Route & {
@@ -198,7 +217,13 @@ export default function RoutePlanning() {
       });
     } catch (error) {
       console.error('Error fetching routes:', error);
-      Alert.alert('Error', 'Failed to fetch routes. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch routes';
+      Alert.alert(
+        'Error',
+        errorMessage.includes('API key')
+          ? errorMessage
+          : 'Failed to fetch routes. Please check your internet connection and try again.',
+      );
     } finally {
       setIsLoadingRoutes(false);
     }
@@ -211,6 +236,25 @@ export default function RoutePlanning() {
 
   const handleEndLocationSelect = (location: LocationSearchResult) => {
     setEndLocation(location);
+    setShowFamilyDestinations(false);
+  };
+
+  const handleFamilyMemberSelect = async (member: FamilyMember) => {
+    try {
+      // Reverse geocode family member's location
+      const geocoded = await reverseGeocode(member.latitude, member.longitude);
+
+      if (geocoded) {
+        setEndLocation({
+          ...geocoded,
+          name: `${member.full_name}'s Location`,
+        });
+        setShowFamilyDestinations(false);
+      }
+    } catch (error) {
+      console.error('Error selecting family member:', error);
+      Alert.alert('Error', 'Failed to select family member location');
+    }
   };
 
   const handleUseCurrentLocation = () => {
@@ -331,6 +375,42 @@ export default function RoutePlanning() {
               icon="end"
               autoFocus={false}
             />
+
+            {/* Family Member Quick Destinations */}
+            {familyMembers.length > 0 && !endLocation && (
+              <View className="mt-3">
+                <TouchableOpacity
+                  onPress={() => setShowFamilyDestinations(!showFamilyDestinations)}
+                  className="flex-row items-center mb-2"
+                  activeOpacity={0.7}
+                >
+                  <MapPin color="#2563eb" size={14} strokeWidth={2} />
+                  <Text className="text-xs font-semibold text-primary-600 ml-1">
+                    Navigate to Family Member
+                  </Text>
+                </TouchableOpacity>
+
+                {showFamilyDestinations && (
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {familyMembers.map((member) => (
+                      <TouchableOpacity
+                        key={member.user_id}
+                        onPress={() => handleFamilyMemberSelect(member)}
+                        className="mr-2 bg-primary-50 border border-primary-200 rounded-xl px-3 py-2"
+                        activeOpacity={0.7}
+                      >
+                        <Text className="text-sm font-semibold text-primary-900">
+                          {member.full_name}
+                        </Text>
+                        <Text className="text-xs text-primary-600">
+                          {member.is_live ? '🟢 Live' : '⚫ Last known'}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                )}
+              </View>
+            )}
           </View>
 
           {/* Travel Mode Selector */}

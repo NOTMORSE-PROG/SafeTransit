@@ -1,5 +1,5 @@
-import React, { memo, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Animated } from 'react-native';
+import React, { memo } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { Lightbulb, AlertTriangle, Bus, Shield, Construction, CheckCircle } from 'lucide-react-native';
 import { Tip, TipCategory, getCategoryColor } from '@/services/tipsService';
@@ -11,62 +11,11 @@ interface TipMarkerProps {
 }
 
 const TipMarker: React.FC<TipMarkerProps> = ({ tip, onPress }) => {
-  // Pulsing animation for critical tips
-  // Hooks must be called before any early returns
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    // Fade in animation on mount
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      tension: 50,
-      friction: 3,
-      useNativeDriver: true,
-    }).start();
-
-    // Pulsing animation for critical severity
-    if (tip?.severity === 'critical') {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.15,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ])
-      ).start();
-    }
-  }, [tip?.severity, pulseAnim, scaleAnim]);
-
   // Critical: Validate tip data and coordinates to prevent crashes
   if (!tip || !isFinite(tip.latitude) || !isFinite(tip.longitude)) {
     console.warn('[TipMarker] Invalid tip or coordinates:', tip);
     return null;
   }
-
-  const handlePress = () => {
-    // Bounce animation on press
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 1.2,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    onPress(tip);
-  };
 
   const getCategoryIcon = (category: TipCategory, iconColor?: string) => {
     const color = iconColor || getCategoryColor(category);
@@ -138,22 +87,13 @@ const TipMarker: React.FC<TipMarkerProps> = ({ tip, onPress }) => {
         latitude: tip.latitude,
         longitude: tip.longitude,
       }}
-      onPress={handlePress}
-      tracksViewChanges={false} // Performance: prevent unnecessary re-renders
+      onPress={() => onPress(tip)}
+      tracksViewChanges={false}
       accessible={true}
       accessibilityLabel={`${tip.severity} severity - ${tip.title} - ${tip.category} tip`}
       accessibilityHint="Double tap to view tip details"
     >
-      <Animated.View
-        style={[
-          styles.markerWrapper,
-          {
-            transform: [
-              { scale: Animated.multiply(scaleAnim, pulseAnim) },
-            ],
-          },
-        ]}
-      >
+      <View style={styles.markerWrapper}>
         <View
           style={[
             styles.markerContainer,
@@ -183,7 +123,7 @@ const TipMarker: React.FC<TipMarkerProps> = ({ tip, onPress }) => {
             </View>
           )}
         </View>
-      </Animated.View>
+      </View>
     </Marker>
   );
 };

@@ -1,12 +1,7 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { View, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
+import ClusteredMapView from "react-native-map-clustering";
 import MapView, { Region, PROVIDER_DEFAULT } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Haptics from "expo-haptics";
@@ -27,28 +22,29 @@ import {
   Search,
   Lightbulb,
   AlertTriangle,
+  Navigation2,
 } from "lucide-react-native";
 import EmergencyAlertModal from "../../components/EmergencyAlertModal";
 import ProtectionEnabledModal from "../../components/ProtectionEnabledModal";
+import FamilyLocationRow from "../../components/FamilyLocationRow";
+import FamilyMemberModal from "../../components/FamilyMemberModal";
 import TipMarker from "../../components/map/TipMarker";
-import TipCluster from "../../components/map/TipCluster";
 import TipDetailCard from "../../components/map/TipDetailCard";
+import FamilyMemberMarker from "../../components/map/FamilyMemberMarker";
 import FilterChips, { FilterState } from "../../components/map/FilterChips";
 import SafetyHeatmap from "../../components/map/SafetyHeatmap";
 import SafetyStats from "../../components/map/SafetyStats";
 import { MarkerSkeletonGrid } from "../../components/map/MarkerSkeleton";
-import { Tip, fetchTips, cleanupExpiredCache } from "../../services/tipsService";
+import {
+  Tip,
+  fetchTips,
+  cleanupExpiredCache,
+} from "../../services/tipsService";
 import { HeatmapZone } from "../../services/heatmapCacheService";
 import {
-  createTipCluster,
-  getClustersForViewport,
-  isCluster,
-  calculateZoomFromDelta,
-  clearClusteringCaches,
-  performCacheCleanup,
-  TipCluster as TipClusterType,
-} from "../../services/clusteringService";
-import Supercluster from "supercluster";
+  FamilyMember,
+  familyLocationService,
+} from "../../services/familyLocationService";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -85,7 +81,6 @@ export default function Home() {
   const [isLoadingTips, setIsLoadingTips] = useState(false);
   const [tipsError, setTipsError] = useState<string | null>(null);
   const [mapRegion, setMapRegion] = useState<Region>(INITIAL_REGION);
-  const clusterRef = useRef<Supercluster | null>(null);
 
   // Filter State
   const [filters, setFilters] = useState<FilterState>({
@@ -97,6 +92,12 @@ export default function Home() {
   // Heatmap State
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [heatmapZones, setHeatmapZones] = useState<HeatmapZone[]>([]);
+
+  // Family Location State
+  const [selectedFamilyMember, setSelectedFamilyMember] =
+    useState<FamilyMember | null>(null);
+  const [isFamilyModalVisible, setIsFamilyModalVisible] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
 
   // UI State
   const [showStats, _setShowStats] = useState(true);
@@ -145,8 +146,34 @@ export default function Home() {
 
   const getCurrentLocation = async () => {
     try {
+      // Request location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("Location permission denied");
+        return;
+      }
+
       const location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location);
+
+      // Always zoom to user's location with medium zoom level
+      const userRegion: Region = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.05, // Medium zoom (~5km radius)
+        longitudeDelta: 0.05,
+      };
+
+      setMapRegion(userRegion);
+
+      // Animate map to user location
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(userRegion, 500);
+      }
+
+      console.log(
+        `[Home] Centered on user location: ${location.coords.latitude}, ${location.coords.longitude}`,
+      );
     } catch (error) {
       console.error("Error getting location:", error);
     }
@@ -178,17 +205,19 @@ export default function Home() {
         lon: currentRegion.longitude,
         radius: currentFilters.radius,
         category:
-          currentFilters.categories.length === 1 ? currentFilters.categories[0] : undefined,
+          currentFilters.categories.length === 1
+            ? currentFilters.categories[0]
+            : undefined,
         time: currentFilters.timeRelevance || undefined,
       });
 
       // Only update state if component is still mounted
       if (!isMounted || controller.signal.aborted) return;
 
-      // Clear clustering caches when tips data changes
-      clearClusteringCaches();
       setTips(fetchedTips);
-      console.log(`[Home] Successfully loaded ${fetchedTips.length} tips from API`);
+      console.log(
+        `[Home] Successfully loaded ${fetchedTips.length} tips from API`,
+      );
     } catch (error: unknown) {
       // Ignore aborted requests
       if (controller.signal.aborted) return;
@@ -220,18 +249,34 @@ export default function Home() {
     };
   }, []); // Empty deps - stable reference
 
-  // Initial load on mount
-  useEffect(() => {
-    getCurrentLocation();
-    loadTips();
-  }, [loadTips]);
-
-  // Create cluster when tips change
-  useEffect(() => {
-    if (tips.length > 0) {
-      clusterRef.current = createTipCluster(tips);
+  const loadFamilyMembers = useCallback(async () => {
+    try {
+      const members = await familyLocationService.getFamilyLocations();
+      setFamilyMembers(members);
+    } catch (error) {
+      console.error("Error loading family members:", error);
+      // Don't show error to user - family locations are optional
     }
-  }, [tips]);
+  }, []);
+
+  // Initial load on mount - get location first, then load tips and family
+  useEffect(() => {
+    const init = async () => {
+      await getCurrentLocation();
+      await loadTips();
+      await loadFamilyMembers();
+    };
+    init();
+  }, [loadTips, loadFamilyMembers]);
+
+  // Refresh family members every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadFamilyMembers();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [loadFamilyMembers]);
 
   // Request ID tracking to prevent race conditions
   const requestIdRef = useRef(0);
@@ -259,17 +304,23 @@ export default function Home() {
   }, [filters, triggerTipReload]);
 
   // Debounced map region change
-  const handleRegionChangeComplete = useCallback((region: Region) => {
-    // Only update if region changed significantly (prevent jitter)
-    const latChanged = Math.abs(region.latitude - mapRegion.latitude) > 0.0001;
-    const lonChanged = Math.abs(region.longitude - mapRegion.longitude) > 0.0001;
-    const deltaChanged = Math.abs(region.latitudeDelta - mapRegion.latitudeDelta) > 0.0001;
+  const handleRegionChangeComplete = useCallback(
+    (region: Region) => {
+      // Only update if region changed significantly (prevent jitter)
+      const latChanged =
+        Math.abs(region.latitude - mapRegion.latitude) > 0.0001;
+      const lonChanged =
+        Math.abs(region.longitude - mapRegion.longitude) > 0.0001;
+      const deltaChanged =
+        Math.abs(region.latitudeDelta - mapRegion.latitudeDelta) > 0.0001;
 
-    if (latChanged || lonChanged || deltaChanged) {
-      setMapRegion(region);
-      triggerTipReload();
-    }
-  }, [mapRegion, triggerTipReload]);
+      if (latChanged || lonChanged || deltaChanged) {
+        setMapRegion(region);
+        triggerTipReload();
+      }
+    },
+    [mapRegion, triggerTipReload],
+  );
 
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -283,61 +334,14 @@ export default function Home() {
   // Periodic cache cleanup to prevent memory leaks
   useEffect(() => {
     const cleanupInterval = setInterval(() => {
-      performCacheCleanup(); // Clustering cache cleanup
-      cleanupExpiredCache();  // AsyncStorage cache cleanup
+      cleanupExpiredCache(); // AsyncStorage cache cleanup
     }, 60000); // Every 60 seconds
 
     return () => clearInterval(cleanupInterval);
   }, []);
 
-  // Memoize bounds calculation
-  const bounds = useMemo(
-    () => ({
-      west: mapRegion.longitude - mapRegion.longitudeDelta / 2,
-      south: mapRegion.latitude - mapRegion.latitudeDelta / 2,
-      east: mapRegion.longitude + mapRegion.longitudeDelta / 2,
-      north: mapRegion.latitude + mapRegion.latitudeDelta / 2,
-    }),
-    [
-      mapRegion.latitude,
-      mapRegion.longitude,
-      mapRegion.latitudeDelta,
-      mapRegion.longitudeDelta,
-    ],
-  );
-
-  // Memoize zoom calculation
-  const zoom = useMemo(
-    () => calculateZoomFromDelta(mapRegion.latitudeDelta),
-    [mapRegion.latitudeDelta],
-  );
-
-  // Calculate clusters for current viewport
-  const clustersOrPoints = useMemo(() => {
-    if (!clusterRef.current || tips.length === 0) {
-      console.log('[Home] No clusters:', { hasClusterRef: !!clusterRef.current, tipsCount: tips.length });
-      return [];
-    }
-    const clusters = getClustersForViewport(clusterRef.current, bounds, zoom);
-    console.log(`[Home] Calculated ${clusters.length} clusters/points from ${tips.length} tips`);
-    return clusters;
-  }, [tips, bounds, zoom]);
-
   const handleTipPress = (tip: Tip) => {
     setSelectedTip(tip);
-  };
-
-  const handleClusterPress = (cluster: TipClusterType) => {
-    // Zoom into the cluster
-    if (mapRef.current) {
-      const [longitude, latitude] = cluster.geometry.coordinates;
-      mapRef.current.animateToRegion({
-        latitude,
-        longitude,
-        latitudeDelta: mapRegion.latitudeDelta / 2,
-        longitudeDelta: mapRegion.longitudeDelta / 2,
-      });
-    }
   };
 
   const handleToggleProtection = async () => {
@@ -361,7 +365,7 @@ export default function Home() {
   return (
     <View className="flex-1">
       {/* Map */}
-      <MapView
+      <ClusteredMapView
         ref={mapRef}
         provider={PROVIDER_DEFAULT}
         style={{ width, height }}
@@ -371,6 +375,17 @@ export default function Home() {
         showsMyLocationButton={false}
         showsCompass={false}
         mapPadding={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        radius={80}
+        maxZoom={18}
+        minZoom={0}
+        minPoints={2}
+        extent={512}
+        nodeSize={64}
+        clusterColor={colors.primary[500]}
+        clusterTextColor="#fff"
+        spiderLineColor={colors.primary[500]}
+        animationEnabled={false}
+        preserveClusterPressBehavior={false}
       >
         {/* Safety Zones - Temporarily disabled to isolate crash */}
         {/* {MOCK_ZONES.map((zone) => (
@@ -395,27 +410,23 @@ export default function Home() {
           <MarkerSkeletonGrid region={mapRegion} count={12} />
         )}
 
-        {/* Tips with Clustering */}
-        {clustersOrPoints.map((item) => {
-          if (isCluster(item)) {
-            return (
-              <TipCluster
-                key={`cluster-${item.properties.cluster_id}`}
-                cluster={item}
-                onPress={handleClusterPress}
-              />
-            );
-          } else {
-            return (
-              <TipMarker
-                key={`tip-${item.properties.id}`}
-                tip={item.properties}
-                onPress={handleTipPress}
-              />
-            );
-          }
-        })}
-      </MapView>
+        {/* Tips with Native Clustering */}
+        {tips.map((tip) => (
+          <TipMarker key={`tip-${tip.id}`} tip={tip} onPress={handleTipPress} />
+        ))}
+
+        {/* Family Member Markers */}
+        {familyMembers.map((member) => (
+          <FamilyMemberMarker
+            key={`family-${member.user_id}`}
+            member={member}
+            onPress={(member) => {
+              setSelectedFamilyMember(member);
+              setIsFamilyModalVisible(true);
+            }}
+          />
+        ))}
+      </ClusteredMapView>
 
       {/* Error Message */}
       {tipsError && !isLoadingTips && (
@@ -540,6 +551,34 @@ export default function Home() {
       {/* Filter Chips */}
       <FilterChips filters={filters} onFiltersChange={setFilters} />
 
+      {/* RECENTER BUTTON - Google Maps style */}
+      <Animated.View
+        entering={FadeIn.delay(600)}
+        className="absolute"
+        style={{ bottom: 180, left: 24 }}
+      >
+        <TouchableOpacity
+          onPress={async () => {
+            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            await getCurrentLocation();
+          }}
+          className="w-14 h-14 rounded-full bg-white items-center justify-center"
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.15,
+            shadowRadius: 8,
+            elevation: 6,
+          }}
+          activeOpacity={0.7}
+          accessible={true}
+          accessibilityLabel="Recenter map to current location"
+          accessibilityRole="button"
+        >
+          <Navigation2 color={colors.primary[600]} size={24} strokeWidth={2.5} />
+        </TouchableOpacity>
+      </Animated.View>
+
       {/* Bottom Sheet */}
       <Animated.View
         entering={SlideInUp.duration(600)}
@@ -547,14 +586,13 @@ export default function Home() {
         style={[
           {
             bottom: 0,
-            paddingBottom: 80,
             height: SHEET_MAX_HEIGHT,
           },
           sheetStyle,
         ]}
       >
+        {/* Handle Bar - Draggable (Fixed) */}
         <View className="px-6 pt-6">
-          {/* Handle Bar - Draggable */}
           <GestureDetector gesture={panGesture}>
             <Animated.View className="items-center py-3 mb-2">
               <View className="w-16 h-1.5 bg-neutral-400 rounded-full" />
@@ -570,7 +608,14 @@ export default function Home() {
               </Text>
             </Animated.View>
           </GestureDetector>
+        </View>
 
+        {/* Scrollable Content */}
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 80 }}
+        >
           {/* Protection Toggle */}
           <TouchableOpacity
             onPress={handleToggleProtection}
@@ -610,7 +655,29 @@ export default function Home() {
             </View>
           </TouchableOpacity>
 
-          {/* Search Destination */}
+          {/* Family Location Row */}
+          <FamilyLocationRow
+            onMemberPress={(member) => {
+              setSelectedFamilyMember(member);
+              setIsFamilyModalVisible(true);
+            }}
+            onCenterOnMember={(member) => {
+              if (mapRef.current) {
+                mapRef.current.animateToRegion(
+                  {
+                    latitude: member.latitude,
+                    longitude: member.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  },
+                  1000,
+                );
+              }
+            }}
+            className="-mx-6 px-6 border-t border-gray-100 mb-4"
+          />
+
+          {/* Route Planning */}
           <TouchableOpacity
             onPress={() => router.push("/route-planning")}
             className="bg-neutral-100 rounded-2xl p-4 mb-4"
@@ -646,22 +713,36 @@ export default function Home() {
               </Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </Animated.View>
 
       {/* Selected Tip Detail Card */}
       {selectedTip && (
-        <Animated.View
-          entering={SlideInUp.duration(400)}
-          className="absolute left-0 right-0"
-          style={{ bottom: height * 0.38 }}
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => setSelectedTip(null)}
+          className="absolute left-0 right-0 top-0 bottom-0 justify-center items-center"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         >
-          <TipDetailCard
-            tip={selectedTip}
-            onClose={() => setSelectedTip(null)}
-          />
-        </Animated.View>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+          >
+            <Animated.View
+              entering={SlideInUp.duration(400)}
+              className="w-11/12 max-w-lg"
+              style={{ width: width * 0.92 }}
+            >
+              <TipDetailCard
+                tip={selectedTip}
+                onClose={() => setSelectedTip(null)}
+              />
+            </Animated.View>
+          </TouchableOpacity>
+        </TouchableOpacity>
       )}
+
+
 
       {/* FLOATING EMERGENCY BUTTON - Always Visible */}
       <Animated.View
@@ -721,6 +802,31 @@ export default function Home() {
       <ProtectionEnabledModal
         visible={isProtectionModalVisible}
         onClose={() => setIsProtectionModalVisible(false)}
+      />
+
+      {/* Family Member Modal */}
+      <FamilyMemberModal
+        member={selectedFamilyMember}
+        isVisible={isFamilyModalVisible}
+        onClose={() => {
+          setIsFamilyModalVisible(false);
+          setSelectedFamilyMember(null);
+        }}
+        onCenterOnMap={(member) => {
+          if (mapRef.current) {
+            mapRef.current.animateToRegion(
+              {
+                latitude: member.latitude,
+                longitude: member.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              },
+              1000,
+            );
+          }
+          setIsFamilyModalVisible(false);
+          setSelectedFamilyMember(null);
+        }}
       />
     </View>
   );
