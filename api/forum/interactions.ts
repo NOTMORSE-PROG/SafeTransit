@@ -348,6 +348,72 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
       }
 
+      case "helpful": {
+        if (content_type !== "tip") {
+          return res.status(400).json({ error: "Helpful action is only available on tips" });
+        }
+
+        // Increment helpful_count for the tip
+        const { neon } = await import("@neondatabase/serverless");
+        const sql = neon(process.env.DATABASE_URL || "");
+
+        // Check if user already marked as helpful (optional - to prevent spam)
+        // For now, allow multiple marks from same user to keep it simple
+
+        const result = await sql`
+          UPDATE tips
+          SET helpful_count = helpful_count + 1
+          WHERE id = ${content_id}
+          RETURNING id, helpful_count
+        `;
+
+        if (result.length === 0) {
+          return res.status(404).json({ error: "Tip not found" });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: {
+            tip_id: result[0].id,
+            helpful_count: result[0].helpful_count,
+          },
+          message: "Tip marked as helpful",
+        });
+      }
+
+      case "confirm": {
+        if (content_type !== "tip") {
+          return res.status(400).json({ error: "Confirm action is only available on tips" });
+        }
+
+        // Update last_confirmed_at and increment confirmed_by_count
+        const { neon } = await import("@neondatabase/serverless");
+        const sql = neon(process.env.DATABASE_URL || "");
+
+        const result = await sql`
+          UPDATE tips
+          SET
+            last_confirmed_at = NOW(),
+            confirmed_by_count = confirmed_by_count + 1
+          WHERE id = ${content_id}
+          RETURNING id, last_confirmed_at, confirmed_by_count
+        `;
+
+        if (result.length === 0) {
+          return res.status(404).json({ error: "Tip not found" });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: {
+            tip_id: result[0].id,
+            last_confirmed_at: result[0].last_confirmed_at,
+            confirmed_by_count: result[0].confirmed_by_count,
+          },
+          message: "Tip confirmed as still valid",
+        });
+      }
+
       default:
         return res.status(400).json({ error: "Invalid action" });
     }

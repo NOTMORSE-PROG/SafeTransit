@@ -73,7 +73,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { q, lat, lon, mode, radius, category, time, bounds } = req.query;
 
-  // Mode 1: Get approved safety tips with spatial filtering
+  // Mode 1: Get safety heatmap zones for viewport
+  if (mode === 'heatmap') {
+    try {
+      // Parse bounds (format: "south,west,north,east")
+      if (!bounds || typeof bounds !== 'string') {
+        return res.status(400).json({ error: 'bounds parameter is required for heatmap mode (format: south,west,north,east)' });
+      }
+
+      const [south, west, north, east] = bounds.split(',').map(parseFloat);
+      if (isNaN(south) || isNaN(west) || isNaN(north) || isNaN(east)) {
+        return res.status(400).json({ error: 'Invalid bounds format' });
+      }
+
+      // Query heatmap zones with LIMIT 200 to prevent crashes
+      const { neon } = await import('@neondatabase/serverless');
+      const sql = neon(process.env.DATABASE_URL || '');
+
+      const zones = await sql`
+        SELECT
+          id,
+          geohash,
+          center_lat,
+          center_lon,
+          safety_score,
+          tip_count,
+          last_updated
+        FROM safety_heatmap_zones
+        WHERE center_lat BETWEEN ${south} AND ${north}
+          AND center_lon BETWEEN ${west} AND ${east}
+          AND tip_count > 0
+        ORDER BY tip_count DESC
+        LIMIT 200
+      `;
+
+      return res.status(200).json({
+        success: true,
+        count: zones.length,
+        zones,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: 'Failed to fetch heatmap zones',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  }
+
+  // Mode 2: Get approved safety tips with spatial filtering
   if (mode === 'tips') {
     try {
       const userLat = lat ? parseFloat(lat as string) : undefined;
@@ -113,7 +160,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
-  // Mode 2: Regular location search (default)
+  // Mode 3: Regular location search (default)
 
   if (!q || typeof q !== 'string' || q.trim().length < 2) {
     res.status(400).json({ error: 'Query parameter "q" is required and must be at least 2 characters' });

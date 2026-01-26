@@ -86,6 +86,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     <div class="desc">User Saved Places (Home, Work, Favorites)</div>
   </div>
 
+  <div class="endpoint">
+    <span class="method">GET/POST</span>
+    <span class="path">/api/user/location-data</span>
+    <div class="desc">GET: Personalized Suggestions | POST: Track Location Actions</div>
+  </div>
+
   <h3>Contacts</h3>
   <div class="endpoint">
     <span class="method">GET/POST</span>
@@ -97,13 +103,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   <div class="endpoint">
     <span class="method">GET</span>
     <span class="path">/api/locations/search</span>
-    <div class="desc">Search Locations (Proximity + Ranking + Pickup Points)</div>
-  </div>
-
-  <div class="endpoint">
-    <span class="method">GET</span>
-    <span class="path">/api/locations/reverse</span>
-    <div class="desc">Reverse Geocoding</div>
+    <div class="desc">Search Locations + Tips + Heatmap (mode: tips|heatmap)</div>
   </div>
 
   <h3>Forum</h3>
@@ -122,7 +122,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   <div class="endpoint">
     <span class="method">POST</span>
     <span class="path">/api/forum/interactions</span>
-    <div class="desc">Vote, Like, Comment, Reply, Report</div>
+    <div class="desc">Vote, Like, Comment, Reply, Report, Helpful, Confirm, Submit Tip, Follow Location, Analyze Route</div>
   </div>
 
   <h3>Upload</h3>
