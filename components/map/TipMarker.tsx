@@ -51,23 +51,23 @@ const TipMarker: React.FC<TipMarkerProps> = ({ tip, onPress }) => {
         shadowOpacity: 0.5,
       },
       high: {
-        backgroundColor: colors.caution[500],
-        borderColor: colors.caution[700],
-        shadowColor: colors.caution[500],
+        backgroundColor: colors.danger[500], // Changed from caution to danger
+        borderColor: colors.danger[700],     // Now red like critical
+        shadowColor: colors.danger[500],
         shadowRadius: 6,
         shadowOpacity: 0.4,
       },
       medium: {
-        backgroundColor: 'white',
-        borderColor: baseColor,
-        shadowColor: baseColor,
+        backgroundColor: colors.caution[500], // Yellow for medium severity
+        borderColor: colors.caution[700],
+        shadowColor: colors.caution[500],
         shadowRadius: 4,
         shadowOpacity: 0.3,
       },
       low: {
-        backgroundColor: 'white',
-        borderColor: colors.neutral[300],
-        shadowColor: colors.neutral[500],
+        backgroundColor: colors.safe[100],    // Light green for low
+        borderColor: colors.safe[500],
+        shadowColor: colors.safe[500],
         shadowRadius: 3,
         shadowOpacity: 0.2,
       },
@@ -77,7 +77,8 @@ const TipMarker: React.FC<TipMarkerProps> = ({ tip, onPress }) => {
   };
 
   const markerStyle = getMarkerStyle();
-  const iconColor = tip.severity === 'critical' || tip.severity === 'high'
+  // White icons for high-severity (red/yellow backgrounds), colored for low severity
+  const iconColor = tip.severity === 'critical' || tip.severity === 'high' || tip.severity === 'medium'
     ? 'white'
     : getCategoryColor(tip.category);
 

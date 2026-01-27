@@ -127,7 +127,7 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
   const severityInfo = getSeverityInfo(tip.severity);
 
   return (
-    <View className="bg-white rounded-3xl shadow-2xl" style={{ maxHeight: '85%', flexShrink: 1 }}>
+    <View className="bg-white rounded-3xl shadow-2xl" style={{ maxHeight: '90%', flexShrink: 1 }}>
       {/* Severity Banner */}
       {(tip.severity === 'critical' || tip.severity === 'high') && (
         <View
@@ -178,7 +178,14 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="px-4 pb-4" showsVerticalScrollIndicator={true} style={{ flexGrow: 0, flexShrink: 1 }}>
+      <ScrollView 
+        className="px-4" 
+        showsVerticalScrollIndicator={true} 
+        style={{ flexGrow: 0, flexShrink: 1 }}
+        contentContainerStyle={{ paddingBottom: 24 }}
+        nestedScrollEnabled={true}
+        scrollEnabled={true}
+      >
         {/* Verification Badge */}
         {tip.verified && (
           <View className="flex-row items-center mb-3 bg-green-50 px-3 py-2 rounded-lg">
@@ -204,7 +211,7 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
         {tip.photo_url && (
           <Image
             source={{ uri: tip.photo_url }}
-            className="w-full h-48 rounded-lg mb-3"
+            className="w-full h-48 rounded-lg mb-4"
             resizeMode="cover"
           />
         )}
@@ -266,7 +273,7 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
         )}
 
         {/* Author & Date */}
-        <View className="flex-row items-center justify-between pt-3 border-t border-gray-200">
+        <View className="flex-row items-center justify-between pt-3 border-t border-gray-200 mb-3">
           <View className="flex-row items-center">
             <User size={16} color={colors.neutral[500]} />
             <Text className="text-sm text-gray-600 ml-1">
@@ -281,7 +288,7 @@ const TipDetailCard: React.FC<TipDetailCardProps> = ({ tip, onClose }) => {
 
         {/* Temporary indicator */}
         {tip.is_temporary && tip.expires_at && (
-          <View className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <View className="bg-amber-50 border border-amber-200 rounded-lg p-3">
             <Text className="text-xs text-amber-800">
               ⚠️ Temporary tip - Expires {formatDate(tip.expires_at)}
             </Text>

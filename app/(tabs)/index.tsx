@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { View, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions, ScrollView, Pressable, GestureResponderEvent } from "react-native";
 import { useRouter } from "expo-router";
 import ClusteredMapView from "react-native-map-clustering";
 import MapView, { Region, PROVIDER_DEFAULT } from "react-native-maps";
@@ -47,6 +47,7 @@ import {
 } from "../../services/familyLocationService";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
+import { useModal } from "../../contexts/ModalContext";
 
 const { width, height } = Dimensions.get("window");
 const SHEET_MIN_HEIGHT = 280;
@@ -101,6 +102,14 @@ export default function Home() {
 
   // UI State
   const [showStats, _setShowStats] = useState(true);
+
+  // Modal context for communicating with parent layout
+  const { setIsModalOpen } = useModal();
+
+  // Sync modal state with context
+  useEffect(() => {
+    setIsModalOpen(!!selectedTip);
+  }, [selectedTip, setIsModalOpen]);
 
   const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
   const startY = useSharedValue(0);
@@ -496,17 +505,20 @@ export default function Home() {
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Legend */}
+      {/* Legend - Tip Severity */}
       <View
         className="absolute top-24 right-6 bg-white/95 rounded-xl p-3 shadow-md"
         style={{ marginTop: 40 }}
       >
+        <Text className="text-xs font-semibold text-neutral-800 mb-2">
+          Tip Severity
+        </Text>
         <View className="flex-row items-center mb-1.5">
           <View
             className="w-4 h-3 rounded bg-safe-500 mr-2"
             style={{ borderWidth: 1, borderColor: colors.safe[500] }}
           />
-          <Text className="text-xs text-neutral-700">Safe</Text>
+          <Text className="text-xs text-neutral-700">Low</Text>
         </View>
         <View className="flex-row items-center mb-1.5">
           <View
@@ -517,14 +529,14 @@ export default function Home() {
               borderStyle: "dashed",
             }}
           />
-          <Text className="text-xs text-neutral-700">Caution</Text>
+          <Text className="text-xs text-neutral-700">Medium</Text>
         </View>
         <View className="flex-row items-center">
           <View
             className="w-4 h-3 rounded bg-danger-500 mr-2"
             style={{ borderWidth: 1.5, borderColor: colors.danger[500] }}
           />
-          <Text className="text-xs text-neutral-700">Risk</Text>
+          <Text className="text-xs text-neutral-700">High</Text>
         </View>
       </View>
 
@@ -718,15 +730,15 @@ export default function Home() {
 
       {/* Selected Tip Detail Card */}
       {selectedTip && (
-        <TouchableOpacity
-          activeOpacity={1}
+        <Pressable
           onPress={() => setSelectedTip(null)}
           className="absolute left-0 right-0 top-0 bottom-0 justify-center items-center"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
         >
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={(e) => e.stopPropagation()}
+          <Pressable
+            onPress={(e: GestureResponderEvent) => {
+              e.stopPropagation();
+            }}
           >
             <Animated.View
               entering={SlideInUp.duration(400)}
@@ -738,8 +750,8 @@ export default function Home() {
                 onClose={() => setSelectedTip(null)}
               />
             </Animated.View>
-          </TouchableOpacity>
-        </TouchableOpacity>
+          </Pressable>
+        </Pressable>
       )}
 
 
