@@ -23,7 +23,7 @@ import {
 import LocationSearchInput from '../components/LocationSearchInput';
 import NavigationConfirmModal from '../components/NavigationConfirmModal';
 import TipDetailCard from '../components/map/TipDetailCard';
-import TipMarker from '../components/map/TipMarker';
+import { TipMarkerIcon } from '../components/map/TipMarkerIcon';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
 import { getMultiModalRoutes, formatDuration, formatDistance, Route, RouteCoordinate } from '../services/locationIQRouting';
 import { 
@@ -366,8 +366,16 @@ export default function RoutePlanning() {
 
   const handleConfirmNavigation = () => {
     setShowNavigationModal(false);
-    // In a real app, this would start turn-by-turn navigation
-    router.back();
+    
+    if (selectedRoute) {
+      router.push({
+        pathname: '/navigation',
+        params: { 
+          routeData: JSON.stringify(selectedRoute),
+          tipsData: JSON.stringify(selectedRouteTips)
+        }
+      });
+    }
   };
 
   const effectiveStartLocation = useCurrentAsStart ? currentLocation : startLocation;
@@ -468,11 +476,16 @@ export default function RoutePlanning() {
             typeof tip.longitude === 'number' && !isNaN(tip.longitude)
           )
           .map((tip, idx) => (
-            <TipMarker
+            <Marker
               key={`tip-${tip.id}-${idx}`}
-              tip={tip}
-              onPress={(t) => setSelectedTipForModal(t)}
-            />
+              coordinate={{
+                latitude: tip.latitude,
+                longitude: tip.longitude,
+              }}
+              onPress={() => setSelectedTipForModal(tip)}
+            >
+              <TipMarkerIcon category={tip.category} size={16} />
+            </Marker>
           ))}
       </MapView>
 

@@ -17,6 +17,7 @@ export interface RouteStep {
   maneuver: {
     type: string;
     modifier?: string;
+    location?: RouteCoordinate;
   };
 }
 
@@ -172,6 +173,10 @@ export async function getRoute(
           maneuver: {
             type: step.maneuver.type,
             modifier: step.maneuver.modifier,
+            location: {
+              latitude: step.maneuver.location[1],
+              longitude: step.maneuver.location[0],
+            },
           },
         })) || [],
       geometry: JSON.stringify(route.geometry.coordinates),
