@@ -15,7 +15,6 @@ A comprehensive safety-first navigation app designed for women commuters in Phil
   - 🚧 **Construction** - Road closures and construction zones
 - **Community Forum**: Discussion-based posts with voting, commenting, and nested replies
 - **Safety Heatmap**: Visual danger zones overlay showing area safety levels
-- **Profile Picture**: Personalize your account with profile photos
 - **Silent Panic Button**: Discreet emergency alerts to helpers and contacts
 - **Quick Exit Screen**: Instantly disguises app as a weather forecast for privacy
 - **Family Location Sharing**: Real-time location tracking with trusted family members

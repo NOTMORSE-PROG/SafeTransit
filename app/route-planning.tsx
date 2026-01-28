@@ -22,10 +22,19 @@ import {
 
 import LocationSearchInput from '../components/LocationSearchInput';
 import NavigationConfirmModal from '../components/NavigationConfirmModal';
+import { TipMarkerIcon } from '../components/map/TipMarkerIcon';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
 import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/locationIQRouting';
-import { analyzeRouteSafety, getSafetyRating } from '../services/routeSafetyService';
+import { 
+  analyzeRouteSafety, 
+  getSafetyRating, 
+  aggregateTipsByCategory,
+  getAllRouteTips,
+  RouteSegment,
+  TipCategorySummary
+} from '../services/routeSafetyService';
 import { familyLocationService, FamilyMember } from '../services/familyLocationService';
+import { Tip } from '../services/tipsService';
 
 const TRAVEL_MODES = [
   { id: 'walk', label: 'Walk', icon: 'PersonStanding' },
@@ -65,7 +74,7 @@ export default function RoutePlanning() {
 
   // Draggable sheet constants
   const SHEET_MIN_HEIGHT = 240;
-  const SHEET_MAX_HEIGHT = 420;
+  const SHEET_MAX_HEIGHT = 420 + insets.bottom;
   const SHEET_PEEK_HEIGHT = 110; // Higher to avoid phone navigation
 
   // Animated values for draggable sheet
@@ -75,6 +84,11 @@ export default function RoutePlanning() {
   // Family locations
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [showFamilyDestinations, setShowFamilyDestinations] = useState(false);
+
+  // Tip visualization states
+  const [routeTips, setRouteTips] = useState<Map<string, Tip[]>>(new Map());
+  const [selectedRouteTips, setSelectedRouteTips] = useState<Tip[]>([]);
+  const [_selectedTipForModal, setSelectedTipForModal] = useState<Tip | null>(null);
 
   // Get current location and family members on mount
   useEffect(() => {
@@ -211,7 +225,11 @@ export default function RoutePlanning() {
         warnings: string[];
         color: string;
         dangerZones: number;
+        segments: RouteSegment[]; // NEW: Color-coded segments
+        tipSummary: TipCategorySummary; // NEW: Tip counts by category
       };
+
+      const newRouteTips = new Map<string, Tip[]>();
 
       const routesWithSafety: RouteWithSafety[] = await Promise.all(
         modeRoutes.map(async (route) => {
@@ -219,6 +237,13 @@ export default function RoutePlanning() {
             // Analyze route safety
             const safetyAnalysis = await analyzeRouteSafety(route.coordinates);
             const safetyRating = getSafetyRating(safetyAnalysis.overallScore);
+
+            // Get all unique tips from this route
+            const allTips = getAllRouteTips(safetyAnalysis.segments);
+            newRouteTips.set(route.id, allTips);
+
+            // Aggregate tips by category
+            const tipSummary = aggregateTipsByCategory(allTips);
 
             // Generate warnings based on danger zones
             const warnings: string[] = [];
@@ -233,6 +258,8 @@ export default function RoutePlanning() {
               warnings,
               color: safetyRating.color,
               dangerZones: safetyAnalysis.dangerZones,
+              segments: safetyAnalysis.segments, // Include segments for colored polylines
+              tipSummary, // Include tip summary for route cards
             };
           } catch (error) {
             console.error('Error analyzing route safety:', error);
@@ -244,13 +271,28 @@ export default function RoutePlanning() {
               warnings: [],
               color: '#9CA3AF',
               dangerZones: 0,
+              segments: [], // Empty segments on error
+              tipSummary: { // Empty tip summary on error
+                harassment: 0,
+                lighting: 0,
+                construction: 0,
+                transit: 0,
+                safe_haven: 0,
+              },
             };
           }
         })
       );
 
       setRoutes(routesWithSafety as Route[]);
+      setRouteTips(newRouteTips); // Save tips for all routes
       setSelectedRoute(routesWithSafety[0] || null);
+      
+      // Set tips for first route
+      if (routesWithSafety[0]) {
+        setSelectedRouteTips(newRouteTips.get(routesWithSafety[0].id) || []);
+      }
+      
       setShowRoutes(true);
 
       // Adjust map to show both points
@@ -371,15 +413,53 @@ export default function RoutePlanning() {
           </Marker>
         )}
 
-        {/* Routes */}
+        {/* Routes - Color-coded segments for selected, gray for others */}
         {showRoutes &&
-          routes.map((route) => (
-            <Polyline
-              key={route.id}
-              coordinates={route.coordinates}
-              strokeColor={route.id === selectedRoute?.id ? (route as Route & { color: string }).color : '#D1D5DB'}
-              strokeWidth={route.id === selectedRoute?.id ? 5 : 3}
-            />
+          routes.map((route) => {
+            const routeWithSegments = route as Route & { segments?: RouteSegment[] };
+            const isSelected = route.id === selectedRoute?.id;
+
+            // If route has segments and is selected, show colored segments
+            if (isSelected && routeWithSegments.segments && routeWithSegments.segments.length > 0) {
+              return routeWithSegments.segments
+                .filter(segment => segment.coordinates && segment.coordinates.length >= 2) // Validate coordinates
+                .map((segment, idx) => (
+                  <Polyline
+                    key={`${route.id}-segment-${idx}`}
+                    coordinates={segment.coordinates}
+                    strokeColor={segment.color || '#22C55E'}
+                    strokeWidth={5}
+                  />
+                ));
+            }
+
+            // Otherwise show full route in gray or route color
+            if (!route.coordinates || route.coordinates.length < 2) return null; // Validate route coordinates
+
+            return (
+              <Polyline
+                key={route.id}
+                coordinates={route.coordinates}
+                strokeColor={isSelected ? (route as Route & { color: string }).color : '#D1D5DB'}
+                strokeWidth={isSelected ? 5 : 3}
+              />
+            );
+          })}
+
+        {/* Tip Markers - Only show for selected route */}
+        {selectedRoute && selectedRouteTips
+          .filter(tip => tip.latitude && tip.longitude) // Validate coordinates
+          .map((tip, idx) => (
+            <Marker
+              key={`tip-${tip.id}-${idx}`}
+              coordinate={{
+                latitude: tip.latitude,
+                longitude: tip.longitude,
+              }}
+              onPress={() => setSelectedTipForModal(tip)}
+            >
+              <TipMarkerIcon category={tip.category} size={16} />
+            </Marker>
           ))}
       </MapView>
 
@@ -553,7 +633,10 @@ export default function RoutePlanning() {
                     entering={FadeInDown.delay(index * 100).duration(600)}
                   >
                     <TouchableOpacity
-                      onPress={() => setSelectedRoute(route)}
+                      onPress={() => {
+                        setSelectedRoute(route);
+                        setSelectedRouteTips(routeTips.get(route.id) || []);
+                      }}
                       className={`mb-3 rounded-2xl p-4 border-2 ${selectedRoute?.id === route.id
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-neutral-200 bg-white'
@@ -594,6 +677,72 @@ export default function RoutePlanning() {
                           </Text>
                         </View>
                       </View>
+
+                      {/* Tip Summary - NEW */}
+                      {(() => {
+                        const routeWithTips = route as Route & { tipSummary?: TipCategorySummary };
+                        const tipSummary = routeWithTips.tipSummary;
+                        
+                        if (!tipSummary) return null;
+                        
+                        const hasTips = tipSummary.harassment > 0 || 
+                                       tipSummary.lighting > 0 || 
+                                       tipSummary.construction > 0 || 
+                                       tipSummary.transit > 0 ||
+                                       tipSummary.safe_haven > 0;
+                        
+                        if (!hasTips) return null;
+
+                        return (
+                          <View className="mb-2 bg-neutral-50 rounded-lg px-3 py-2">
+                            <Text className="text-xs font-semibold text-neutral-700 mb-1.5">
+                              Safety Info:
+                            </Text>
+                            <View className="flex-row flex-wrap">
+                              {tipSummary.harassment > 0 && (
+                                <View className="flex-row items-center mr-3 mb-1">
+                                  <AlertTriangle color="#DC2626" size={12} strokeWidth={2} />
+                                  <Text className="text-xs text-danger-700 ml-1">
+                                    {tipSummary.harassment} harassment
+                                  </Text>
+                                </View>
+                              )}
+                              {tipSummary.lighting > 0 && (
+                                <View className="flex-row items-center mr-3 mb-1">
+                                  <AlertTriangle color="#EAB308" size={12} strokeWidth={2} />
+                                  <Text className="text-xs text-warning-700 ml-1">
+                                    {tipSummary.lighting} poor lighting
+                                  </Text>
+                                </View>
+                              )}
+                              {tipSummary.construction > 0 && (
+                                <View className="flex-row items-center mr-3 mb-1">
+                                  <AlertTriangle color="#F97316" size={12} strokeWidth={2} />
+                                  <Text className="text-xs text-orange-700 ml-1">
+                                    {tipSummary.construction} construction
+                                  </Text>
+                                </View>
+                              )}
+                              {tipSummary.transit > 0 && (
+                                <View className="flex-row items-center mr-3 mb-1">
+                                  <Bus color="#3B82F6" size={12} strokeWidth={2} />
+                                  <Text className="text-xs text-blue-700 ml-1">
+                                    {tipSummary.transit} transit issue{tipSummary.transit > 1 ? 's' : ''}
+                                  </Text>
+                                </View>
+                              )}
+                              {tipSummary.safe_haven > 0 && (
+                                <View className="flex-row items-center mr-3 mb-1">
+                                  <CheckCircle color="#22C55E" size={12} strokeWidth={2} />
+                                  <Text className="text-xs text-success-700 ml-1">
+                                    {tipSummary.safe_haven} safe haven{tipSummary.safe_haven > 1 ? 's' : ''}
+                                  </Text>
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        );
+                      })()}
 
                       {routeWithSafety.warnings && routeWithSafety.warnings.length > 0 ? (
                         <View className="bg-warning-50 rounded-lg px-3 py-2">

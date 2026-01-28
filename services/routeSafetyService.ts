@@ -270,3 +270,47 @@ export function getSafetyRating(score: number): {
     return { text: 'High Risk', color: '#EF4444', emoji: '🚨' };
   }
 }
+
+/**
+ * Aggregate tips by category for display
+ */
+export interface TipCategorySummary {
+  harassment: number;
+  lighting: number;
+  construction: number;
+  transit: number;
+  safe_haven: number;
+}
+
+export function aggregateTipsByCategory(tips: Tip[]): TipCategorySummary {
+  const summary: TipCategorySummary = {
+    harassment: 0,
+    lighting: 0,
+    construction: 0,
+    transit: 0,
+    safe_haven: 0,
+  };
+
+  tips.forEach((tip) => {
+    if (tip.category in summary) {
+      summary[tip.category as keyof TipCategorySummary]++;
+    }
+  });
+
+  return summary;
+}
+
+/**
+ * Get all unique tips from route segments
+ */
+export function getAllRouteTips(segments: RouteSegment[]): Tip[] {
+  const tipMap = new Map<string, Tip>();
+
+  segments.forEach((segment) => {
+    segment.nearbyTips.forEach((tip) => {
+      tipMap.set(tip.id, tip);
+    });
+  });
+
+  return Array.from(tipMap.values());
+}
