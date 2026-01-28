@@ -1,6 +1,8 @@
-// LocationIQ Routing Service
-// Professional routing with multiple transportation modes
-// Uses LocationIQ Directions API (based on OSRM with enhancements)
+// Hybrid Routing Service
+// Uses OpenRouteService for walking/cycling (better pedestrian routes)
+// Uses LocationIQ for driving (already working)
+
+import * as OpenRouteService from './openRouteService';
 
 export interface RouteCoordinate {
   latitude: number;
@@ -82,19 +84,30 @@ interface LocationIQResponse {
 /**
  * Get routes between two or more points using LocationIQ
  * @param coordinates Array of {latitude, longitude} pairs
- * @param profile 'driving-car', 'foot-walking', 'cycling-regular'
+ * @param profile 'driving', 'walking', 'cycling'
  * @param alternatives Number of alternative routes (0-3)
  */
 export async function getRoute(
   coordinates: { latitude: number; longitude: number }[],
-  profile: "driving-car" | "foot-walking" | "cycling-regular" = "driving-car",
+  profile: "driving" | "walking" | "cycling" = "driving",
   alternatives: number = 2,
 ): Promise<Route[]> {
   if (coordinates.length < 2) {
     throw new Error("At least 2 coordinates are required for routing");
   }
 
-  // Return mock routes if no API key
+  // Use OpenRouteService for walking and cycling (better pedestrian routes)
+  if (profile === "walking" || profile === "cycling") {
+    try {
+      const orsProfile = profile === "walking" ? "foot-walking" : "cycling-regular";
+      return await OpenRouteService.getRoute(coordinates, orsProfile, alternatives);
+    } catch (error) {
+      console.warn("OpenRouteService failed, falling back to mock routes:", error);
+      return getMockRoutes(coordinates[0], coordinates[coordinates.length - 1], profile);
+    }
+  }
+
+  // Use LocationIQ for driving
   if (!API_KEY) {
     console.warn(
       "LocationIQ API key not configured. Using mock routes for development.",
@@ -180,10 +193,10 @@ export async function getMultiModalRoutes(
 ): Promise<Map<string, Route[]>> {
   const results = new Map<string, Route[]>();
 
-  const profileMap: Record<string, "driving-car" | "foot-walking" | "cycling-regular"> = {
-    walk: "foot-walking",
-    drive: "driving-car",
-    transit: "driving-car", // Transit uses driving as fallback with adjusted times
+  const profileMap: Record<string, "driving" | "walking" | "cycling"> = {
+    walk: "walking", // Now uses OpenRouteService for true pedestrian routes
+    drive: "driving",
+    transit: "driving", // Transit uses driving as fallback with adjusted times
   };
 
   for (const mode of modes) {
@@ -246,16 +259,16 @@ export async function getMultiModalRoutes(
 function getMockRoutes(
   start: { latitude: number; longitude: number },
   end: { latitude: number; longitude: number },
-  profile: "driving-car" | "foot-walking" | "cycling-regular",
+  profile: "driving" | "walking" | "cycling",
 ): Route[] {
   // Calculate straight-line distance
   const distance = calculateDistance(start, end);
 
   // Estimate duration based on mode (m/s average speeds)
   const speedMap = {
-    "foot-walking": 1.4, // ~5 km/h
-    "driving-car": 11.1, // ~40 km/h in Manila traffic
-    "cycling-regular": 4.2, // ~15 km/h
+    "walking": 1.4, // ~5 km/h
+    "driving": 11.1, // ~40 km/h in Manila traffic
+    "cycling": 4.2, // ~15 km/h
   };
   const speed = speedMap[profile];
   const duration = distance / speed;

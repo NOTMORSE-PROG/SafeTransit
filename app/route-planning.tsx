@@ -61,7 +61,7 @@ export default function RoutePlanning() {
   const [showRoutes, setShowRoutes] = useState(false);
   const [mapRegion, setMapRegion] = useState<Region>(MANILA_REGION);
   const [showNavigationModal, setShowNavigationModal] = useState(false);
-  const [isSheetExpanded, setIsSheetExpanded] = useState(false);
+  const [_isSheetExpanded, setIsSheetExpanded] = useState(false);
 
   // Draggable sheet constants
   const SHEET_MIN_HEIGHT = 240;
