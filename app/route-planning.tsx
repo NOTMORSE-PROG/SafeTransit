@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView, { Polyline, Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
-import Animated, { FadeInDown, SlideInDown, useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
+import Animated, { FadeInDown, SlideInDown, SlideInUp, useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as ExpoLocation from 'expo-location';
 import {
@@ -22,9 +22,10 @@ import {
 
 import LocationSearchInput from '../components/LocationSearchInput';
 import NavigationConfirmModal from '../components/NavigationConfirmModal';
-import { TipMarkerIcon } from '../components/map/TipMarkerIcon';
+import TipDetailCard from '../components/map/TipDetailCard';
+import TipMarker from '../components/map/TipMarker';
 import { LocationSearchResult, reverseGeocode } from '../services/nominatim';
-import { getMultiModalRoutes, formatDuration, formatDistance, Route } from '../services/locationIQRouting';
+import { getMultiModalRoutes, formatDuration, formatDistance, Route, RouteCoordinate } from '../services/locationIQRouting';
 import { 
   analyzeRouteSafety, 
   getSafetyRating, 
@@ -88,7 +89,7 @@ export default function RoutePlanning() {
   // Tip visualization states
   const [routeTips, setRouteTips] = useState<Map<string, Tip[]>>(new Map());
   const [selectedRouteTips, setSelectedRouteTips] = useState<Tip[]>([]);
-  const [_selectedTipForModal, setSelectedTipForModal] = useState<Tip | null>(null);
+  const [selectedTipForModal, setSelectedTipForModal] = useState<Tip | null>(null);
 
   // Get current location and family members on mount
   useEffect(() => {
@@ -419,10 +420,19 @@ export default function RoutePlanning() {
             const routeWithSegments = route as Route & { segments?: RouteSegment[] };
             const isSelected = route.id === selectedRoute?.id;
 
+            // Helper to validate coordinate
+            const isValidCoord = (c: RouteCoordinate) => 
+              c && typeof c.latitude === 'number' && !isNaN(c.latitude) &&
+              typeof c.longitude === 'number' && !isNaN(c.longitude);
+
             // If route has segments and is selected, show colored segments
             if (isSelected && routeWithSegments.segments && routeWithSegments.segments.length > 0) {
               return routeWithSegments.segments
-                .filter(segment => segment.coordinates && segment.coordinates.length >= 2) // Validate coordinates
+                .filter(segment => 
+                  segment.coordinates && 
+                  segment.coordinates.length >= 2 &&
+                  segment.coordinates.every(isValidCoord)
+                )
                 .map((segment, idx) => (
                   <Polyline
                     key={`${route.id}-segment-${idx}`}
@@ -434,7 +444,11 @@ export default function RoutePlanning() {
             }
 
             // Otherwise show full route in gray or route color
-            if (!route.coordinates || route.coordinates.length < 2) return null; // Validate route coordinates
+            if (!route.coordinates || 
+                route.coordinates.length < 2 || 
+                !route.coordinates.every(isValidCoord)) {
+              return null;
+            }
 
             return (
               <Polyline
@@ -447,19 +461,18 @@ export default function RoutePlanning() {
           })}
 
         {/* Tip Markers - Only show for selected route */}
-        {selectedRoute && selectedRouteTips
-          .filter(tip => tip.latitude && tip.longitude) // Validate coordinates
+        {selectedRoute && Array.isArray(selectedRouteTips) && selectedRouteTips
+          .filter(tip => 
+            tip && 
+            typeof tip.latitude === 'number' && !isNaN(tip.latitude) &&
+            typeof tip.longitude === 'number' && !isNaN(tip.longitude)
+          )
           .map((tip, idx) => (
-            <Marker
+            <TipMarker
               key={`tip-${tip.id}-${idx}`}
-              coordinate={{
-                latitude: tip.latitude,
-                longitude: tip.longitude,
-              }}
-              onPress={() => setSelectedTipForModal(tip)}
-            >
-              <TipMarkerIcon category={tip.category} size={16} />
-            </Marker>
+              tip={tip}
+              onPress={(t) => setSelectedTipForModal(t)}
+            />
           ))}
       </MapView>
 
@@ -594,37 +607,41 @@ export default function RoutePlanning() {
 
       {/* Route Options */}
       {showRoutes && routes.length > 0 && (
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            entering={SlideInDown.duration(600)}
-            style={[
-              {
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: SHEET_MAX_HEIGHT,
-                backgroundColor: 'white',
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: -2 },
-                shadowOpacity: 0.1,
-                shadowRadius: 8,
-                elevation: 5,
-              },
-              sheetStyle,
-            ]}
-          >
-            {/* Drag Handle */}
-            <View className="items-center py-3">
+        <Animated.View
+          entering={SlideInDown.duration(600)}
+          style={[
+            {
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: SHEET_MAX_HEIGHT,
+              backgroundColor: 'white',
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 5,
+            },
+            sheetStyle,
+          ]}
+        >
+          {/* Drag Handle */}
+          <GestureDetector gesture={panGesture}>
+            <Animated.View className="items-center py-3 bg-transparent w-full">
               <View className="w-12 h-1 bg-neutral-300 rounded-full" />
-            </View>
+            </Animated.View>
+          </GestureDetector>
 
-            <View className="px-6" style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}>
-              <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
+          <View className="px-6 flex-1" style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}>
+            <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
 
-            <ScrollView className="mb-4" style={{ maxHeight: 300 }}>
+            <ScrollView 
+              className="flex-1 mb-4" 
+              showsVerticalScrollIndicator={false}
+            >
               {routes.map((route, index) => {
                 const routeWithSafety = route as Route & { color: string; warnings?: string[] };
                 return (
@@ -774,7 +791,7 @@ export default function RoutePlanning() {
             <TouchableOpacity
               onPress={handleStartNavigation}
               disabled={!selectedRoute}
-              className={`rounded-xl py-4 ${selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
+              className={`rounded-xl py-5 ${selectedRoute ? 'bg-primary-600' : 'bg-neutral-300'
                 }`}
               activeOpacity={0.8}
               accessible={true}
@@ -787,7 +804,6 @@ export default function RoutePlanning() {
             </TouchableOpacity>
           </View>
         </Animated.View>
-      </GestureDetector>
       )}
 
       {/* Navigation Confirmation Modal */}
@@ -800,6 +816,37 @@ export default function RoutePlanning() {
           onClose={() => setShowNavigationModal(false)}
           onConfirm={handleConfirmNavigation}
         />
+      )}
+
+      {/* Selected Tip Detail Card Modal */}
+      {selectedTipForModal && (
+        <>
+          {/* Backdrop - tap to close */}
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setSelectedTipForModal(null)}
+            className="absolute left-0 right-0 top-0 bottom-0"
+            style={{ backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }}
+          />
+          
+          {/* Modal Content */}
+          <View 
+            className="absolute left-0 right-0 top-0 bottom-0 justify-center items-center"
+            pointerEvents="box-none"
+            style={{ zIndex: 101 }}
+          >
+            <Animated.View
+              entering={SlideInUp.duration(400)}
+              className="w-11/12 max-w-lg"
+              style={{ width: Dimensions.get('window').width * 0.92 }}
+            >
+              <TipDetailCard
+                tip={selectedTipForModal}
+                onClose={() => setSelectedTipForModal(null)}
+              />
+            </Animated.View>
+          </View>
+        </>
       )}
     </View>
   );
