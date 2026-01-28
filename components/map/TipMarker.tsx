@@ -40,8 +40,6 @@ const TipMarker: React.FC<TipMarkerProps> = ({ tip, onPress }) => {
 
   // Get marker style based on severity
   const getMarkerStyle = () => {
-    const baseColor = getCategoryColor(tip.category);
-
     const severityStyles = {
       critical: {
         backgroundColor: colors.danger[500],

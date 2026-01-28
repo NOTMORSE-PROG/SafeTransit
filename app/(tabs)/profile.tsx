@@ -226,7 +226,7 @@ export default function Profile() {
   // Handle view family details
   const handleViewFamilyDetails = () => {
     if (!family) return;
-    setShowFamilyDetailsModal(true);
+    router.push("/family" as never);
   };
 
   // Upload image to UploadThing via backend API

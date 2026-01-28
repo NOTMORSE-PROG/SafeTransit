@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { View, Text, TouchableOpacity, Dimensions, ScrollView, Pressable, GestureResponderEvent } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import ClusteredMapView from "react-native-map-clustering";
 import MapView, { Region, PROVIDER_DEFAULT } from "react-native-maps";
@@ -730,15 +730,19 @@ export default function Home() {
 
       {/* Selected Tip Detail Card */}
       {selectedTip && (
-        <Pressable
-          onPress={() => setSelectedTip(null)}
-          className="absolute left-0 right-0 top-0 bottom-0 justify-center items-center"
-          style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
-        >
-          <Pressable
-            onPress={(e: GestureResponderEvent) => {
-              e.stopPropagation();
-            }}
+        <>
+          {/* Backdrop - tap to close */}
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setSelectedTip(null)}
+            className="absolute left-0 right-0 top-0 bottom-0"
+            style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+          />
+          
+          {/* Modal Content */}
+          <View 
+            className="absolute left-0 right-0 top-0 bottom-0 justify-center items-center"
+            pointerEvents="box-none"
           >
             <Animated.View
               entering={SlideInUp.duration(400)}
@@ -750,8 +754,8 @@ export default function Home() {
                 onClose={() => setSelectedTip(null)}
               />
             </Animated.View>
-          </Pressable>
-        </Pressable>
+          </View>
+        </>
       )}
 
 
