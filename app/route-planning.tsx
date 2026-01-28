@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } fr
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView, { Polyline, Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps';
-import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, SlideInDown, useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as ExpoLocation from 'expo-location';
 import {
   PersonStanding,
@@ -60,6 +61,16 @@ export default function RoutePlanning() {
   const [showRoutes, setShowRoutes] = useState(false);
   const [mapRegion, setMapRegion] = useState<Region>(MANILA_REGION);
   const [showNavigationModal, setShowNavigationModal] = useState(false);
+  const [isSheetExpanded, setIsSheetExpanded] = useState(false);
+
+  // Draggable sheet constants
+  const SHEET_MIN_HEIGHT = 240;
+  const SHEET_MAX_HEIGHT = 420;
+  const SHEET_PEEK_HEIGHT = 110; // Higher to avoid phone navigation
+
+  // Animated values for draggable sheet
+  const translateY = useSharedValue(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
+  const startY = useSharedValue(0);
 
   // Family locations
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
@@ -71,6 +82,45 @@ export default function RoutePlanning() {
     loadFamilyMembers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Pan gesture for draggable sheet
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
+      startY.value = translateY.value;
+    })
+    .onUpdate((event) => {
+      const newY = startY.value + event.translationY;
+      // 0 = fully expanded, max = collapsed to peek
+      const minY = 0;
+      const maxY = SHEET_MAX_HEIGHT - SHEET_PEEK_HEIGHT;
+      if (newY >= minY && newY <= maxY) {
+        translateY.value = newY;
+      }
+    })
+    .onEnd((event) => {
+      const middleThreshold = (SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT) / 2;
+      const collapseThreshold = SHEET_MAX_HEIGHT - SHEET_PEEK_HEIGHT - 50;
+
+      // Slide up = expand
+      if (event.velocityY < -500 || translateY.value < middleThreshold) {
+        translateY.value = withSpring(0);
+        runOnJS(setIsSheetExpanded)(true);
+      }
+      // Slide down fast or far = hide to peek
+      else if (event.velocityY > 500 || translateY.value > collapseThreshold) {
+        translateY.value = withSpring(SHEET_MAX_HEIGHT - SHEET_PEEK_HEIGHT);
+        runOnJS(setIsSheetExpanded)(false);
+      }
+      // Return to default position
+      else {
+        translateY.value = withSpring(SHEET_MAX_HEIGHT - SHEET_MIN_HEIGHT);
+        runOnJS(setIsSheetExpanded)(false);
+      }
+    });
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
 
   const loadFamilyMembers = async () => {
     try {
@@ -464,12 +514,35 @@ export default function RoutePlanning() {
 
       {/* Route Options */}
       {showRoutes && routes.length > 0 && (
-        <Animated.View
-          entering={SlideInDown.duration(600)}
-          className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl"
-        >
-          <View className="px-6 pt-6" style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}>
-            <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            entering={SlideInDown.duration(600)}
+            style={[
+              {
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: SHEET_MAX_HEIGHT,
+                backgroundColor: 'white',
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: -2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+                elevation: 5,
+              },
+              sheetStyle,
+            ]}
+          >
+            {/* Drag Handle */}
+            <View className="items-center py-3">
+              <View className="w-12 h-1 bg-neutral-300 rounded-full" />
+            </View>
+
+            <View className="px-6" style={{ paddingBottom: Math.max(insets.bottom, 16) + 12 }}>
+              <Text className="text-xl font-bold text-neutral-900 mb-4">Choose Your Route</Text>
 
             <ScrollView className="mb-4" style={{ maxHeight: 300 }}>
               {routes.map((route, index) => {
@@ -565,6 +638,7 @@ export default function RoutePlanning() {
             </TouchableOpacity>
           </View>
         </Animated.View>
+      </GestureDetector>
       )}
 
       {/* Navigation Confirmation Modal */}
