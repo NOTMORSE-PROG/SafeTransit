@@ -4,6 +4,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Lightbulb, UserCircle, Bell, LucideIcon } from 'lucide-react-native';
 import PagerView from 'react-native-pager-view';
 import { MOCK_NOTIFICATIONS, getUnreadCount } from '../../services/notifications';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import { ModalProvider, useModal } from '../../contexts/ModalContext';
 
 import HomeScreen from './index';
 import CommunityScreen from './community';
@@ -46,11 +48,12 @@ function TabBarItem({ icon: Icon, label, focused, badgeCount, onPress }: TabBarI
   );
 }
 
-export default function TabsLayout() {
+function TabsLayoutInner() {
   const insets = useSafeAreaInsets();
   const [unreadCount, setUnreadCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
+  const { isModalOpen } = useModal();
 
   useEffect(() => {
     setUnreadCount(getUnreadCount(MOCK_NOTIFICATIONS));
@@ -79,10 +82,28 @@ export default function TabsLayout() {
       >
         {tabs.map((tab, index) => (
           <View key={String(index)} style={styles.page}>
-            <tab.screen />
+            <ErrorBoundary>
+              <tab.screen />
+            </ErrorBoundary>
           </View>
         ))}
       </PagerView>
+
+      {/* Backdrop overlay when modal is open */}
+      {isModalOpen && (
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 80 + insets.bottom,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            zIndex: 999,
+          }}
+          pointerEvents="none"
+        />
+      )}
 
       <View
         style={[
@@ -102,6 +123,14 @@ export default function TabsLayout() {
         ))}
       </View>
     </View>
+  );
+}
+
+export default function TabsLayout() {
+  return (
+    <ModalProvider>
+      <TabsLayoutInner />
+    </ModalProvider>
   );
 }
 

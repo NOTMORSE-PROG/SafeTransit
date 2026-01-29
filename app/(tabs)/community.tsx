@@ -10,7 +10,7 @@ import {
   TextInput,
   RefreshControl,
   ActivityIndicator,
-  AppState,
+
 } from "react-native";
 import { useRouter } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -21,7 +21,7 @@ import {
   TrendingUp,
   Clock,
   SearchX,
-  ArrowUp,
+
 } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import { ForumPostCard } from "@/components/forum/ForumPostCard";
@@ -54,10 +54,7 @@ export default function Community() {
   const [searchQuery, setSearchQuery] = useState("");
   const [votingPostId, setVotingPostId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [newPostsAvailable, setNewPostsAvailable] = useState<
-    ForumPostWithAuthor[]
-  >([]);
-  const [showNewPostsBanner, setShowNewPostsBanner] = useState(false);
+
 
   const loadPosts = useCallback(
     async (showRefresh = false) => {
@@ -73,8 +70,7 @@ export default function Community() {
         });
 
         setPosts(response.data);
-        setShowNewPostsBanner(false);
-        setNewPostsAvailable([]);
+
       } catch (err) {
         console.error("Failed to load posts:", err);
         setError(err instanceof Error ? err.message : "Failed to load posts");
@@ -86,32 +82,9 @@ export default function Community() {
     [sortBy, selectedFlair, token],
   );
 
-  const checkForNewPosts = useCallback(async () => {
-    try {
-      const response = await getPosts({
-        sort: sortBy,
-        flair: selectedFlair === "all" ? undefined : selectedFlair,
-        token: token || undefined,
-      });
 
-      const newPosts = response.data.filter(
-        (newPost) => !posts.some((existingPost) => existingPost.id === newPost.id),
-      );
 
-      if (newPosts.length > 0) {
-        setNewPostsAvailable(newPosts);
-        setShowNewPostsBanner(true);
-      }
-    } catch (err) {
-      console.error("Silent refresh failed:", err);
-    }
-  }, [sortBy, selectedFlair, token, posts]);
 
-  const applyNewPosts = () => {
-    setPosts((prev) => [...newPostsAvailable, ...prev]);
-    setNewPostsAvailable([]);
-    setShowNewPostsBanner(false);
-  };
 
   // Load posts when filters change
   useEffect(() => {
@@ -119,32 +92,7 @@ export default function Community() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadPosts, sortBy, searchQuery]);
 
-  // Facebook-style silent refresh with AppState monitoring
-  useEffect(() => {
-    const appStateSubscription = AppState.addEventListener(
-      "change",
-      (nextAppState) => {
-        if (nextAppState === "active") {
-          checkForNewPosts();
-        }
-      },
-    );
 
-    const intervalId = setInterval(() => {
-      if (
-        AppState.currentState === "active" &&
-        !isLoading &&
-        !isRefreshing
-      ) {
-        checkForNewPosts();
-      }
-    }, 30000); // 30 seconds
-
-    return () => {
-      clearInterval(intervalId);
-      appStateSubscription.remove();
-    };
-  }, [isLoading, isRefreshing, checkForNewPosts]);
 
   const handleVote = async (postId: string, voteType: "up" | "down") => {
     if (!token) {
@@ -324,23 +272,7 @@ export default function Community() {
         </ScrollView>
       </View>
 
-      {/* New Posts Available Banner */}
-      {showNewPostsBanner && (
-        <TouchableOpacity
-          onPress={applyNewPosts}
-          className="absolute top-0 left-4 right-4 z-50 bg-primary-600 rounded-b-xl px-4 py-3 flex-row items-center justify-center shadow-lg"
-          style={{ marginTop: 0 }}
-          activeOpacity={0.8}
-        >
-          <View className="flex-row items-center">
-            <ArrowUp color="#fff" size={18} strokeWidth={2} />
-            <Text className="text-white font-semibold ml-2">
-              {newPostsAvailable.length} new{" "}
-              {newPostsAvailable.length === 1 ? "post" : "posts"}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      )}
+
 
       {/* Posts List */}
       <ScrollView

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,9 @@ import {
   Pressable,
   ActivityIndicator,
   TextInput,
+  Share,
 } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -32,13 +34,20 @@ import {
   Chrome,
   Pencil,
   MessageSquare,
+  Users,
+  Copy,
+  Share2,
+  UserPlus,
 } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system/legacy";
 import { Image } from "expo-image";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import { familyLocationService } from "../../services/familyLocationService";
+import { familyService, Family } from "../../services/familyService";
 import { apiFetch } from "../../utils/api";
+import FamilyDetailsModal from "../../components/FamilyDetailsModal";
 
 export default function Profile() {
   const router = useRouter();
@@ -48,6 +57,7 @@ export default function Profile() {
   const [backgroundAlerts, setBackgroundAlerts] = useState(true);
   const [vibrationAlerts, setVibrationAlerts] = useState(true);
   const [soundAlerts, setSoundAlerts] = useState(false);
+  const [familyLocationSharing, setFamilyLocationSharing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [linkingGoogle, setLinkingGoogle] = useState(false);
@@ -57,6 +67,14 @@ export default function Profile() {
   const [isSavingName, setIsSavingName] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // Family state
+  const [family, setFamily] = useState<Family | null>(null);
+  const [isLoadingFamily, setIsLoadingFamily] = useState(true);
+  const [showCreateFamilyModal, setShowCreateFamilyModal] = useState(false);
+  const [showFamilyDetailsModal, setShowFamilyDetailsModal] = useState(false);
+  const [familyName, setFamilyName] = useState("");
+  const [isCreatingFamily, setIsCreatingFamily] = useState(false);
 
   // Use profile image from user context (synced with database)
   const profileImage = user?.profileImageUrl || null;
@@ -79,12 +97,137 @@ export default function Profile() {
     }
   }, [token]);
 
-  // Reload contact count when screen comes into focus
+  // Load user's family
+  const loadFamily = useCallback(async (silent = false) => {
+    if (!token) {
+      setIsLoadingFamily(false);
+      return;
+    }
+
+    try {
+      if (!silent) {
+        setIsLoadingFamily(true);
+      }
+      familyService.setToken(token);
+      const families = await familyService.getUserFamilies();
+      setFamily(families[0] || null);
+    } catch (error) {
+      console.error("Failed to load family", error);
+      // Don't clear existing family data on error - keep showing current data
+    } finally {
+      if (!silent) {
+        setIsLoadingFamily(false);
+      }
+    }
+  }, [token]);
+
+  // Load family location sharing state
+  const loadFamilyLocationSharing = useCallback(async () => {
+    try {
+      const isEnabled = await familyLocationService.isLocationSharingEnabled();
+      setFamilyLocationSharing(isEnabled);
+    } catch (error) {
+      console.error("Failed to load family location sharing state:", error);
+    }
+  }, [setFamilyLocationSharing]);
+
+  // Reload contact count and family when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       loadContactCount();
-    }, [loadContactCount]),
+      loadFamilyLocationSharing();
+      loadFamily();
+    }, [loadContactCount, loadFamilyLocationSharing, loadFamily]),
   );
+
+  // Handle family location sharing toggle
+  const handleFamilyLocationToggle = async (enabled: boolean) => {
+    try {
+      setFamilyLocationSharing(enabled);
+      if (enabled) {
+        await familyLocationService.enableLocationSharing();
+      } else {
+        await familyLocationService.disableLocationSharing();
+      }
+    } catch (error) {
+      console.error("Failed to toggle family location sharing:", error);
+      // Revert state on error
+      setFamilyLocationSharing(!enabled);
+      Alert.alert("Error", "Failed to update location sharing settings");
+    }
+  };
+
+  // Initialize family location service and family service with token
+  useEffect(() => {
+    if (token) {
+      familyLocationService.setToken(token);
+      familyService.setToken(token);
+    }
+  }, [token]);
+
+  // Handle create family
+  const handleCreateFamily = async () => {
+    if (!familyName.trim() || !token) return;
+
+    if (familyName.trim().length < 2) {
+      Alert.alert("Error", "Family name must be at least 2 characters");
+      return;
+    }
+
+    setIsCreatingFamily(true);
+
+    try {
+      const newFamily = await familyService.createFamily(familyName.trim());
+      setFamily(newFamily);
+      setShowCreateFamilyModal(false);
+      setFamilyName("");
+      Alert.alert("Success", "Family created successfully!");
+    } catch (error) {
+      console.error("Failed to create family:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to create family",
+      );
+    } finally {
+      setIsCreatingFamily(false);
+    }
+  };
+
+  // Handle copy invite link
+  const handleCopyInviteLink = async () => {
+    if (!family) return;
+
+    const link = familyService.getShareableLink(family.invite_code);
+    try {
+      await Clipboard.setStringAsync(link);
+      Alert.alert("Copied!", "Invite link copied to clipboard");
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      Alert.alert("Invite Link", link);
+    }
+  };
+
+  // Handle share invite link
+  const handleShareInviteLink = async () => {
+    if (!family) return;
+
+    const link = familyService.getShareableLink(family.invite_code);
+    try {
+      await Share.share({
+        message: `Join my family safety network on SafeTransit!\n\nFamily: ${family.name}\nInvite code: ${family.invite_code}\n\nLink: ${link}`,
+        title: "Join My Family Network",
+      });
+    } catch (error) {
+      console.error("Failed to share:", error);
+      Alert.alert("Invite Link", link);
+    }
+  };
+
+  // Handle view family details
+  const handleViewFamilyDetails = () => {
+    if (!family) return;
+    router.push("/family" as never);
+  };
 
   // Upload image to UploadThing via backend API
   const uploadImage = async (file: {
@@ -415,6 +558,28 @@ export default function Profile() {
                 <View className="flex-row items-center justify-between">
                   <View className="flex-1">
                     <Text className="text-base font-semibold text-neutral-900 mb-1">
+                      Share Location with Family
+                    </Text>
+                    <Text className="text-sm text-neutral-500">
+                      Allow family members to see your location
+                    </Text>
+                  </View>
+                  <Switch
+                    value={familyLocationSharing}
+                    onValueChange={handleFamilyLocationToggle}
+                    trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
+                    thumbColor={familyLocationSharing ? "#2563eb" : "#f3f4f6"}
+                    accessible={true}
+                    accessibilityLabel="Family location sharing toggle"
+                    accessibilityRole="switch"
+                  />
+                </View>
+              </View>
+
+              <View className="px-4 py-4 border-b border-neutral-100">
+                <View className="flex-row items-center justify-between">
+                  <View className="flex-1">
+                    <Text className="text-base font-semibold text-neutral-900 mb-1">
                       Vibration Alerts
                     </Text>
                     <Text className="text-sm text-neutral-500">
@@ -457,8 +622,93 @@ export default function Profile() {
             </View>
           </Animated.View>
 
-          {/* Emergency Contacts */}
+          {/* Family Safety Network */}
           <Animated.View entering={FadeInDown.delay(300).duration(600)}>
+            <Text className="text-lg font-bold text-neutral-900 mb-3">
+              Family Safety Network
+            </Text>
+
+            {isLoadingFamily ? (
+              <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+                <ActivityIndicator color="#2563eb" size="small" />
+              </View>
+            ) : family ? (
+              <View className="bg-white rounded-2xl overflow-hidden mb-6 shadow-sm">
+                {/* Family Header */}
+                <TouchableOpacity
+                  className="px-4 py-4 border-b border-neutral-100"
+                  activeOpacity={0.7}
+                  onPress={handleViewFamilyDetails}
+                >
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-row items-center flex-1">
+                      <View className="w-12 h-12 bg-green-100 rounded-full items-center justify-center mr-3">
+                        <Users color="#22c55e" size={24} strokeWidth={2} />
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-base font-semibold text-neutral-900">
+                          {family.name}
+                        </Text>
+                        <Text className="text-sm text-neutral-500">
+                          {family.memberCount || 0} member{family.memberCount !== 1 ? "s" : ""} • {family.userRole === "creator" ? "Creator" : "Member"}
+                        </Text>
+                      </View>
+                    </View>
+                    <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
+                  </View>
+                </TouchableOpacity>
+
+                {/* Invite Code */}
+                <View className="px-4 py-4 bg-neutral-50">
+                  <Text className="text-xs font-semibold text-neutral-500 mb-2">
+                    INVITE CODE
+                  </Text>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-lg font-mono font-bold text-neutral-900">
+                      {family.invite_code}
+                    </Text>
+                    <View className="flex-row space-x-2">
+                      <TouchableOpacity
+                        onPress={handleCopyInviteLink}
+                        className="bg-white px-3 py-2 rounded-lg border border-neutral-200"
+                        activeOpacity={0.7}
+                      >
+                        <Copy color="#6b7280" size={16} strokeWidth={2} />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={handleShareInviteLink}
+                        className="bg-primary-600 px-3 py-2 rounded-lg"
+                        activeOpacity={0.7}
+                      >
+                        <Share2 color="#ffffff" size={16} strokeWidth={2} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <TouchableOpacity
+                className="bg-white rounded-2xl p-4 mb-6 shadow-sm border-2 border-dashed border-neutral-200"
+                activeOpacity={0.7}
+                onPress={() => setShowCreateFamilyModal(true)}
+              >
+                <View className="items-center py-4">
+                  <View className="w-16 h-16 bg-primary-100 rounded-full items-center justify-center mb-3">
+                    <UserPlus color="#2563eb" size={28} strokeWidth={2} />
+                  </View>
+                  <Text className="text-base font-semibold text-neutral-900 mb-1">
+                    Create Your Family Network
+                  </Text>
+                  <Text className="text-sm text-neutral-500 text-center px-4">
+                    Start sharing your location with trusted family members
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          </Animated.View>
+
+          {/* Emergency Contacts */}
+          <Animated.View entering={FadeInDown.delay(350).duration(600)}>
             <Text className="text-lg font-bold text-neutral-900 mb-3">
               Emergency Contacts
             </Text>
@@ -492,7 +742,7 @@ export default function Profile() {
           </Animated.View>
 
           {/* My Posts */}
-          <Animated.View entering={FadeInDown.delay(320).duration(600)}>
+          <Animated.View entering={FadeInDown.delay(400).duration(600)}>
             <Text className="text-lg font-bold text-neutral-900 mb-3">
               My Content
             </Text>
@@ -525,7 +775,7 @@ export default function Profile() {
           </Animated.View>
 
           {/* Linked Accounts */}
-          <Animated.View entering={FadeInDown.delay(350).duration(600)}>
+          <Animated.View entering={FadeInDown.delay(450).duration(600)}>
             <Text className="text-lg font-bold text-neutral-900 mb-3">
               Linked Accounts
             </Text>
@@ -575,7 +825,7 @@ export default function Profile() {
           </Animated.View>
 
           {/* About */}
-          <Animated.View entering={FadeInDown.delay(400).duration(600)}>
+          <Animated.View entering={FadeInDown.delay(500).duration(600)}>
             <Text className="text-lg font-bold text-neutral-900 mb-3">
               About
             </Text>
@@ -630,7 +880,7 @@ export default function Profile() {
           </Animated.View>
 
           {/* Logout */}
-          <Animated.View entering={FadeInDown.delay(500).duration(600)}>
+          <Animated.View entering={FadeInDown.delay(550).duration(600)}>
             <TouchableOpacity
               onPress={handleLogout}
               className="bg-danger-50 border-2 border-danger-200 rounded-2xl p-4 mb-8"
@@ -849,6 +1099,77 @@ export default function Profile() {
           </Animated.View>
         </View>
       </Modal>
+
+      {/* Create Family Modal */}
+      <Modal
+        visible={showCreateFamilyModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowCreateFamilyModal(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50 px-6">
+          <Animated.View
+            entering={FadeIn.duration(200)}
+            className="bg-white rounded-2xl p-6 w-full max-w-sm"
+          >
+            <Text className="text-xl font-bold text-neutral-900 mb-4">
+              Create Family Network
+            </Text>
+
+            <Text className="text-sm text-neutral-600 mb-4">
+              Give your family network a name. You'll get a unique invite code
+              to share with family members.
+            </Text>
+
+            <TextInput
+              value={familyName}
+              onChangeText={setFamilyName}
+              placeholder="e.g., The Smiths"
+              className="border border-neutral-200 rounded-xl px-4 py-3 text-base text-neutral-900 mb-4"
+              autoFocus
+              placeholderTextColor="#9ca3af"
+            />
+
+            <View className="flex-row space-x-3">
+              <TouchableOpacity
+                onPress={() => {
+                  setShowCreateFamilyModal(false);
+                  setFamilyName("");
+                }}
+                className="flex-1 bg-neutral-100 py-3 rounded-xl"
+                activeOpacity={0.7}
+              >
+                <Text className="text-neutral-700 text-center font-semibold">
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={handleCreateFamily}
+                disabled={isCreatingFamily || !familyName.trim()}
+                className={`flex-1 py-3 rounded-xl ${isCreatingFamily || !familyName.trim() ? "bg-primary-300" : "bg-primary-600"}`}
+                activeOpacity={0.7}
+              >
+                {isCreatingFamily ? (
+                  <ActivityIndicator color="#ffffff" size="small" />
+                ) : (
+                  <Text className="text-white text-center font-semibold">
+                    Create
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* Family Details Modal */}
+      <FamilyDetailsModal
+        family={family}
+        isVisible={showFamilyDetailsModal}
+        onClose={() => setShowFamilyDetailsModal(false)}
+        onFamilyUpdated={loadFamily}
+      />
     </View>
   );
 }

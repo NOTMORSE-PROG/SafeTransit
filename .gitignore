@@ -37,6 +37,7 @@ yarn-error.*
 .env*.local
 .env.production
 .env.development
+db/
 
 # Secrets and sensitive files
 KEYSTORE_SECRET.txt
