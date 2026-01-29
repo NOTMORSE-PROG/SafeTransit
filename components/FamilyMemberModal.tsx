@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, View, Text, TouchableOpacity, Pressable } from "react-native";
 import { Image } from "expo-image";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   X,
   UserCircle,
@@ -25,6 +26,7 @@ const FamilyMemberModal: React.FC<FamilyMemberModalProps> = ({
   onClose,
   onCenterOnMap,
 }) => {
+  const insets = useSafeAreaInsets();
   if (!member) return null;
 
   const getStatusInfo = (member: FamilyMember) => {
@@ -224,7 +226,7 @@ const FamilyMemberModal: React.FC<FamilyMemberModalProps> = ({
               </View>
 
               {/* Actions */}
-              <View className="mt-8">
+              <View className="mt-8" style={{ marginBottom: Math.max(insets.bottom, 20) }}>
                 <TouchableOpacity
                   onPress={() => {
                     onCenterOnMap(member);

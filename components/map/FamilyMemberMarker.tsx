@@ -1,9 +1,9 @@
 import React from "react";
 import { View } from "react-native";
-import { Marker } from "react-native-maps";
 import { Image } from "expo-image";
 import { UserCircle } from "lucide-react-native";
 import { FamilyMember } from "../../services/familyLocationService";
+import { OptimizedMarker } from "./OptimizedMarker";
 
 interface FamilyMemberMarkerProps {
   member: FamilyMember;
@@ -34,13 +34,12 @@ const FamilyMemberMarker: React.FC<FamilyMemberMarkerProps> = ({
   const statusColor = getStatusColor(member);
 
   return (
-    <Marker
+    <OptimizedMarker
       coordinate={{
         latitude: member.latitude,
         longitude: member.longitude,
       }}
       onPress={() => onPress?.(member)}
-      tracksViewChanges={false}
     >
       <View className="items-center">
         {/* Avatar with status ring */}
@@ -78,7 +77,7 @@ const FamilyMemberMarker: React.FC<FamilyMemberMarkerProps> = ({
           }}
         />
       </View>
-    </Marker>
+    </OptimizedMarker>
   );
 };
 
