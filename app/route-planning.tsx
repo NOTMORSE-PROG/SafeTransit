@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -36,6 +36,7 @@ import {
 } from '../services/routeSafetyService';
 import { familyLocationService, FamilyMember } from '../services/familyLocationService';
 import { Tip } from '../services/tipsService';
+import { OptimizedMarker } from '../components/map/OptimizedMarker';
 
 const TRAVEL_MODES = [
   { id: 'walk', label: 'Walk', icon: 'PersonStanding' },
@@ -54,6 +55,7 @@ const MANILA_REGION: Region = {
 export default function RoutePlanning() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const mapRef = useRef<MapView | null>(null);
 
   // Location states
   const [currentLocation, setCurrentLocation] = useState<LocationSearchResult | null>(null);
@@ -181,13 +183,17 @@ export default function RoutePlanning() {
           setStartLocation(geocoded);
         }
 
-        // Center map on current location
-        setMapRegion({
+        // Center map on current location (uncontrolled map, like homepage)
+        const nextRegion: Region = {
           latitude,
           longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
-        });
+        };
+        setMapRegion(nextRegion);
+        if (mapRef.current) {
+          mapRef.current.animateToRegion(nextRegion, 600);
+        }
       }
     } catch (error) {
       console.error('Error getting current location:', error);
@@ -296,18 +302,22 @@ export default function RoutePlanning() {
       
       setShowRoutes(true);
 
-      // Adjust map to show both points
+      // Adjust map to show both points (animate instead of controlling region prop)
       const midLat = (start.latitude + end.latitude) / 2;
       const midLon = (start.longitude + end.longitude) / 2;
       const latDelta = Math.abs(start.latitude - end.latitude) * 2.5;
       const lonDelta = Math.abs(start.longitude - end.longitude) * 2.5;
 
-      setMapRegion({
+      const nextRegion: Region = {
         latitude: midLat,
         longitude: midLon,
         latitudeDelta: Math.max(latDelta, 0.02),
         longitudeDelta: Math.max(lonDelta, 0.02),
-      });
+      };
+      setMapRegion(nextRegion);
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(nextRegion, 600);
+      }
     } catch (error) {
       console.error('Error fetching routes:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch routes';
@@ -384,11 +394,13 @@ export default function RoutePlanning() {
     <View className="flex-1 bg-white">
       {/* Map */}
       <MapView
+        ref={mapRef}
         provider={PROVIDER_DEFAULT}
         style={{ flex: 1 }}
-        region={mapRegion}
+        initialRegion={mapRegion}
         showsUserLocation
         showsMyLocationButton={false}
+        maxZoomLevel={18}
       >
         {/* Starting Point Marker */}
         {effectiveStartLocation && (
@@ -476,16 +488,18 @@ export default function RoutePlanning() {
             typeof tip.longitude === 'number' && !isNaN(tip.longitude)
           )
           .map((tip, idx) => (
-            <Marker
+            <OptimizedMarker
               key={`tip-${tip.id}-${idx}`}
               coordinate={{
                 latitude: tip.latitude,
                 longitude: tip.longitude,
               }}
-              onPress={() => setSelectedTipForModal(tip)}
+              onPress={() => {
+                setSelectedTipForModal(tip);
+              }}
             >
               <TipMarkerIcon category={tip.category} size={16} />
-            </Marker>
+            </OptimizedMarker>
           ))}
       </MapView>
 

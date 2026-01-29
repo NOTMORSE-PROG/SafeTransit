@@ -4,18 +4,21 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Polyline, Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import Animated, { SlideInUp } from 'react-native-reanimated';
 import * as Location from 'expo-location';
+import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { 
   ArrowLeft, 
   ArrowRight, 
   ArrowUp, 
   X, 
-  MapPin
+  MapPin,
+  Navigation
 } from 'lucide-react-native';
 import { Route } from '../services/locationIQRouting';
 import { Tip } from '../services/tipsService';
 import { TipMarkerIcon } from '../components/map/TipMarkerIcon';
 import TipDetailCard from '../components/map/TipDetailCard';
+import { OptimizedMarker } from '../components/map/OptimizedMarker';
 
 // Helper to calculate distance between two points (Haversine formula)
 function getDistanceFromLatLonInMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -45,6 +48,7 @@ export default function NavigationScreen() {
   const params = useLocalSearchParams();
   const insets = useSafeAreaInsets();
   const mapRef = useRef<MapView>(null);
+  const lastCameraUpdateMsRef = useRef(0);
   
   // State
   const [route, setRoute] = useState<Route | null>(null);
@@ -55,6 +59,7 @@ export default function NavigationScreen() {
   const [distanceToNextStep, setDistanceToNextStep] = useState(0);
   const [isTracking, setIsTracking] = useState(true);
   const [heading, setHeading] = useState(0);
+  const [isMapReady, setIsMapReady] = useState(false);
 
   // Parse route params
   useEffect(() => {
@@ -82,6 +87,7 @@ export default function NavigationScreen() {
   // Track user location
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
+    let isActive = true;
 
     const startTracking = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -93,24 +99,35 @@ export default function NavigationScreen() {
       subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.BestForNavigation,
-          timeInterval: 1000,
+          timeInterval: 500,
           distanceInterval: 5, // Update every 5 meters
         },
         (location) => {
+          if (!isActive) return;
           setCurrentLocation(location);
           setHeading(location.coords.heading || 0);
           
           // Update map camera
-          if (isTracking && mapRef.current) {
-            mapRef.current.animateCamera({
-              center: {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              },
-              heading: location.coords.heading || 0,
-              pitch: 45,
-              zoom: 19,
-            }, { duration: 1000 });
+          // Important: avoid fighting Google Maps internal state while user taps markers / modal is open.
+          // This prevents a known Android Google Maps IllegalStateException in some devices.
+          if (isMapReady && isTracking && !selectedTip && mapRef.current) {
+            const now = Date.now();
+            // Throttle camera updates to reduce native contention.
+            if (now - lastCameraUpdateMsRef.current >= 500) {
+              lastCameraUpdateMsRef.current = now;
+              mapRef.current.animateCamera(
+                {
+                  center: {
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                  },
+                  heading: location.coords.heading || 0,
+                  pitch: 45,
+                  zoom: 18,
+                },
+                { duration: 500 }
+              );
+            }
           }
         }
       );
@@ -119,11 +136,12 @@ export default function NavigationScreen() {
     startTracking();
 
     return () => {
+      isActive = false;
       if (subscription) {
         subscription.remove();
       }
     };
-  }, [isTracking]);
+  }, [isTracking, isMapReady, selectedTip]);
 
   // Navigation Logic
   useEffect(() => {
@@ -208,12 +226,15 @@ export default function NavigationScreen() {
         showsUserLocation
         showsMyLocationButton={false}
         showsCompass={false}
+        onMapReady={() => setIsMapReady(true)}
+        maxZoomLevel={18}
         initialRegion={{
           latitude: route.coordinates[0].latitude,
           longitude: route.coordinates[0].longitude,
           latitudeDelta: 0.002,
           longitudeDelta: 0.002,
         }}
+        onPanDrag={() => setIsTracking(false)}
       >
         {validRouteCoordinates.length >= 2 && (
           <Polyline
@@ -252,16 +273,20 @@ export default function NavigationScreen() {
         {tips
           .filter(isValidCoord)
           .map((tip, idx) => (
-          <Marker
+          <OptimizedMarker
             key={`tip-${tip.id}-${idx}`}
             coordinate={{
               latitude: tip.latitude,
               longitude: tip.longitude,
             }}
-            onPress={() => setSelectedTip(tip)}
+            onPress={() => {
+              // Pause tracking while the tip modal is open
+              setIsTracking(false);
+              setSelectedTip(tip);
+            }}
           >
             <TipMarkerIcon category={tip.category} size={28} />
-          </Marker>
+          </OptimizedMarker>
         ))}
       </MapView>
 
@@ -291,6 +316,40 @@ export default function NavigationScreen() {
           </View>
         </View>
       </View>
+
+      {/* Re-center Button */}
+      {!isTracking && (
+        <Animated.View 
+          entering={SlideInUp.duration(300)}
+          className="absolute right-4"
+          style={{ bottom: Math.max(insets.bottom, 20) + 180 }} // Position above the bottom panel
+        >
+          <TouchableOpacity
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              setIsTracking(true);
+              
+              // Immediate camera update
+              if (currentLocation && mapRef.current) {
+                mapRef.current.animateCamera({
+                  center: {
+                    latitude: currentLocation.coords.latitude,
+                    longitude: currentLocation.coords.longitude,
+                  },
+                  heading: currentLocation.coords.heading || 0,
+                  pitch: 45,
+                  zoom: 18,
+                }, { duration: 400 });
+              }
+            }}
+            className="bg-white px-4 py-3 rounded-full shadow-lg border border-neutral-200 flex-row items-center"
+            activeOpacity={0.8}
+          >
+            <Navigation color="#2563eb" size={20} fill="#2563eb" />
+            <Text className="ml-2 font-bold text-primary-600">Re-center</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      )}
 
       {/* Bottom Info Panel */}
       <View 
@@ -333,7 +392,9 @@ export default function NavigationScreen() {
         <>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => setSelectedTip(null)}
+            onPress={() => {
+              setSelectedTip(null);
+            }}
             className="absolute left-0 right-0 top-0 bottom-0"
             style={{ backgroundColor: "rgba(0,0,0,0.6)", zIndex: 100 }}
           />
@@ -349,7 +410,9 @@ export default function NavigationScreen() {
             >
               <TipDetailCard
                 tip={selectedTip}
-                onClose={() => setSelectedTip(null)}
+                onClose={() => {
+                  setSelectedTip(null);
+                }}
               />
             </Animated.View>
           </View>
