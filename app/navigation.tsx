@@ -39,9 +39,16 @@ function deg2rad(deg: number) {
 }
 
 // Helper to validate coordinate
-const isValidCoord = (c: any): boolean => 
-  !!c && typeof c.latitude === 'number' && !isNaN(c.latitude) &&
-  typeof c.longitude === 'number' && !isNaN(c.longitude);
+const isValidCoord = (c: unknown): c is { latitude: number; longitude: number } => {
+  if (!c || typeof c !== 'object') return false;
+  const coord = c as { latitude?: unknown; longitude?: unknown };
+  return (
+    typeof coord.latitude === 'number' &&
+    typeof coord.longitude === 'number' &&
+    !isNaN(coord.latitude) &&
+    !isNaN(coord.longitude)
+  );
+};
 
 export default function NavigationScreen() {
   const router = useRouter();
