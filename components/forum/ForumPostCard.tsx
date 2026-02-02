@@ -42,7 +42,6 @@ export function ForumPostCard({
   onVote,
   isVoting,
 }: ForumPostCardProps) {
-  const avatarUri = post.author_image_url || "https://via.placeholder.com/40";
   const [showImageZoom, setShowImageZoom] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -57,10 +56,18 @@ export function ForumPostCard({
       >
         {/* Header: Author + Flair */}
         <View className="flex-row items-center mb-3">
-          <Image
-            source={{ uri: avatarUri }}
-            className="w-10 h-10 rounded-full bg-neutral-200"
-          />
+          <View className="w-10 h-10 rounded-full bg-neutral-200 items-center justify-center">
+            {post.author_image_url ? (
+              <Image
+                source={{ uri: post.author_image_url }}
+                className="w-10 h-10 rounded-full"
+              />
+            ) : (
+              <Text className="text-neutral-600 font-semibold text-base">
+                {post.author_name.charAt(0).toUpperCase()}
+              </Text>
+            )}
+          </View>
           <View className="flex-1 ml-3">
             <Text className="text-sm font-semibold text-neutral-900">
               {post.author_name}

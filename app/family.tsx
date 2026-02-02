@@ -23,46 +23,6 @@ import { Image } from "expo-image";
 import { useAuth } from "../contexts/AuthContext";
 import { familyService, Family, FamilyMemberDetail } from "../services/familyService";
 
-// Mock family members data
-const MOCK_FAMILY_MEMBERS: FamilyMemberDetail[] = [
-  {
-    family_id: "mock-family-1",
-    user_id: "mock-user-1",
-    role: "creator",
-    joined_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    full_name: "Maria Santos",
-    email: "maria@example.com",
-    profile_image_url: null,
-  },
-  {
-    family_id: "mock-family-1",
-    user_id: "mock-user-2",
-    role: "member",
-    joined_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    full_name: "Juan Santos",
-    email: "juan@example.com",
-    profile_image_url: null,
-  },
-  {
-    family_id: "mock-family-1",
-    user_id: "mock-user-3",
-    role: "member",
-    joined_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    full_name: "Ana Santos",
-    email: "ana@example.com",
-    profile_image_url: null,
-  },
-  {
-    family_id: "mock-family-1",
-    user_id: "mock-user-4",
-    role: "member",
-    joined_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    full_name: "Pedro Santos",
-    email: "pedro@example.com",
-    profile_image_url: null,
-  },
-];
-
 export default function FamilyPage() {
   const router = useRouter();
   const { token } = useAuth();
@@ -83,8 +43,8 @@ export default function FamilyPage() {
       
       if (families.length > 0) {
         setFamily(families[0]);
-        // Use mock members for now
-        setMembers(MOCK_FAMILY_MEMBERS);
+        const familyMembers = await familyService.getFamilyMembers(families[0].id);
+        setMembers(familyMembers);
       }
     } catch (error) {
       console.error("Failed to load family", error);
