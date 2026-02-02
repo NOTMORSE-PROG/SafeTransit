@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X, Info, Shield, MapPin, Users, AlertCircle } from 'lucide-react-native';
 import { apiFetch } from '@/utils/api';
 import { CONSENT_TYPES } from '@/constants/legalDocuments';
@@ -40,6 +41,7 @@ export default function ConsentManager({
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
 
   const consentItems: ConsentItem[] = [
     {
@@ -345,7 +347,7 @@ This consent is **required** to use SafeTransit and cannot be disabled.`,
 
             {/* Footer */}
             {!isLoading && (
-              <View className="border-t border-gray-200 px-6 py-4 bg-white">
+              <View className="border-t border-gray-200 px-6 bg-white" style={{ paddingTop: 16, paddingBottom: Math.max(insets.bottom + 16, 24) }}>
                 <View className="flex-row gap-3">
                   <TouchableOpacity
                     onPress={onClose}

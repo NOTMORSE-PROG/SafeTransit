@@ -8,6 +8,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Markdown from 'react-native-markdown-display';
 import { X, Check } from 'lucide-react-native';
 
@@ -36,6 +37,7 @@ export default function LegalDocumentViewer({
 }: LegalDocumentViewerProps) {
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const insets = useSafeAreaInsets();
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -210,7 +212,7 @@ export default function LegalDocumentViewer({
           </ScrollView>
 
           {/* Footer with actions */}
-          <View className="border-t border-gray-200 px-6 py-4 bg-white">
+          <View className="border-t border-gray-200 px-6 bg-white" style={{ paddingTop: 16, paddingBottom: Math.max(insets.bottom + 16, 24) }}>
             {showAcceptButton ? (
               <View className="flex-row gap-3">
                 <TouchableOpacity
