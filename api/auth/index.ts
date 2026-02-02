@@ -3,6 +3,7 @@
 // Routes based on request body fields
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
 import { UserRepository } from "../../services/repositories/userRepository";
 import { comparePassword, hashPassword } from "../../services/auth/password";
 import {
@@ -18,6 +19,17 @@ import {
   sanitizeEmail,
   sanitizeText,
 } from "../../services/auth/inputValidation";
+
+// Database connection
+const getDatabaseUrl = (): string => {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL environment variable is not set");
+  }
+  return url;
+};
+
+const sql = neon(getDatabaseUrl());
 
 interface GoogleUserInfo {
   id: string; // Google's user ID
@@ -233,6 +245,36 @@ async function handleSignup(
     phone_number: null,
     google_id: null,
   });
+
+  // Log user consents for Terms of Service and Privacy Policy
+  try {
+    // Update user table with consent timestamps
+    await sql`
+      UPDATE users
+      SET accepted_terms_at = NOW(),
+          accepted_privacy_at = NOW(),
+          terms_version = ${'1.0.0'},
+          privacy_version = ${'1.0.0'}
+      WHERE id = ${newUser.id}
+    `;
+
+    // Log consents to user_consents table
+    const consents = [
+      { type: 'terms_of_service', given: true, method: 'signup' },
+      { type: 'privacy_policy', given: true, method: 'signup' },
+      { type: 'data_processing', given: true, method: 'signup' },
+    ];
+
+    for (const consent of consents) {
+      await sql`
+        INSERT INTO user_consents (user_id, consent_type, consent_given, consent_method)
+        VALUES (${newUser.id}, ${consent.type}, ${consent.given}, ${consent.method})
+      `;
+    }
+  } catch (consentError) {
+    console.error('Failed to log user consents:', consentError);
+    // Don't fail signup if consent logging fails, but log the error
+  }
 
   // Generate JWT token
   const token = generateToken({ userId: newUser.id, email: newUser.email });
