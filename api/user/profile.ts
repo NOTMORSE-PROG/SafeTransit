@@ -1,9 +1,20 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
 import { verifyToken } from "../../services/auth/jwt";
 import { validatePhoneNumber } from "../../services/auth/validation";
 import { UserRepository } from "../../services/repositories/userRepository";
 import { UTApi } from "uploadthing/server";
 import { sanitizeText, isValidURL } from "../../services/auth/inputValidation";
+
+const getDatabaseUrl = (): string => {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL environment variable is not set");
+  }
+  return url;
+};
+
+const sql = neon(getDatabaseUrl());
 
 const utapi = new UTApi({
   token: process.env.UPLOADTHING_TOKEN,
@@ -53,14 +64,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // GET consents
     if (action === 'consents') {
       try {
-        const { query } = await import('../../db/index');
-        const result = await query(
-          'SELECT consent_type, consent_given, consented_at, withdrawn_at FROM user_consents WHERE user_id = $1',
-          [payload.userId]
-        );
+        const result = await sql`
+          SELECT consent_type, consent_given, consented_at, withdrawn_at
+          FROM user_consents
+          WHERE user_id = ${payload.userId}
+        `;
 
         const consents: Record<string, boolean> = {};
-        result.rows.forEach((row: { consent_type: string; consent_given: boolean; withdrawn_at: string | null }) => {
+        result.forEach((row: { consent_type: string; consent_given: boolean; withdrawn_at: string | null }) => {
           // Only include as true if consent_given is true and not withdrawn
           consents[row.consent_type] = row.consent_given && !row.withdrawn_at;
         });
@@ -105,8 +116,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (action === 'delete') {
       try {
-        const { query } = await import('../../db/index');
-
         // Get user to find profile image
         const user = await UserRepository.findById(payload.userId);
         if (!user) {
@@ -126,13 +135,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // Log deletion request
-        await query(
-          'INSERT INTO data_deletion_requests (user_id, status) VALUES ($1, $2)',
-          [payload.userId, 'completed']
-        );
+        await sql`
+          INSERT INTO data_deletion_requests (user_id, status)
+          VALUES (${payload.userId}, 'completed')
+        `;
 
         // Delete user (CASCADE will handle related data)
-        await query('DELETE FROM users WHERE id = $1', [payload.userId]);
+        await sql`DELETE FROM users WHERE id = ${payload.userId}`;
 
         return res.status(200).json({
           success: true,
@@ -157,7 +166,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // POST consent
   if (req.method === "POST" && action === 'consent') {
     try {
-      const { query } = await import('../../db/index');
       const { consent_type, consent_given, method } = req.body;
 
       if (!consent_type || typeof consent_given !== 'boolean') {
@@ -165,16 +173,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       // Insert or update consent
-      await query(
-        `INSERT INTO user_consents (user_id, consent_type, consent_given, consent_method, consented_at, withdrawn_at)
-         VALUES ($1, $2, $3, $4, NOW(), NULL)
-         ON CONFLICT (user_id, consent_type)
-         DO UPDATE SET
-           consent_given = $3,
-           withdrawn_at = CASE WHEN $3 = false THEN NOW() ELSE NULL END,
-           consented_at = CASE WHEN $3 = true THEN NOW() ELSE user_consents.consented_at END`,
-        [payload.userId, consent_type, consent_given, method || 'settings']
-      );
+      await sql`
+        INSERT INTO user_consents (user_id, consent_type, consent_given, consent_method, consented_at, withdrawn_at)
+        VALUES (${payload.userId}, ${consent_type}, ${consent_given}, ${method || 'settings'}, NOW(), NULL)
+        ON CONFLICT (user_id, consent_type)
+        DO UPDATE SET
+          consent_given = ${consent_given},
+          withdrawn_at = CASE WHEN ${consent_given} = false THEN NOW() ELSE NULL END,
+          consented_at = CASE WHEN ${consent_given} = true THEN NOW() ELSE user_consents.consented_at END
+      `;
 
       return res.status(200).json({
         success: true,
@@ -189,30 +196,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // POST data export
   if (req.method === "POST" && action === 'export') {
     try {
-      const { query } = await import('../../db/index');
-
       // Fetch all user data
       const user = await UserRepository.findById(payload.userId);
-      const locationHistory = await query(
-        'SELECT * FROM user_location_history WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1000',
-        [payload.userId]
-      );
-      const emergencyContacts = await query(
-        'SELECT * FROM emergency_contacts WHERE user_id = $1',
-        [payload.userId]
-      );
-      const familyMembers = await query(
-        'SELECT * FROM family_members WHERE user_id = $1',
-        [payload.userId]
-      );
-      const forumPosts = await query(
-        'SELECT * FROM forum_posts WHERE user_id = $1',
-        [payload.userId]
-      );
-      const consents = await query(
-        'SELECT * FROM user_consents WHERE user_id = $1',
-        [payload.userId]
-      );
+      const locationHistory = await sql`
+        SELECT * FROM user_location_history
+        WHERE user_id = ${payload.userId}
+        ORDER BY created_at DESC
+        LIMIT 1000
+      `;
+      const emergencyContacts = await sql`
+        SELECT * FROM emergency_contacts WHERE user_id = ${payload.userId}
+      `;
+      const familyMembers = await sql`
+        SELECT * FROM family_members WHERE user_id = ${payload.userId}
+      `;
+      const forumPosts = await sql`
+        SELECT * FROM forum_posts WHERE user_id = ${payload.userId}
+      `;
+      const consents = await sql`
+        SELECT * FROM user_consents WHERE user_id = ${payload.userId}
+      `;
 
       // Compile export data
       const exportData = {
@@ -224,14 +227,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           phone_number: user?.phone_number,
           created_at: user?.created_at,
         },
-        location_history: locationHistory.rows,
-        emergency_contacts: emergencyContacts.rows.map((c: { phone_number: string; name: string }) => ({
+        location_history: locationHistory,
+        emergency_contacts: emergencyContacts.map((c: { phone_number: string; name: string }) => ({
           name: c.name,
           phone_number: c.phone_number,
         })),
-        family_members: familyMembers.rows,
-        forum_posts: forumPosts.rows,
-        consents: consents.rows,
+        family_members: familyMembers,
+        forum_posts: forumPosts,
+        consents: consents,
       };
 
       // In production, you would upload this to a temporary storage and return a download URL
@@ -243,10 +246,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7); // Expires in 7 days
 
-      await query(
-        'INSERT INTO data_export_requests (user_id, status, export_url, completed_at, expires_at) VALUES ($1, $2, $3, NOW(), $4)',
-        [payload.userId, 'completed', 'https://example.com/export/mock-url', expiresAt]
-      );
+      await sql`
+        INSERT INTO data_export_requests (user_id, status, export_url, completed_at, expires_at)
+        VALUES (${payload.userId}, 'completed', 'https://example.com/export/mock-url', NOW(), ${expiresAt.toISOString()})
+      `;
 
       return res.status(200).json({
         success: true,
