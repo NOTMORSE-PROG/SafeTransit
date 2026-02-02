@@ -43,8 +43,8 @@ export default function FamilyPage() {
       
       if (families.length > 0) {
         setFamily(families[0]);
-        const familyMembers = await familyService.getFamilyMembers(families[0].id);
-        setMembers(familyMembers);
+        const familyDetails = await familyService.getFamilyDetails(families[0].id);
+        setMembers(familyDetails.members);
       }
     } catch (error) {
       console.error("Failed to load family", error);
