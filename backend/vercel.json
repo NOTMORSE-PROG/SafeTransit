@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/api/index" },
+    { "source": "/api/auth/login", "destination": "/api/auth" },
+    { "source": "/api/auth/google", "destination": "/api/auth" }
+  ]
+}
