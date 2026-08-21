@@ -236,28 +236,79 @@ function getShortName(place: NominatimPlace): string {
 }
 
 /**
- * Get popular places in Manila as suggestions
+ * Curated popular places in Metro Manila with verified coordinates.
+ * Hand-checked against authoritative sources (Wikipedia infoboxes, Nominatim live)
+ * on 2026-04-26. Returning hardcoded coords avoids two real failure modes:
+ *   1. Nominatim text-search for "Ortigas Center" returns a pedestrian footbridge
+ *      in Pasig — not the CBD — which produced wrong suggestions.
+ *   2. Brand renames (e.g. Resorts World Manila -> Newport World Resorts) leave
+ *      stale text searches pointing at the wrong place.
  */
 export async function getManilaPopularPlaces(): Promise<LocationSearchResult[]> {
-  const popularPlaces = [
-    'Makati City Hall',
-    'SM Mall of Asia',
-    'BGC Taguig',
-    'NAIA Terminal 3',
-    'Quezon City Hall',
-    'Manila City Hall',
-    'Ortigas Center',
-    'Greenhills Shopping Center',
+  return [
+    {
+      id: 'popular-makati-city-hall',
+      name: 'Makati City Hall',
+      address: 'J. P. Rizal Street, Poblacion, Makati, Metro Manila, Philippines',
+      latitude: 14.5705,
+      longitude: 121.0272,
+      type: 'townhall',
+    },
+    {
+      id: 'popular-sm-moa',
+      name: 'SM Mall of Asia',
+      address: 'Seaside Boulevard, Pasay, Metro Manila, Philippines',
+      latitude: 14.5352,
+      longitude: 120.9816,
+      type: 'mall',
+    },
+    {
+      id: 'popular-bgc',
+      name: 'Bonifacio Global City',
+      address: 'Fort Bonifacio, Taguig, Metro Manila, Philippines',
+      latitude: 14.5494,
+      longitude: 121.0546,
+      type: 'neighbourhood',
+    },
+    {
+      id: 'popular-naia-t3',
+      name: 'NAIA Terminal 3',
+      address: 'Andrews Avenue, Pasay, Metro Manila, Philippines',
+      latitude: 14.5201,
+      longitude: 121.0142,
+      type: 'aeroway',
+    },
+    {
+      id: 'popular-qc-city-hall',
+      name: 'Quezon City Hall',
+      address: 'Mayaman Street, Diliman, Quezon City, Metro Manila, Philippines',
+      latitude: 14.6464,
+      longitude: 121.0500,
+      type: 'townhall',
+    },
+    {
+      id: 'popular-manila-city-hall',
+      name: 'Manila City Hall',
+      address: 'Taft Avenue, Ermita, Manila, Metro Manila, Philippines',
+      latitude: 14.5893,
+      longitude: 120.9816,
+      type: 'townhall',
+    },
+    {
+      id: 'popular-ortigas-center',
+      name: 'Ortigas Center',
+      address: 'Pasig, Metro Manila, Philippines',
+      latitude: 14.5854,
+      longitude: 121.0641,
+      type: 'commercial',
+    },
+    {
+      id: 'popular-greenhills',
+      name: 'Greenhills Shopping Center',
+      address: 'Greenhills, San Juan, Metro Manila, Philippines',
+      latitude: 14.6017,
+      longitude: 121.0499,
+      type: 'mall',
+    },
   ];
-
-  const results: LocationSearchResult[] = [];
-
-  for (const place of popularPlaces.slice(0, 5)) {
-    const searchResults = await searchLocations(place, 1);
-    if (searchResults.length > 0) {
-      results.push(searchResults[0]);
-    }
-  }
-
-  return results;
 }

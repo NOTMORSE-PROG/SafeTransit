@@ -48,52 +48,30 @@ class FamilyService {
    */
   async getUserFamilies(): Promise<Family[]> {
     if (!this.token) {
-      // Return mock data when not authenticated
-      return this.getMockFamilies();
+      return [];
     }
 
-    try {
-      const response = await apiFetch("/api/family", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      });
-
-      if (!response.ok) {
-        let errorMessage = "Failed to fetch families";
-        try {
-          const error = await response.json();
-          errorMessage = error.error || errorMessage;
-        } catch {
-          // Response is not JSON, use status text
-          errorMessage = response.statusText || errorMessage;
-        }
-        throw new Error(errorMessage);
-      }
-
-      const data = await response.json();
-      return data.families || [];
-    } catch {
-      // Family API not yet implemented - silently fall back to mock data
-      return this.getMockFamilies();
-    }
-  }
-
-  private getMockFamilies(): Family[] {
-    const createdDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return [
-      {
-        id: "mock-family-1",
-        name: "Santos Family",
-        invite_code: "DEMO123",
-        created_by: "mock-user-1",
-        created_at: createdDate.toISOString(),
-        updated_at: createdDate.toISOString(),
-        memberCount: 4,
-        userRole: "creator" as const,
+    const response = await apiFetch("/api/family", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.token}`,
       },
-    ];
+    });
+
+    if (!response.ok) {
+      let errorMessage = "Failed to fetch families";
+      try {
+        const error = await response.json();
+        errorMessage = error.error || errorMessage;
+      } catch {
+        // Response is not JSON, use status text
+        errorMessage = response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data.families || [];
   }
 
   /**

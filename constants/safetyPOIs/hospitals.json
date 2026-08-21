@@ -1,0 +1,4541 @@
+[
+  {
+    "id": "80050000-0000-0000-0000-000025389198",
+    "osm_id": 25389198,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Protacio Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5241939,
+    "longitude": 120.9965839,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055051235",
+    "osm_id": 255051235,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "UST Hospital Clinical Division",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6122477,
+    "longitude": 120.9898193,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055059925",
+    "osm_id": 255059925,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Our Lady of Mercy Hospital",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.721521,
+    "longitude": 121.0397952,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055060717",
+    "osm_id": 255060717,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "A. R. Bautista Children And General Hospital",
+    "address": "Kalookan",
+    "phone": null,
+    "latitude": 14.7303,
+    "longitude": 121.043441,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055060785",
+    "osm_id": 255060785,
+    "type": "hospital",
+    "subtype": null,
+    "name": "St. John Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6931601,
+    "longitude": 120.9656248,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055061867",
+    "osm_id": 255061867,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Casual General Hospital",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7370013,
+    "longitude": 121.070637,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055063024",
+    "osm_id": 255063024,
+    "type": "hospital",
+    "subtype": null,
+    "name": "J. P. Sioson General Hospital And Colleges",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.6599034,
+    "longitude": 121.0250945,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055066513",
+    "osm_id": 255066513,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Fairview Polymedic Hospital",
+    "address": "Quirino Highway, Kalookan",
+    "phone": null,
+    "latitude": 14.729371,
+    "longitude": 121.04251,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055067973",
+    "osm_id": 255067973,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Mother Regina",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.58352,
+    "longitude": 121.085128,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055070486",
+    "osm_id": 255070486,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Acebedo General Hospital",
+    "address": "General Luis Street, Valenzuela",
+    "phone": null,
+    "latitude": 14.7188033,
+    "longitude": 121.0051496,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055071671",
+    "osm_id": 255071671,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Tanchoco Clinic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.67563,
+    "longitude": 120.943161,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055071879",
+    "osm_id": 255071879,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Our Lady Of Grace Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.64872,
+    "longitude": 120.981758,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000089717017",
+    "osm_id": 589717017,
+    "type": "hospital",
+    "subtype": null,
+    "name": "B A Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7384585,
+    "longitude": 120.9580669,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000097000047",
+    "osm_id": 597000047,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ann Francis Mother & Child Hospital",
+    "address": "Quirino Highway",
+    "phone": null,
+    "latitude": 14.6943711,
+    "longitude": 121.0312571,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000097116607",
+    "osm_id": 597116607,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Tawiran Public Clinic",
+    "address": "Tawiran Road",
+    "phone": null,
+    "latitude": 14.7445042,
+    "longitude": 120.9110293,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0006-000043218009",
+    "osm_id": 643218009,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Commcare, Inc.",
+    "address": "Montclair Street, Parañaque",
+    "phone": null,
+    "latitude": 14.501349,
+    "longitude": 121.023788,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0006-000060610237",
+    "osm_id": 660610237,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Contreras Medical Clinic and Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4132944,
+    "longitude": 120.8574984,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000079209740",
+    "osm_id": 1279209740,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Amisola Maternity Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6328532,
+    "longitude": 120.9781047,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0017-000028914761",
+    "osm_id": 1728914761,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Aesthetic Avenue Medical Clinic",
+    "address": "BF Resort Drive, Las Piñas",
+    "phone": null,
+    "latitude": 14.4422175,
+    "longitude": 120.9916161,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0017-000028914773",
+    "osm_id": 1728914773,
+    "type": "hospital",
+    "subtype": null,
+    "name": "BF Maternity Clinic",
+    "address": "BF Resort Drive, Las Piñas",
+    "phone": null,
+    "latitude": 14.4422958,
+    "longitude": 120.9915862,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0019-000098698325",
+    "osm_id": 1998698325,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Alfonso Clinic",
+    "address": "M. Suarez Avenue, Pasig",
+    "phone": null,
+    "latitude": 14.5681954,
+    "longitude": 121.0861052,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0020-000008421593",
+    "osm_id": 2008421593,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Medical Clinic",
+    "address": "Patindig Araw Road, Imus",
+    "phone": null,
+    "latitude": 14.4060294,
+    "longitude": 120.9282904,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0025-000065829028",
+    "osm_id": 2565829028,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Valenzuela City Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6894963,
+    "longitude": 120.9777468,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0026-000010273475",
+    "osm_id": 2610273475,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Martin Maternity and Pediatrics Hospital",
+    "address": "Marseilla Street, Salcedo 2",
+    "phone": "+63464381112",
+    "latitude": 14.425703,
+    "longitude": 120.8741989,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0049-000016564521",
+    "osm_id": 4916564521,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Perpetual Succor Maternity Hospital",
+    "address": "Florentino Cayco Street",
+    "phone": null,
+    "latitude": 14.6080998,
+    "longitude": 120.9923296,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0054-000016366377",
+    "osm_id": 5416366377,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Crossroads Treatment and Rehabilitation Center",
+    "address": "Taipei",
+    "phone": null,
+    "latitude": 14.5480689,
+    "longitude": 121.1326996,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0057-000046203921",
+    "osm_id": 5746203921,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Micah Clinic",
+    "address": "San Marcelino Street, Manila",
+    "phone": null,
+    "latitude": 14.5728051,
+    "longitude": 120.992672,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0060-000011953702",
+    "osm_id": 6011953702,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Ambulatory CPU Lingap Bata – UST Medical Social Service Dapartment",
+    "address": "España Boulevard, Manila",
+    "phone": null,
+    "latitude": 14.6115031,
+    "longitude": 120.990071,
+    "tags": {
+      "operator": "UST",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0060-000036095585",
+    "osm_id": 6036095585,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Fatima University Medical Center",
+    "address": "Sumulong Highway, Antipolo",
+    "phone": null,
+    "latitude": 14.6192564,
+    "longitude": 121.1522667,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://www.fumc.com.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0060-000094516077",
+    "osm_id": 6094516077,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "King of Kings Servant Healer Medical Clinic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.433875,
+    "longitude": 120.9893055,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0061-000092293786",
+    "osm_id": 6192293786,
+    "type": "hospital",
+    "subtype": null,
+    "name": "manila east medical center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5740982,
+    "longitude": 121.1436702,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0063-000051453988",
+    "osm_id": 6351453988,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Philippine Medical Tests System",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6358797,
+    "longitude": 121.0246028,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0063-000080993970",
+    "osm_id": 6380993970,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Doctor J. Sabili General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.48889,
+    "longitude": 121.0578217,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0072-000078748585",
+    "osm_id": 7278748585,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Vian Family Hospital II",
+    "address": "Quirino Highway, Quezon City",
+    "phone": "+63 2 7261 3275; +63 2 3454 3433",
+    "latitude": 14.682847,
+    "longitude": 121.021062,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0084-000024682317",
+    "osm_id": 8424682317,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Our Lady of Grace Hospital",
+    "address": "8th Avenue",
+    "phone": "+63 283611124",
+    "latitude": 14.6488967,
+    "longitude": 120.981379,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0087-000020820470",
+    "osm_id": 8720820470,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Queensberry",
+    "address": "Ramirez Street",
+    "phone": null,
+    "latitude": 14.7238749,
+    "longitude": 121.0396761,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0087-000037517378",
+    "osm_id": 8737517378,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Our Lady of Lourdes Hospital",
+    "address": "General Luis Street",
+    "phone": null,
+    "latitude": 14.719221,
+    "longitude": 121.0066929,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0110-000082277450",
+    "osm_id": 11082277450,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Unciano Paramedical General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.600722,
+    "longitude": 121.016232,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0110-000082277452",
+    "osm_id": 11082277452,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Our Lady of Lourdes Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5947342,
+    "longitude": 121.0230978,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0117-000060406138",
+    "osm_id": 11760406138,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "RPHS II",
+    "address": "E. Rodriguez Avenue, Antipolo",
+    "phone": null,
+    "latitude": 14.5782449,
+    "longitude": 121.1860811,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0121-000093991210",
+    "osm_id": 12193991210,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "CSM Dental Clinic",
+    "address": "Rizal Avenue Extension, Malabon",
+    "phone": null,
+    "latitude": 14.6587471,
+    "longitude": 120.9525315,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0121-000094623363",
+    "osm_id": 12194623363,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "CB Dialysis Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.660274,
+    "longitude": 120.9513335,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0122-000017091258",
+    "osm_id": 12217091258,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Antipolo City Hosital System",
+    "address": null,
+    "phone": null,
+    "latitude": 14.620777,
+    "longitude": 121.1282039,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0124-000096195998",
+    "osm_id": 12496195998,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Bignay Health Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.747888,
+    "longitude": 120.9967872,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0128-000039109900",
+    "osm_id": 12839109900,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Northern Tagalog Regional Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7524776,
+    "longitude": 121.1324921,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0137-000062275145",
+    "osm_id": 13762275145,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "site",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6164769,
+    "longitude": 121.0123842,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000023378684",
+    "osm_id": 23378684,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Alabang Medical Center",
+    "address": "Alabang-Zapote Road, Muntinlupa",
+    "phone": "(02)7750275",
+    "latitude": 14.4277653,
+    "longitude": 121.0244792,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000023378979",
+    "osm_id": 23378979,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Ospital ng Muntinlupa",
+    "address": "Centennial Lane, Muntinlupa",
+    "phone": null,
+    "latitude": 14.4142507,
+    "longitude": 121.0441701,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000023378990",
+    "osm_id": 23378990,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Asian Hospital and Medical Center",
+    "address": "Civic Drive, Muntinlupa",
+    "phone": "+63 2 8771 9000; +63 2 8876 5739",
+    "latitude": 14.4132052,
+    "longitude": 121.0436117,
+    "tags": {
+      "operator": "Sampaguita Adapon",
+      "opening_hours": "Tu 09:30-17:00; Th 13:00-18:00",
+      "website": "https://www.asianhospital.com/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000025795096",
+    "osm_id": 25795096,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "National Kidney and Transplant Institute",
+    "address": "East Avenue",
+    "phone": "+63 2 981 0300",
+    "latitude": 14.647247,
+    "longitude": 121.0472489,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://www.nkti.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000025943731",
+    "osm_id": 25943731,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Fairview General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7056728,
+    "longitude": 121.0720252,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000028997817",
+    "osm_id": 28997817,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Ospital ng Makati",
+    "address": "Sampaguita Street, Taguig",
+    "phone": "8882 6316",
+    "latitude": 14.5464125,
+    "longitude": 121.0618875,
+    "tags": {
+      "operator": "City Government of Makati",
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000029042991",
+    "osm_id": 29042991,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Taytay Emergency Hospital",
+    "address": "J. Asilo Street",
+    "phone": null,
+    "latitude": 14.5709353,
+    "longitude": 121.1314566,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000029353952",
+    "osm_id": 29353952,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Luke's Medical Center Global City",
+    "address": "32nd Street, Taguig",
+    "phone": "+63939 9373182;+632 7897700",
+    "latitude": 14.5551344,
+    "longitude": 121.0481158,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000032596622",
+    "osm_id": 32596622,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Quezon Institute",
+    "address": null,
+    "phone": null,
+    "latitude": 14.617654,
+    "longitude": 121.0132039,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000035567304",
+    "osm_id": 35567304,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "University of the East - Ramon Magsaysay Memorial Medical Center",
+    "address": "Aurora Boulevard, San Juan",
+    "phone": null,
+    "latitude": 14.6066733,
+    "longitude": 121.0205952,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000046332952",
+    "osm_id": 46332952,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Novaliches General Hospital",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7094982,
+    "longitude": 121.0388551,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000049333995",
+    "osm_id": 49333995,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Makati Medical Center",
+    "address": "Amorsolo Street, Makati",
+    "phone": "+63 2 8888 8999 loc 2357",
+    "latitude": 14.5592839,
+    "longitude": 121.0148788,
+    "tags": {
+      "operator": "Medical Doctors, Inc.",
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000054025002",
+    "osm_id": 54025002,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Amang Rodriguez Memorial Medical Center",
+    "address": "Sumulong Highway, Marikina",
+    "phone": null,
+    "latitude": 14.6361025,
+    "longitude": 121.0984437,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000076344014",
+    "osm_id": 76344014,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Rizal Medical Center",
+    "address": "Pasig Boulevard, Pasig",
+    "phone": "+632 6719740-43 loc. 103;+632 6719616;+63936 1944238;+63932 6019341",
+    "latitude": 14.5639477,
+    "longitude": 121.0661219,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000079312531",
+    "osm_id": 79312531,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Pasay City General Hospital",
+    "address": "Padre Burgos Street, Pasay",
+    "phone": null,
+    "latitude": 14.5493216,
+    "longitude": 121.0010018,
+    "tags": {
+      "operator": "City of Pasay",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000082707121",
+    "osm_id": 82707121,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Victor R. Potenciano Medical Center",
+    "address": "Epifanio De los Santos Avenue (EDSA), Mandaluyong",
+    "phone": null,
+    "latitude": 14.5769481,
+    "longitude": 121.0499839,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": "https://www.vrp.com.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000083534531",
+    "osm_id": 83534531,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Las Piñas General Hospital & Satellite Trauma Center",
+    "address": "P. Diego Cera Avenue, Las Piñas",
+    "phone": null,
+    "latitude": 14.4716361,
+    "longitude": 120.9738077,
+    "tags": {
+      "operator": "Department of Health",
+      "opening_hours": null,
+      "website": "https://lpghstc.doh.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000084272189",
+    "osm_id": 84272189,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Adventist Medical Center Manila",
+    "address": "Donada Street, Pasay",
+    "phone": "+632 8525-9192 to 98",
+    "latitude": 14.5559964,
+    "longitude": 120.995281,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://amcmanila.org"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000085238912",
+    "osm_id": 85238912,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Armed Forces of the Philippines Medical Center",
+    "address": "V. Luna Road, Quezon City",
+    "phone": null,
+    "latitude": 14.6348324,
+    "longitude": 121.0520007,
+    "tags": {
+      "operator": "Armed Forces of the Philippines",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000087741356",
+    "osm_id": 87741356,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Medical Center Manila",
+    "address": "United Nations Avenue, Manila",
+    "phone": "+63 2 8523 8131",
+    "latitude": 14.5824342,
+    "longitude": 120.9854605,
+    "tags": {
+      "operator": "ManilaMed",
+      "opening_hours": null,
+      "website": "https://www.manilamed.com.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000089564505",
+    "osm_id": 89564505,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "AMOSUP Seamen's Hospital",
+    "address": "Cabildo Street, Manila",
+    "phone": null,
+    "latitude": 14.5874799,
+    "longitude": 120.9776399,
+    "tags": {
+      "operator": "Associated Marine Officers and Seamens Union of the Philippines",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000090139977",
+    "osm_id": 90139977,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Manila Doctors Hospital",
+    "address": "Kalaw Avenue, Manila",
+    "phone": "+632 5247376;+632 5580888 loc. 4480;+632 5247376",
+    "latitude": 14.5820028,
+    "longitude": 120.9827958,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000090316401",
+    "osm_id": 90316401,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Philippine General Hospital",
+    "address": "Taft Avenue, Manila",
+    "phone": "+63 2 3450 0188",
+    "latitude": 14.5777703,
+    "longitude": 120.9856636,
+    "tags": {
+      "operator": "University of the Philippines Manila",
+      "opening_hours": null,
+      "website": "https://www.pgh.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000091187868",
+    "osm_id": 91187868,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "East Avenue Medical Center",
+    "address": "East Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6419117,
+    "longitude": 121.0479244,
+    "tags": {
+      "operator": "Department of Health",
+      "opening_hours": null,
+      "website": "https://eamc.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000091187869",
+    "osm_id": 91187869,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Philippine Heart Center",
+    "address": "East Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6439166,
+    "longitude": 121.0484175,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000091599188",
+    "osm_id": 91599188,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "General Malvar Hospital",
+    "address": "Commonwealth Avenue",
+    "phone": null,
+    "latitude": 14.6675899,
+    "longitude": 121.0726421,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000093309820",
+    "osm_id": 93309820,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Saint Michael Medical Hospital",
+    "address": "Bacoor",
+    "phone": null,
+    "latitude": 14.4096045,
+    "longitude": 120.9768175,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000093806644",
+    "osm_id": 93806644,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Veterans Memorial Medical Center",
+    "address": "North Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6565115,
+    "longitude": 121.0400526,
+    "tags": {
+      "operator": "Philippine Veterans Affairs Office",
+      "opening_hours": null,
+      "website": "https://vmmc.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000096054542",
+    "osm_id": 96054542,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "New Era General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6643312,
+    "longitude": 121.0666863,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000096336385",
+    "osm_id": 96336385,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Jose Fabella Memorial Hospital Annex",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6469763,
+    "longitude": 121.0435126,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0000-000097073768",
+    "osm_id": 97073768,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Philippine Orthopedic Hospital",
+    "address": null,
+    "phone": "+63 2 711 4276",
+    "latitude": 14.6277917,
+    "longitude": 121.0033559,
+    "tags": {
+      "operator": "Department of Health",
+      "opening_hours": "24/7",
+      "website": "https://poc.doh.gov.ph"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000002682002",
+    "osm_id": 102682002,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Fe Del Mundo Medical Center",
+    "address": "Banawe Street, Quezon City",
+    "phone": null,
+    "latitude": 14.6205993,
+    "longitude": 121.0092169,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://www.fedelmundo.com.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000004371863",
+    "osm_id": 104371863,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Garcia General Hospital",
+    "address": "Bayan-Bayanan Avenue, Marikina",
+    "phone": null,
+    "latitude": 14.6512201,
+    "longitude": 121.1109386,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000010702706",
+    "osm_id": 110702706,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Las Piñas Doctors Hospital",
+    "address": "CAA Avenue, Las Piñas",
+    "phone": null,
+    "latitude": 14.4556192,
+    "longitude": 120.9938879,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "http://www.laspinasdoctorshospitalinc.com/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000012176621",
+    "osm_id": 112176621,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Medical Center Parañaque",
+    "address": "Dr. A. Santos Avenue, Parañaque",
+    "phone": "+63917 811 8094",
+    "latitude": 14.4583565,
+    "longitude": 121.0334534,
+    "tags": {
+      "operator": "Mount Grace Hospital",
+      "opening_hours": null,
+      "website": "https://www.medicalcenterparanaque.com"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000013365744",
+    "osm_id": 113365744,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Fort Bonifacio General Hospital",
+    "address": "Taguig",
+    "phone": null,
+    "latitude": 14.5309799,
+    "longitude": 121.047896,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000014368100",
+    "osm_id": 114368100,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Acop Medical Clinic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5819233,
+    "longitude": 121.1707558,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000015222320",
+    "osm_id": 115222320,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Jose R. Reyes Memorial Medical Center",
+    "address": "Rizal Avenue, Manila",
+    "phone": null,
+    "latitude": 14.614115,
+    "longitude": 120.9819216,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://jrrmmc.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000016954572",
+    "osm_id": 116954572,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Dr. Jesus C. Delgado Memorial Hospital",
+    "address": "Kamuning Road, Quezon City",
+    "phone": null,
+    "latitude": 14.6277829,
+    "longitude": 121.0347676,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000017630731",
+    "osm_id": 117630731,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Saint Anthony Medical Center",
+    "address": "B. Santa Ana Street, Marikina",
+    "phone": null,
+    "latitude": 14.6245013,
+    "longitude": 121.1027964,
+    "tags": {
+      "operator": "private",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000017750356",
+    "osm_id": 117750356,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Metro North Medical Center and Hospital",
+    "address": "Mindanao Avenue",
+    "phone": null,
+    "latitude": 14.6688986,
+    "longitude": 121.0336488,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000020779195",
+    "osm_id": 120779195,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "SDS Medical Center",
+    "address": "Katipunan Street, Marikina",
+    "phone": "+63289337078",
+    "latitude": 14.6394487,
+    "longitude": 121.110016,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000021189960",
+    "osm_id": 121189960,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Ramon Hospital",
+    "address": "General Ordoñez Street, Marikina",
+    "phone": null,
+    "latitude": 14.6441046,
+    "longitude": 121.1172145,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000022383431",
+    "osm_id": 122383431,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ospital ng Maynila",
+    "address": "Quirino Avenue, Manila",
+    "phone": "+63 025246063;+63 025246064",
+    "latitude": 14.5639015,
+    "longitude": 120.9864434,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000023669713",
+    "osm_id": 123669713,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Mission Hospital",
+    "address": "Ortigas Avenue Extension, Pasig",
+    "phone": null,
+    "latitude": 14.589917,
+    "longitude": 121.0975134,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000027202854",
+    "osm_id": 127202854,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ospital ng Sampaloc",
+    "address": "General Geronimo Street, Manila",
+    "phone": null,
+    "latitude": 14.6078415,
+    "longitude": 120.9967184,
+    "tags": {
+      "operator": "City Government of Manila",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000031706185",
+    "osm_id": 131706185,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Our Lady of Lourdes Hospital",
+    "address": "P. Sanchez Street, Manila",
+    "phone": null,
+    "latitude": 14.5949309,
+    "longitude": 121.0224475,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000034643140",
+    "osm_id": 134643140,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Calalang General Hospital",
+    "address": "MacArthur Highway, Valenzuela",
+    "phone": null,
+    "latitude": 14.6726857,
+    "longitude": 120.9825327,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000036816020",
+    "osm_id": 136816020,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "CGEA Station Hospital",
+    "address": "Segundo Avenue",
+    "phone": null,
+    "latitude": 14.6123935,
+    "longitude": 121.0641162,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000045083991",
+    "osm_id": 145083991,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Taguig-Pateros District Hospital",
+    "address": "East Service Road, Taguig",
+    "phone": null,
+    "latitude": 14.5108311,
+    "longitude": 121.0342461,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000052173092",
+    "osm_id": 152173092,
+    "type": "hospital",
+    "subtype": null,
+    "name": "San Isidro Hospital - Extension Facility",
+    "address": "M. L. Quezon Avenue, Angono",
+    "phone": null,
+    "latitude": 14.5246498,
+    "longitude": 121.1522631,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000055400231",
+    "osm_id": 155400231,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "De Los Santos Medical Center",
+    "address": "E. Rodriguez Sr. Avenue, Quezon City",
+    "phone": "+63 2 7889 35762",
+    "latitude": 14.6202079,
+    "longitude": 121.0175123,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000061306364",
+    "osm_id": 161306364,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Justice Jose Abad Santos General Hospital",
+    "address": "Numancia Street, Manila",
+    "phone": null,
+    "latitude": 14.5974353,
+    "longitude": 120.9720135,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000061306372",
+    "osm_id": 161306372,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Mary Johnston Hospital",
+    "address": "J. Nolasco Street, Manila",
+    "phone": "+632 2454021 loc 385/412",
+    "latitude": 14.6090583,
+    "longitude": 120.9661998,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000061306530",
+    "osm_id": 161306530,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Gat Andres Bonifacio Medical Center",
+    "address": "Delpan Street, Manila",
+    "phone": "+63 2 8243 8841",
+    "latitude": 14.6010991,
+    "longitude": 120.9648842,
+    "tags": {
+      "operator": "City Government of Manila",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000062045159",
+    "osm_id": 162045159,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Saint Victoria Hospital",
+    "address": "J. P. Rizal Street, Marikina",
+    "phone": null,
+    "latitude": 14.6421814,
+    "longitude": 121.094689,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000062639734",
+    "osm_id": 162639734,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Vincent Hospital",
+    "address": "Bayan-Bayanan Avenue, Marikina",
+    "phone": null,
+    "latitude": 14.6509537,
+    "longitude": 121.1076272,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000072909311",
+    "osm_id": 172909311,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Las Piñas City Medical Center",
+    "address": "Marcos Alvarez Avenue, Las Piñas",
+    "phone": "+63 2 8800 0825;+63 2 8800 2288;+63 2 8800 5524;+63 2 8800 5695",
+    "latitude": 14.4296889,
+    "longitude": 121.0035032,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000075024244",
+    "osm_id": 175024244,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Fatima University Medical Center",
+    "address": "Valenzuela",
+    "phone": null,
+    "latitude": 14.6780614,
+    "longitude": 120.980462,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000080153501",
+    "osm_id": 180153501,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Kawit Lying In Clinic",
+    "address": "Tirona Highway, Kawit",
+    "phone": null,
+    "latitude": 14.4489709,
+    "longitude": 120.9207023,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000080161924",
+    "osm_id": 180161924,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Child Specialist and Family Clinic",
+    "address": "General Evangelista Street, Bacoor",
+    "phone": null,
+    "latitude": 14.4529621,
+    "longitude": 120.9288831,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000080161934",
+    "osm_id": 180161934,
+    "type": "hospital",
+    "subtype": null,
+    "name": "MNS Ultrasound",
+    "address": "General Evangelista Street, Bacoor",
+    "phone": null,
+    "latitude": 14.4598388,
+    "longitude": 120.9446429,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000081985244",
+    "osm_id": 181985244,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Our Lady of Peace Hospital",
+    "address": "Villamar 1st Street, Parañaque",
+    "phone": null,
+    "latitude": 14.4883556,
+    "longitude": 120.9836383,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000082994404",
+    "osm_id": 182994404,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Mary Chiles General Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6031756,
+    "longitude": 120.9899198,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000083018529",
+    "osm_id": 183018529,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Antipolo General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6292785,
+    "longitude": 121.1240494,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000084031593",
+    "osm_id": 184031593,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "De Ocampo Memorial Medical Center",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5998307,
+    "longitude": 120.9996274,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000088693881",
+    "osm_id": 188693881,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Pasig City General Hospital",
+    "address": "M. Eusebio Avenue, Pasig",
+    "phone": null,
+    "latitude": 14.5724372,
+    "longitude": 121.0992271,
+    "tags": {
+      "operator": "City Government of Pasig",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000090251511",
+    "osm_id": 190251511,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Jude Maternity Clinic",
+    "address": "Patindig Araw Road, Imus",
+    "phone": "+63 (46) 4713342",
+    "latitude": 14.4062976,
+    "longitude": 120.9343128,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0001-000093633009",
+    "osm_id": 193633009,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Providence Hospital",
+    "address": "Quezon Avenue, Quezon City",
+    "phone": "+63 2 558 6999",
+    "latitude": 14.6412486,
+    "longitude": 121.0316844,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000029503729",
+    "osm_id": 229503729,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Cainta Municipal Hospital",
+    "address": "Cainta",
+    "phone": null,
+    "latitude": 14.5802755,
+    "longitude": 121.1139367,
+    "tags": {
+      "operator": "Municipality of Cainta",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000029639122",
+    "osm_id": 229639122,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Taytay Doctors Multispecialty Hospital",
+    "address": "Rizal Avenue",
+    "phone": null,
+    "latitude": 14.5738353,
+    "longitude": 121.1253097,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000031404558",
+    "osm_id": 231404558,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Philippine Children's Medical Center",
+    "address": "Quezon Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6475865,
+    "longitude": 121.0414436,
+    "tags": {
+      "operator": "Department of Health",
+      "opening_hours": null,
+      "website": "http://www.pcmc.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000033135828",
+    "osm_id": 233135828,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "H-Vill Hospital",
+    "address": "J. P. Rizal Avenue",
+    "phone": null,
+    "latitude": 14.7267477,
+    "longitude": 121.1428903,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000039011136",
+    "osm_id": 239011136,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "University of Perpetual Help Dalta Medical Center",
+    "address": "Alabang-Zapote Road, Las Piñas",
+    "phone": null,
+    "latitude": 14.4482913,
+    "longitude": 120.9856287,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000040126491",
+    "osm_id": 240126491,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Pamplona Hospital & Medical Center",
+    "address": "Alabang-Zapote Road",
+    "phone": "+63 0282554802",
+    "latitude": 14.4628693,
+    "longitude": 120.9687744,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000040131999",
+    "osm_id": 240131999,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Alabang Medical Clinic",
+    "address": "Alabang-Zapote Road, Las Piñas",
+    "phone": null,
+    "latitude": 14.4428817,
+    "longitude": 120.9969765,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000044438634",
+    "osm_id": 244438634,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Medical Center Taguig",
+    "address": "Pedro Cayetano Boulevard, Taguig",
+    "phone": null,
+    "latitude": 14.5308699,
+    "longitude": 121.0653963,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000047636777",
+    "osm_id": 247636777,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "University of Santo Tomas Hospital",
+    "address": "A. H. Lacson Avenue, Manila",
+    "phone": null,
+    "latitude": 14.6112692,
+    "longitude": 120.9901943,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055989049",
+    "osm_id": 255989049,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Juan Medical Center",
+    "address": "N. Domingo Street",
+    "phone": null,
+    "latitude": 14.6066054,
+    "longitude": 121.0234751,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000055991090",
+    "osm_id": 255991090,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Main Building",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5948789,
+    "longitude": 121.0225611,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000056058998",
+    "osm_id": 256058998,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "VT Maternity Hospital",
+    "address": "Toyota Avenue, Marikina",
+    "phone": null,
+    "latitude": 14.6371064,
+    "longitude": 121.09944,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000056339755",
+    "osm_id": 256339755,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Caloocan City Medical Center South",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6483413,
+    "longitude": 120.9735979,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000059579603",
+    "osm_id": 259579603,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Golden Acres Doctors' Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4190552,
+    "longitude": 120.997974,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000061877875",
+    "osm_id": 261877875,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Angono Medics Hospital",
+    "address": "Angono",
+    "phone": null,
+    "latitude": 14.5313277,
+    "longitude": 121.1528401,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000062166619",
+    "osm_id": 262166619,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Rizal Provincial Hospital System",
+    "address": "NHA Avenue",
+    "phone": "+63 2 8639 8453",
+    "latitude": 14.6193729,
+    "longitude": 121.1803185,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000062308307",
+    "osm_id": 262308307,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Jesus Immaculate Concepcion Hospital",
+    "address": "Katipunan Street, Marikina",
+    "phone": null,
+    "latitude": 14.6383662,
+    "longitude": 121.1089582,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000062678832",
+    "osm_id": 262678832,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Kawit Kalayaan Hospital",
+    "address": "Toclong-San Sebastian Road, Kawit",
+    "phone": "+63 (46) 4388523",
+    "latitude": 14.4169591,
+    "longitude": 120.8985378,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000063121475",
+    "osm_id": 263121475,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Angono General Hospital",
+    "address": "A. Ibañez Street, Angono",
+    "phone": "+63 026512253",
+    "latitude": 14.5266768,
+    "longitude": 121.1521402,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000064289095",
+    "osm_id": 264289095,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Villarosa Hospital",
+    "address": "F. Salalilla Street",
+    "phone": null,
+    "latitude": 14.6219447,
+    "longitude": 121.0660721,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000065574761",
+    "osm_id": 265574761,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Manila Central University Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6577421,
+    "longitude": 120.9870998,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://www.mcuhospital.org/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000065574777",
+    "osm_id": 265574777,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Manila Central University Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.657686,
+    "longitude": 120.9867239,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000073216481",
+    "osm_id": 273216481,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Cruz-Rabe Hospital",
+    "address": "Taguig City",
+    "phone": null,
+    "latitude": 14.5293323,
+    "longitude": 121.0707218,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000073418582",
+    "osm_id": 273418582,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Pamplona Medical Clinic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4623957,
+    "longitude": 120.9619515,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000073420439",
+    "osm_id": 273420439,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Christ The King General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.462626,
+    "longitude": 120.9606721,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000073430418",
+    "osm_id": 273430418,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Sta. Rita De Baclaran General Hospital",
+    "address": "Parañaque",
+    "phone": null,
+    "latitude": 14.5299069,
+    "longitude": 120.9958679,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000082854038",
+    "osm_id": 282854038,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Nazarenus Hospital",
+    "address": "MacArthur Highway, Meycauayan",
+    "phone": null,
+    "latitude": 14.7515761,
+    "longitude": 120.9552475,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000083053426",
+    "osm_id": 283053426,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "World Citi Medical Center",
+    "address": "Aurora Boulevard, Quezon City",
+    "phone": null,
+    "latitude": 14.6270434,
+    "longitude": 121.0633256,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000084348300",
+    "osm_id": 284348300,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Bautista Hospital",
+    "address": "Cavite City",
+    "phone": null,
+    "latitude": 14.4774967,
+    "longitude": 120.8918937,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000084349392",
+    "osm_id": 284349392,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Cavite Medical Center",
+    "address": "Manila-Cavite Road, Cavite City",
+    "phone": null,
+    "latitude": 14.463373,
+    "longitude": 120.881885,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000087975636",
+    "osm_id": 287975636,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Perpetual Help Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6133919,
+    "longitude": 120.9883427,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000088185193",
+    "osm_id": 288185193,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Lorenzo Ruiz General Hospital",
+    "address": "O. Reyes Street, Malabon City",
+    "phone": null,
+    "latitude": 14.694303,
+    "longitude": 120.9564069,
+    "tags": {
+      "operator": "Department of Health",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000088588367",
+    "osm_id": 288588367,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Navotas City Hospital",
+    "address": "M. Naval Street",
+    "phone": null,
+    "latitude": 14.6601402,
+    "longitude": 120.9458638,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000091642917",
+    "osm_id": 291642917,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Hospital of the Infant Jesus Medical Center",
+    "address": "A. H. Lacson Avenue",
+    "phone": "+632 7312771,151",
+    "latitude": 14.6140317,
+    "longitude": 120.9892758,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000092038834",
+    "osm_id": 292038834,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "The Lord's Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7371903,
+    "longitude": 120.9579768,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000092038922",
+    "osm_id": 292038922,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Francis Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7339116,
+    "longitude": 120.957462,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000092406574",
+    "osm_id": 292406574,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Santa Clara de Montefalco Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7491222,
+    "longitude": 120.9715275,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000097887294",
+    "osm_id": 297887294,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Soriano Leyble Medical & Maternity Hospital",
+    "address": "San Jose Street, Antipolo",
+    "phone": null,
+    "latitude": 14.5884029,
+    "longitude": 121.1772021,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0002-000099406484",
+    "osm_id": 299406484,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Nodado General Hospital",
+    "address": "Zabarte Road",
+    "phone": null,
+    "latitude": 14.7382739,
+    "longitude": 121.0474734,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000002984763",
+    "osm_id": 302984763,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Michael Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7612039,
+    "longitude": 120.9477515,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000003409437",
+    "osm_id": 303409437,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Trinity Woman and Child Hospital",
+    "address": "New Panaderos Street, Manila",
+    "phone": null,
+    "latitude": 14.5840942,
+    "longitude": 121.0177123,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000003409449",
+    "osm_id": 303409449,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Santa Ana Hospital",
+    "address": "New Panaderos Street, Manila",
+    "phone": "+63 2 8516 6151;+63 2 8516 6790",
+    "latitude": 14.583431,
+    "longitude": 121.0161561,
+    "tags": {
+      "operator": "City Government of Manila",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000003419303",
+    "osm_id": 303419303,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "G. H. del Pilar Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7929097,
+    "longitude": 120.8799144,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000003750180",
+    "osm_id": 303750180,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Mount Carmel Medical Center",
+    "address": "MacArthur Highway",
+    "phone": null,
+    "latitude": 14.783941,
+    "longitude": 120.9329149,
+    "tags": {
+      "operator": null,
+      "opening_hours": "Mo-Sa 08:00-17:00",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000004117640",
+    "osm_id": 304117640,
+    "type": "hospital",
+    "subtype": null,
+    "name": "North Caloocan Doctors Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7660751,
+    "longitude": 121.0846894,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000008989457",
+    "osm_id": 308989457,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Soccoro Clinic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4980325,
+    "longitude": 120.9905222,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000010796627",
+    "osm_id": 310796627,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Francis General Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6089447,
+    "longitude": 121.0039577,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000011349240",
+    "osm_id": 311349240,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Unihealth-Parañaque Hospital and Medical Center",
+    "address": "Dr. A. Santos Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.464435,
+    "longitude": 121.0195736,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000012353855",
+    "osm_id": 312353855,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Martinez Hospital",
+    "address": "A. Mabini Street, Caloocan",
+    "phone": null,
+    "latitude": 14.6385559,
+    "longitude": 120.9759068,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000016651481",
+    "osm_id": 316651481,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Antipolo Doctors Hospital",
+    "address": "M. L. Quezon Extension, Antipolo City",
+    "phone": null,
+    "latitude": 14.574349,
+    "longitude": 121.1771472,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000022756911",
+    "osm_id": 322756911,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Olivarez General Hospital",
+    "address": "Parañaque",
+    "phone": null,
+    "latitude": 14.4793126,
+    "longitude": 120.9968948,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000029654541",
+    "osm_id": 329654541,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Unciano Medical Center",
+    "address": "Senator L. Sumulong Memorial Circle, Antipolo",
+    "phone": null,
+    "latitude": 14.580093,
+    "longitude": 121.1718882,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000032083684",
+    "osm_id": 332083684,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Unciano Paramedical General Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6007075,
+    "longitude": 121.0162299,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000044562174",
+    "osm_id": 344562174,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Javillonar Clinic and Hospital",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.5654141,
+    "longitude": 121.0784364,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000053772389",
+    "osm_id": 353772389,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Cornel Medical Center",
+    "address": "Marcos Highway, Antipolo",
+    "phone": null,
+    "latitude": 14.6254105,
+    "longitude": 121.1222424,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000053969645",
+    "osm_id": 353969645,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "TriCity Medical Center",
+    "address": "C. Raymundo Avenue, Pasig",
+    "phone": "+63282759752",
+    "latitude": 14.575821,
+    "longitude": 121.0853242,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000054429846",
+    "osm_id": 354429846,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Marymount Hospital",
+    "address": "Meycauayan-Iba Road, Meycauayan",
+    "phone": null,
+    "latitude": 14.7644218,
+    "longitude": 120.9887687,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000060817932",
+    "osm_id": 360817932,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Presidential Security Group Station Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5937241,
+    "longitude": 121.0006899,
+    "tags": {
+      "operator": "Presidential Security Group Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000063541233",
+    "osm_id": 363541233,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Pope John Paul II Hospital and Medical Center",
+    "address": "Alabang-Zapote Road, Las Piñas",
+    "phone": null,
+    "latitude": 14.4433115,
+    "longitude": 120.9963648,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000072781921",
+    "osm_id": 372781921,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Mission Medical Plaza",
+    "address": "Ortigas Avenue Extension",
+    "phone": null,
+    "latitude": 14.5898327,
+    "longitude": 121.0979787,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000084932890",
+    "osm_id": 384932890,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Lazaro Hospital",
+    "address": "Quiricada Street, Manila",
+    "phone": "+632 7323777",
+    "latitude": 14.6138284,
+    "longitude": 120.9807571,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000084934616",
+    "osm_id": 384934616,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "St. Camillus Medical Center",
+    "address": "Amang Rodriguez Avenue, Pasig City",
+    "phone": "+63 2 864 5374",
+    "latitude": 14.612177,
+    "longitude": 121.0916955,
+    "tags": {
+      "operator": "Camillian Fathers",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000084934859",
+    "osm_id": 384934859,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Salve Regina General Hospital",
+    "address": "Marcos Highway, Pasig",
+    "phone": null,
+    "latitude": 14.620042,
+    "longitude": 121.0962156,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000085381471",
+    "osm_id": 385381471,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Clinica Antipolo Hospital and Wellness Center",
+    "address": "Senator L. Sumulong Memorial Circle, Antipolo",
+    "phone": null,
+    "latitude": 14.5895179,
+    "longitude": 121.1698035,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0003-000097725310",
+    "osm_id": 397725310,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Binangonan Lakeview Hospital",
+    "address": "Manila East Road, Binangonan",
+    "phone": null,
+    "latitude": 14.502496,
+    "longitude": 121.1699891,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://www.ourblh.com"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000004525070",
+    "osm_id": 404525070,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Cavite Naval Hospital",
+    "address": "Cavite City",
+    "phone": null,
+    "latitude": 14.483132,
+    "longitude": 120.9144713,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000016632976",
+    "osm_id": 416632976,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Bacoor Doctors Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4198455,
+    "longitude": 120.9676614,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000025075417",
+    "osm_id": 425075417,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Imus Family Hospital",
+    "address": "Imus",
+    "phone": null,
+    "latitude": 14.4325535,
+    "longitude": 120.9462884,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000043525352",
+    "osm_id": 443525352,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Recuenco General Hospital",
+    "address": "Sampaloc Extension, Taguig",
+    "phone": null,
+    "latitude": 14.5133234,
+    "longitude": 121.0596548,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000058980559",
+    "osm_id": 458980559,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Rizal Provincial Hospital - Binangonan Annex",
+    "address": "Manila East Road",
+    "phone": "+63026202400 ;+6326205003",
+    "latitude": 14.4889499,
+    "longitude": 121.1862997,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000077645762",
+    "osm_id": 477645762,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "De Guzman Clinic",
+    "address": "Marikina",
+    "phone": null,
+    "latitude": 14.6570412,
+    "longitude": 121.1066938,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000086970925",
+    "osm_id": 486970925,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Philippine National Police General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6096302,
+    "longitude": 121.0520903,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000088704414",
+    "osm_id": 488704414,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Skyline Hospital and Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7982563,
+    "longitude": 121.0705005,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0004-000097953970",
+    "osm_id": 497953970,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Bernardino General Hospital 2",
+    "address": null,
+    "phone": "+63289398050 ;+63289610328",
+    "latitude": 14.7401525,
+    "longitude": 121.0466431,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000005988905",
+    "osm_id": 505988905,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Cabinte Maternity & Children's Hospital",
+    "address": "Marcos Alvarez Avenue, Las Piñas",
+    "phone": null,
+    "latitude": 14.4241601,
+    "longitude": 120.9996462,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000006543661",
+    "osm_id": 506543661,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Saint Jude Hospital and Medical Center",
+    "address": "Don Quijote Street, Manila",
+    "phone": null,
+    "latitude": 14.6157926,
+    "longitude": 120.9893892,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000025405920",
+    "osm_id": 525405920,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Dr. Montano G. Ramos General Hospital",
+    "address": "Bukidnon Street, Quezon City",
+    "phone": "+63 289276628",
+    "latitude": 14.659386,
+    "longitude": 121.0235972,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://web.facebook.com/dmgrgh"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000028989939",
+    "osm_id": 528989939,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Caloocan City North Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7561517,
+    "longitude": 121.0502049,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000030280724",
+    "osm_id": 530280724,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Nodado General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7633043,
+    "longitude": 121.0440578,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000034775070",
+    "osm_id": 534775070,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "National Mental Hospital",
+    "address": "Caloocan",
+    "phone": null,
+    "latitude": 14.7685928,
+    "longitude": 121.043062,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000034857378",
+    "osm_id": 534857378,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Doctor Jose N. Rodriguez Memorial Hospital & Sanitarium",
+    "address": "Saint Joseph Avenue, Calocan",
+    "phone": "+63 920 982 4758;+63 925 354 7547",
+    "latitude": 14.766709,
+    "longitude": 121.0656547,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000041799981",
+    "osm_id": 541799981,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Hope General Hopital",
+    "address": "Buenamar Street",
+    "phone": null,
+    "latitude": 14.7193002,
+    "longitude": 121.0390335,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000041820647",
+    "osm_id": 541820647,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Casaul General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6793861,
+    "longitude": 121.0205964,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000049330479",
+    "osm_id": 549330479,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Banaag Dental Clinic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6770153,
+    "longitude": 120.9424721,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000049332778",
+    "osm_id": 549332778,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "QuintoPolyMedic",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6675092,
+    "longitude": 120.9477172,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000060063538",
+    "osm_id": 560063538,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Quezon Institute Compound",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6165134,
+    "longitude": 121.0123323,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000061507712",
+    "osm_id": 561507712,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ortigas Hospital and Healthcare Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5859724,
+    "longitude": 121.1179911,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000069368253",
+    "osm_id": 569368253,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Arnaiz Hospital",
+    "address": "F.P. Felix Avenue, Cainta",
+    "phone": null,
+    "latitude": 14.6127234,
+    "longitude": 121.1030967,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000074920880",
+    "osm_id": 574920880,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ospital ng Malabon",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6571749,
+    "longitude": 120.9505826,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000078433431",
+    "osm_id": 578433431,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Tondo Medical Center",
+    "address": "Honorio Lopez Boulevard, Manila",
+    "phone": "+6399 89446223",
+    "latitude": 14.6350222,
+    "longitude": 120.9630702,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000080507735",
+    "osm_id": 580507735,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ospital ng Parañaque - District II",
+    "address": "Doña Soledad Avenue",
+    "phone": null,
+    "latitude": 14.4883392,
+    "longitude": 121.0245202,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000091364370",
+    "osm_id": 591364370,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Mateo Medical Center",
+    "address": "General A. Luna Street",
+    "phone": null,
+    "latitude": 14.6853691,
+    "longitude": 121.1155624,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0005-000091766108",
+    "osm_id": 591766108,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "San Lorenzo Hospital",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7357264,
+    "longitude": 121.0691593,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0006-000058684225",
+    "osm_id": 658684225,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Allied Care Experts Medical Center Valenzuela",
+    "address": "MacArthur Highway, Valenzuela",
+    "phone": "366-0000;366-0001;366-0002;366-0003;366-0004;366-0005",
+    "latitude": 14.7152551,
+    "longitude": 120.9573336,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://acemcvalenzuela.com.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000004249058",
+    "osm_id": 704249058,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Diliman Doctors Hospital",
+    "address": "Commonwealth Avenue, Quezon City",
+    "phone": "+6328836900",
+    "latitude": 14.6683854,
+    "longitude": 121.0760951,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000041963839",
+    "osm_id": 741963839,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Philippine Navy Hospital",
+    "address": "Taguig",
+    "phone": null,
+    "latitude": 14.5302964,
+    "longitude": 121.0316791,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000067425252",
+    "osm_id": 767425252,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Holylife Hospital",
+    "address": "President Quezon Street, Pasig",
+    "phone": null,
+    "latitude": 14.5920242,
+    "longitude": 121.0957736,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000075154939",
+    "osm_id": 775154939,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ospital ng Parañaque",
+    "address": "Quirino Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.5004367,
+    "longitude": 120.991147,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000081507514",
+    "osm_id": 781507514,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Bernardino General Hospital",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7001955,
+    "longitude": 121.03485,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000081515671",
+    "osm_id": 781515671,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Pasig Doctors Medical Center",
+    "address": "Eulogio Amang Rodriquez, Pasig",
+    "phone": null,
+    "latitude": 14.600855,
+    "longitude": 121.0922559,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000084480740",
+    "osm_id": 784480740,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Christ the King Medical Center",
+    "address": "Alabang-Zapote Road, Las Piñas",
+    "phone": null,
+    "latitude": 14.4590494,
+    "longitude": 120.9699947,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://christthekingmed.wixsite.com/ctkmc"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000084554612",
+    "osm_id": 784554612,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Rosario Maclang Bautista General Hospital",
+    "address": "Batasan Hills, Quezon City",
+    "phone": null,
+    "latitude": 14.686097,
+    "longitude": 121.0891038,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000084855136",
+    "osm_id": 784855136,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Las Piñas City Health Office",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4501871,
+    "longitude": 120.9828922,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000086331536",
+    "osm_id": 786331536,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ygeia Medical Center, Inc.",
+    "address": "Quirino Avenue, Manila",
+    "phone": "+63 2 8521 8777",
+    "latitude": 14.5880414,
+    "longitude": 121.0016634,
+    "tags": {
+      "operator": null,
+      "opening_hours": "Mo-Fr 06:00-19:00; Sa 06:00-17:00; Su 07:00-14:00",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000086370497",
+    "osm_id": 786370497,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Alfonso Specialist Hospital",
+    "address": "Doctor Sixto Antonio Avenue, Pasig",
+    "phone": null,
+    "latitude": 14.5901099,
+    "longitude": 121.0846475,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000086370974",
+    "osm_id": 786370974,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Ospital ng Tondo",
+    "address": "Abad Santos Avenue, Tondo",
+    "phone": null,
+    "latitude": 14.6259948,
+    "longitude": 120.9783059,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000087782007",
+    "osm_id": 787782007,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "King of Kings Servant Healer Medical Clinic",
+    "address": "BF Resort Drive, Las Piñas",
+    "phone": null,
+    "latitude": 14.4338707,
+    "longitude": 120.9892829,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0007-000096759425",
+    "osm_id": 796759425,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Lorenzo Hospital",
+    "address": "Deparo Road, Caloocan",
+    "phone": null,
+    "latitude": 14.7372495,
+    "longitude": 121.0323024,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000004161688",
+    "osm_id": 804161688,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "The Premier Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4886435,
+    "longitude": 120.993132,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000006655759",
+    "osm_id": 806655759,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Metropolitan Medical Center",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6096026,
+    "longitude": 120.9784805,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000007314859",
+    "osm_id": 807314859,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "San Isidro Hospital",
+    "address": "M. L. Quezon Avenue, Angono",
+    "phone": "+63 2 8451 2398",
+    "latitude": 14.525701,
+    "longitude": 121.153139,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000036344280",
+    "osm_id": 836344280,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Blessed Trinity Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6247545,
+    "longitude": 121.1257728,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000036960349",
+    "osm_id": 836960349,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "St. Luke's Medical Center",
+    "address": "E. Rodriguez Sr. Avenue, Quezon City",
+    "phone": "+63 2 723 0101",
+    "latitude": 14.6228823,
+    "longitude": 121.023504,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": "https://www.stlukes.com.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000047013665",
+    "osm_id": 847013665,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Cruz-Dalida Hospital",
+    "address": "F. Salvador Avenue, Quezon City",
+    "phone": "+63284174080 ;+63283521849",
+    "latitude": 14.7232932,
+    "longitude": 121.0440229,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000059800364",
+    "osm_id": 859800364,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Pag-Asa Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.520708,
+    "longitude": 121.1564172,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000066859679",
+    "osm_id": 866859679,
+    "type": "hospital",
+    "subtype": null,
+    "name": "San Mateo Doctors",
+    "address": "General A. Luna Street",
+    "phone": "+63 025341200",
+    "latitude": 14.6935876,
+    "longitude": 121.1175283,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0008-000090866017",
+    "osm_id": 890866017,
+    "type": "hospital",
+    "subtype": null,
+    "name": "A. Zarate General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4686829,
+    "longitude": 120.9805321,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000023686671",
+    "osm_id": 923686671,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Dr. Montano G. Ramos General Hospital",
+    "address": "Mindanao Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6705308,
+    "longitude": 121.0320837,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000025788657",
+    "osm_id": 925788657,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Metro Rizal Doctors Hospital",
+    "address": "Marick Drive",
+    "phone": null,
+    "latitude": 14.5826066,
+    "longitude": 121.114096,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000030226857",
+    "osm_id": 930226857,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Valenzuela Citicare Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6955941,
+    "longitude": 120.9632519,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000033223291",
+    "osm_id": 933223291,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Capitol Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6340975,
+    "longitude": 121.02252,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000041848364",
+    "osm_id": 941848364,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Paredes Medical Center & Hospital",
+    "address": "Aguinaldo Highway, Imus",
+    "phone": "+63 46 472 2326",
+    "latitude": 14.412932,
+    "longitude": 120.9405409,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000042891048",
+    "osm_id": 942891048,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Barangay 174 Health Center and Lying In",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7626442,
+    "longitude": 121.0477456,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0009-000086224943",
+    "osm_id": 986224943,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Bicutan Medican Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.498754,
+    "longitude": 121.0638481,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0010-000023374780",
+    "osm_id": 1023374780,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Vian Family Hospital",
+    "address": "General T. de Leon Road",
+    "phone": null,
+    "latitude": 14.6848646,
+    "longitude": 120.9891714,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0010-000024382287",
+    "osm_id": 1024382287,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Saint Mattheus Hospital",
+    "address": "General A. Luna Street",
+    "phone": null,
+    "latitude": 14.6738184,
+    "longitude": 121.1099048,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0010-000061369046",
+    "osm_id": 1061369046,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Makati Life Medical Center",
+    "address": "Malugay Street, Makati",
+    "phone": null,
+    "latitude": 14.5630505,
+    "longitude": 121.017616,
+    "tags": {
+      "operator": "LifeNurture Inc., City Government of Makati",
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0010-000072477745",
+    "osm_id": 1072477745,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Allied Care Experts Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5440569,
+    "longitude": 121.0653023,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0010-000075934213",
+    "osm_id": 1075934213,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Taguig City General Hospital",
+    "address": "Temple Street, Taguig",
+    "phone": null,
+    "latitude": 14.5144552,
+    "longitude": 121.072568,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0011-000004981743",
+    "osm_id": 1104981743,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Saint Paul Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7955185,
+    "longitude": 120.928874,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0011-000017530134",
+    "osm_id": 1117530134,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Bermudez Polymedic Hospital",
+    "address": "Malaria Road, Caloocan",
+    "phone": null,
+    "latitude": 14.7700948,
+    "longitude": 121.0782804,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0011-000087061220",
+    "osm_id": 1187061220,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Antipolo City Community Hospital Annex",
+    "address": "E. Rodriguez Avenue",
+    "phone": null,
+    "latitude": 14.5780752,
+    "longitude": 121.1860087,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0011-000089918897",
+    "osm_id": 1189918897,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Santana Maternity & Childrens Hospital",
+    "address": "Juan Sumulong Street",
+    "phone": null,
+    "latitude": 14.5844113,
+    "longitude": 121.1773236,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000019924267",
+    "osm_id": 1219924267,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "President Corazon C. Aquino General Hospital",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5914359,
+    "longitude": 120.9572199,
+    "tags": {
+      "operator": "City Government of Manila",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000043950712",
+    "osm_id": 1243950712,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "National Center for Geriatric Health",
+    "address": "General Solano Street",
+    "phone": null,
+    "latitude": 14.5917792,
+    "longitude": 120.9911946,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000051014451",
+    "osm_id": 1251014451,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Far Eastern University - Nicanor Reyes Medical Foundation",
+    "address": "Regalado Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6987835,
+    "longitude": 121.0668998,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000065623115",
+    "osm_id": 1265623115,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Assumption Specialty Hospital and Medical Center",
+    "address": "Sumulong Highway",
+    "phone": null,
+    "latitude": 14.6056201,
+    "longitude": 121.1742431,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000071746131",
+    "osm_id": 1271746131,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Metro Pasay Hospital and Medical Center",
+    "address": "M. dela Cruz Extension, Pasay",
+    "phone": null,
+    "latitude": 14.5391293,
+    "longitude": 121.0062488,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000084446292",
+    "osm_id": 1284446292,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Taguig Doctors Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.478802,
+    "longitude": 121.0610453,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000088233312",
+    "osm_id": 1288233312,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Bocaue Specialists Medical Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7783147,
+    "longitude": 120.9376675,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000090448946",
+    "osm_id": 1290448946,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Joni Villanueva General Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7967928,
+    "longitude": 120.9435785,
+    "tags": {
+      "operator": "Department of Health",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000090815713",
+    "osm_id": 1290815713,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Marikina Doctors Hospital and Medical Center",
+    "address": "Evangelista Avenue",
+    "phone": null,
+    "latitude": 14.6210693,
+    "longitude": 121.0825904,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0012-000096098159",
+    "osm_id": 1296098159,
+    "type": "hospital",
+    "subtype": null,
+    "name": "Healthway Cancer Care Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5028418,
+    "longitude": 121.0484512,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0013-000002980224",
+    "osm_id": 1302980224,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "United Doctors Medical Center",
+    "address": "Nicanor Ramirez Street, Quezon City",
+    "phone": null,
+    "latitude": 14.6170519,
+    "longitude": 121.0018331,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0013-000025538014",
+    "osm_id": 1325538014,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Binakayan Hospital and Medical Center",
+    "address": "Covelandia Road, Kawit",
+    "phone": null,
+    "latitude": 14.4517921,
+    "longitude": 120.9264483,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0013-000027201768",
+    "osm_id": 1327201768,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Las Piñas General Hospital",
+    "address": "P. Diego Cera Avenue, Las Piñas",
+    "phone": null,
+    "latitude": 14.4720541,
+    "longitude": 120.974632,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0013-000029028411",
+    "osm_id": 1329028411,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Dr. Jose Fabella Memorial Hospital",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6156852,
+    "longitude": 120.9805118,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0013-000050622464",
+    "osm_id": 1350622464,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "Air Force General Hospital",
+    "address": "Pasay",
+    "phone": null,
+    "latitude": 14.5169119,
+    "longitude": 121.0199228,
+    "tags": {
+      "operator": "Philippine Air Force",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0014-000028063750",
+    "osm_id": 1428063750,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Doctor Olivia Salamanca Memorial District Hospital",
+    "address": "Padre Gomez Street",
+    "phone": null,
+    "latitude": 14.4812633,
+    "longitude": 120.9113394,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0014-000035976373",
+    "osm_id": 1435976373,
+    "type": "hospital",
+    "subtype": "emergency",
+    "name": "The Medical City",
+    "address": "Ortigas Avenue, Pasig",
+    "phone": "+63 298810005626765",
+    "latitude": 14.5899507,
+    "longitude": 121.069306,
+    "tags": {
+      "operator": "The Medical City",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0014-000050354186",
+    "osm_id": 1450354186,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Sanctissimo Rosario General Hospital",
+    "address": "Espiritu Street, Valenzuela",
+    "phone": null,
+    "latitude": 14.6752302,
+    "longitude": 120.9842692,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "80050000-0000-0000-0014-000082301511",
+    "osm_id": 1482301511,
+    "type": "hospital",
+    "subtype": "hospital",
+    "name": "Padre Pio Hospital",
+    "address": "General A. Luna Street",
+    "phone": null,
+    "latitude": 14.6810848,
+    "longitude": 121.1140788,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  }
+]

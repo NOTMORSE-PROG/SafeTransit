@@ -4,8 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Switch,
-  Modal,
   ActivityIndicator,
   Image,
 } from "react-native";
@@ -24,6 +22,8 @@ import {
 } from "lucide-react-native";
 import { useAuth } from "../../contexts/AuthContext";
 import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import LegalDocumentViewer from "@/components/LegalDocumentViewer";
+import { LEGAL_DOCUMENTS } from "@/constants/legalDocuments";
 
 export default function Signup() {
   const router = useRouter();
@@ -36,6 +36,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [acceptPrivacy, setAcceptPrivacy] = useState(false);
 
   // State and effects
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +44,7 @@ export default function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   // Whole form validation
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -61,6 +63,7 @@ export default function Signup() {
     passwordValid &&
     passwordsMatch &&
     acceptTerms &&
+    acceptPrivacy &&
     !isLoading;
 
   // Signup event handler
@@ -301,25 +304,49 @@ export default function Signup() {
 
         <Animated.View
           entering={FadeInDown.delay(500).duration(500)}
-          className="mb-10"
+          className="mb-4"
         >
-          <View className="flex-row items-center justify-between border border-neutral-100 rounded-2xl px-4 py-3">
-            <Text className="text-xs text-neutral-500 flex-1 mr-3 font-medium">
-              I agree to the{" "}
-              <Text
-                onPress={() => setShowTermsModal(true)}
-                className="text-primary-600 font-bold underline"
-              >
-                Terms & Privacy
+          <TouchableOpacity
+            onPress={() => setShowTermsModal(true)}
+            className={`border rounded-2xl px-4 py-3 mb-3 ${
+              acceptTerms ? 'border-green-500 bg-green-50' : 'border-neutral-100 bg-white'
+            }`}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text className="text-xs text-neutral-700 flex-1 mr-3 font-medium">
+                {acceptTerms ? '✓ ' : ''}I agree to the{" "}
+                <Text className="text-primary-600 font-bold underline">
+                  Terms of Service
+                </Text>
               </Text>
-            </Text>
-            <Switch
-              value={acceptTerms}
-              onValueChange={setAcceptTerms}
-              trackColor={{ false: "#e5e5e5", true: "#2563eb" }}
-              thumbColor="#ffffff"
-            />
-          </View>
+              {acceptTerms ? (
+                <Text className="text-green-600 text-xs font-bold">Accepted</Text>
+              ) : (
+                <Text className="text-primary-600 text-xs font-bold">Read & Accept</Text>
+              )}
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setShowPrivacyModal(true)}
+            className={`border rounded-2xl px-4 py-3 mb-6 ${
+              acceptPrivacy ? 'border-green-500 bg-green-50' : 'border-neutral-100 bg-white'
+            }`}
+          >
+            <View className="flex-row items-center justify-between">
+              <Text className="text-xs text-neutral-700 flex-1 mr-3 font-medium">
+                {acceptPrivacy ? '✓ ' : ''}I agree to the{" "}
+                <Text className="text-primary-600 font-bold underline">
+                  Privacy Policy
+                </Text>
+              </Text>
+              {acceptPrivacy ? (
+                <Text className="text-green-600 text-xs font-bold">Accepted</Text>
+              ) : (
+                <Text className="text-primary-600 text-xs font-bold">Read & Accept</Text>
+              )}
+            </View>
+          </TouchableOpacity>
         </Animated.View>
       </KeyboardAwareScrollView>
 
@@ -387,33 +414,33 @@ export default function Signup() {
         </TouchableOpacity>
       </View>
 
-      <Modal visible={showTermsModal} transparent animationType="fade">
-        <View className="flex-1 bg-neutral-900/80 justify-center px-6">
-          <Animated.View
-            entering={FadeInDown}
-            className="bg-white rounded-[32px] p-8 shadow-2xl"
-          >
-            <Text className="text-xl font-black text-neutral-900 mb-4 tracking-tight">
-              Terms & Privacy
-            </Text>
-            <Text className="text-sm text-neutral-500 mb-8 leading-6 font-medium">
-              By using SafeTransit, you agree to our data usage and privacy
-              practices. Your data is encrypted and never sold.
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setAcceptTerms(true);
-                setShowTermsModal(false);
-              }}
-              className="bg-primary-600 rounded-2xl py-4"
-            >
-              <Text className="text-white text-center font-bold uppercase tracking-widest">
-                Confirm
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
-      </Modal>
+      {/* Terms of Service Modal */}
+      <LegalDocumentViewer
+        visible={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        onAccept={() => {
+          setAcceptTerms(true);
+          setShowTermsModal(false);
+        }}
+        documentType="terms"
+        document={LEGAL_DOCUMENTS.termsOfService}
+        mode="accept"
+        requireScrollToBottom={true}
+      />
+
+      {/* Privacy Policy Modal */}
+      <LegalDocumentViewer
+        visible={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        onAccept={() => {
+          setAcceptPrivacy(true);
+          setShowPrivacyModal(false);
+        }}
+        documentType="privacy"
+        document={LEGAL_DOCUMENTS.privacyPolicy}
+        mode="accept"
+        requireScrollToBottom={true}
+      />
     </View>
   );
 }

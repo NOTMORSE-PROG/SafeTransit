@@ -31,7 +31,8 @@ import FamilyMemberModal from "../../components/FamilyMemberModal";
 import TipMarker from "../../components/map/TipMarker";
 import TipDetailCard from "../../components/map/TipDetailCard";
 import FamilyMemberMarker from "../../components/map/FamilyMemberMarker";
-import FilterChips, { FilterState } from "../../components/map/FilterChips";
+import FilterChips, { FilterState, DEFAULT_POI_LAYERS } from "../../components/map/FilterChips";
+import POIMarker from "../../components/map/POIMarker";
 import SafetyHeatmap from "../../components/map/SafetyHeatmap";
 import SafetyStats from "../../components/map/SafetyStats";
 import { MarkerSkeletonGrid } from "../../components/map/MarkerSkeleton";
@@ -45,6 +46,8 @@ import {
   FamilyMember,
   familyLocationService,
 } from "../../services/familyLocationService";
+import { safetyPOIService } from "../../services/safetyPOIService";
+import type { SafetyPOI } from "../../types/safetyPOI";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
 import { useModal } from "../../contexts/ModalContext";
@@ -88,7 +91,11 @@ export default function Home() {
     categories: [],
     radius: 5000,
     timeRelevance: null,
+    layers: DEFAULT_POI_LAYERS,
   });
+
+  // Safety POI State (police, hospitals, transit stations)
+  const [pois, setPois] = useState<SafetyPOI[]>([]);
 
   // Heatmap State
   const [showHeatmap, setShowHeatmap] = useState(false);
@@ -312,6 +319,45 @@ export default function Home() {
     triggerTipReload();
   }, [filters, triggerTipReload]);
 
+  // Load POIs when map region changes (debounced via mapRegion update)
+  useEffect(() => {
+    let cancelled = false;
+    const layers = filters.layers ?? DEFAULT_POI_LAYERS;
+    const enabled = layers.police || layers.hospitals || layers.transit;
+    if (!enabled) {
+      setPois([]);
+      return;
+    }
+    const halfLat = mapRegion.latitudeDelta / 2;
+    const halfLon = mapRegion.longitudeDelta / 2;
+    const bounds = {
+      south: mapRegion.latitude - halfLat,
+      north: mapRegion.latitude + halfLat,
+      west: mapRegion.longitude - halfLon,
+      east: mapRegion.longitude + halfLon,
+    };
+    safetyPOIService
+      .fetchPOIs(bounds)
+      .then((fetched) => {
+        if (cancelled) return;
+        const filtered = fetched.filter((p) => {
+          if (p.type === 'police') return layers.police;
+          if (p.type === 'hospital') return layers.hospitals;
+          if (p.type === 'transit') return layers.transit;
+          return false;
+        });
+        setPois(filtered);
+      })
+      .catch((err) => console.warn('[Home] POI fetch error:', err));
+    return () => {
+      cancelled = true;
+    };
+  }, [mapRegion, filters.layers]);
+
+  const handlePOIPress = useCallback((poi: SafetyPOI) => {
+    console.log('[Home] POI pressed:', poi.name, poi.type);
+  }, []);
+
   // Debounced map region change
   const handleRegionChangeComplete = useCallback(
     (region: Region) => {
@@ -434,6 +480,11 @@ export default function Home() {
               setIsFamilyModalVisible(true);
             }}
           />
+        ))}
+
+        {/* Safety POI Markers (police, hospitals, transit) */}
+        {pois.map((poi) => (
+          <POIMarker key={`poi-${poi.id}`} poi={poi} onPress={handlePOIPress} />
         ))}
       </ClusteredMapView>
 

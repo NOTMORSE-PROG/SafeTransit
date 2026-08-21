@@ -48,6 +48,8 @@ import { familyLocationService } from "../../services/familyLocationService";
 import { familyService, Family } from "../../services/familyService";
 import { apiFetch } from "../../utils/api";
 import FamilyDetailsModal from "../../components/FamilyDetailsModal";
+import LegalDocumentViewer from "../../components/LegalDocumentViewer";
+import { LEGAL_DOCUMENTS } from "../../constants/legalDocuments";
 
 export default function Profile() {
   const router = useRouter();
@@ -75,6 +77,10 @@ export default function Profile() {
   const [showFamilyDetailsModal, setShowFamilyDetailsModal] = useState(false);
   const [familyName, setFamilyName] = useState("");
   const [isCreatingFamily, setIsCreatingFamily] = useState(false);
+
+  // Legal document modals
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   // Use profile image from user context (synced with database)
   const profileImage = user?.profileImageUrl || null;
@@ -853,6 +859,7 @@ export default function Profile() {
                 accessible={true}
                 accessibilityLabel="Privacy policy"
                 accessibilityRole="button"
+                onPress={() => setShowPrivacyModal(true)}
               >
                 <View className="flex-row items-center justify-between">
                   <Text className="text-base text-neutral-900">
@@ -863,15 +870,32 @@ export default function Profile() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="px-4 py-4"
+                className="px-4 py-4 border-b border-neutral-100"
                 activeOpacity={0.7}
                 accessible={true}
                 accessibilityLabel="Terms of service"
                 accessibilityRole="button"
+                onPress={() => setShowTermsModal(true)}
               >
                 <View className="flex-row items-center justify-between">
                   <Text className="text-base text-neutral-900">
                     Terms of Service
+                  </Text>
+                  <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className="px-4 py-4"
+                activeOpacity={0.7}
+                accessible={true}
+                accessibilityLabel="Data and privacy settings"
+                accessibilityRole="button"
+                onPress={() => router.push("/data-privacy" as any)}
+              >
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-base text-neutral-900">
+                    Data & Privacy
                   </Text>
                   <ChevronRight color="#9ca3af" size={20} strokeWidth={2} />
                 </View>
@@ -1169,6 +1193,23 @@ export default function Profile() {
         isVisible={showFamilyDetailsModal}
         onClose={() => setShowFamilyDetailsModal(false)}
         onFamilyUpdated={loadFamily}
+      />
+
+      {/* Legal Document Modals */}
+      <LegalDocumentViewer
+        visible={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        documentType="terms"
+        document={LEGAL_DOCUMENTS.termsOfService}
+        mode="view"
+      />
+
+      <LegalDocumentViewer
+        visible={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        documentType="privacy"
+        document={LEGAL_DOCUMENTS.privacyPolicy}
+        mode="view"
       />
     </View>
   );

@@ -42,20 +42,23 @@ export default function Permissions() {
   const requestLocationPermission = async () => {
     setLocationLoading(true);
     try {
+      // Only request foreground location during onboarding
+      // Background location will be requested later when user enables Background Protection
       const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
 
       if (foregroundStatus === 'granted') {
-        const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
-
-        if (backgroundStatus === 'granted') {
-          setLocationGranted(true);
-        } else {
-          showAlert(
-            'Background Location Required',
-            'SafeTransit needs background location access to warn you of danger zones even when your phone is locked.',
-            'warning'
-          );
-        }
+        setLocationGranted(true);
+        showAlert(
+          'Location Access Granted',
+          'You can now see danger zones on your routes. Enable Background Protection later in settings for alerts even when the app is closed.',
+          'success'
+        );
+      } else {
+        showAlert(
+          'Location Permission Denied',
+          'SafeTransit needs location access to show you danger zones and provide safe routes.',
+          'warning'
+        );
       }
     } catch (error) {
       console.error('Location permission error:', error);
@@ -114,7 +117,7 @@ export default function Permissions() {
             Grant Permissions
           </Text>
           <Text className="text-base text-neutral-600 leading-6">
-            SafeTransit needs these permissions to keep you safe
+            SafeTransit needs these permissions to provide safety features and protect you from danger zones
           </Text>
         </Animated.View>
 
@@ -144,9 +147,23 @@ export default function Permissions() {
               </View>
             </View>
 
-            <Text className="text-neutral-700 text-sm mb-4 leading-5">
-              To warn you of danger zones even when your phone is in your pocket, SafeTransit needs to access your location in the background.
-            </Text>
+            <View className="mb-4">
+              <Text className="text-neutral-900 text-sm font-semibold mb-2">
+                What we use it for:
+              </Text>
+              <Text className="text-neutral-700 text-sm leading-5 mb-1">
+                • Show danger zones on your route while the app is open
+              </Text>
+              <Text className="text-neutral-700 text-sm leading-5 mb-1">
+                • Provide safe route planning and navigation
+              </Text>
+              <Text className="text-neutral-700 text-sm leading-5 mb-3">
+                • See nearby safety tips from the community
+              </Text>
+              <Text className="text-neutral-600 text-xs leading-4 italic">
+                Note: Background alerts (when app is closed) are optional and can be enabled later in Settings.
+              </Text>
+            </View>
 
             {!locationGranted && (
               <TouchableOpacity
@@ -192,9 +209,23 @@ export default function Permissions() {
               </View>
             </View>
 
-            <Text className="text-neutral-700 text-sm mb-4 leading-5">
-              Receive critical safety alerts and warnings about nearby danger zones.
-            </Text>
+            <View className="mb-4">
+              <Text className="text-neutral-900 text-sm font-semibold mb-2">
+                What we use it for:
+              </Text>
+              <Text className="text-neutral-700 text-sm leading-5 mb-1">
+                • Receive safety alerts when entering danger zones
+              </Text>
+              <Text className="text-neutral-700 text-sm leading-5 mb-1">
+                • Get emergency notifications from your panic button
+              </Text>
+              <Text className="text-neutral-700 text-sm leading-5 mb-3">
+                • Stay updated on nearby safety concerns
+              </Text>
+              <Text className="text-neutral-600 text-xs leading-4 italic">
+                Note: Notifications are essential for the panic button and safety alerts to work properly.
+              </Text>
+            </View>
 
             {!notificationGranted && (
               <TouchableOpacity

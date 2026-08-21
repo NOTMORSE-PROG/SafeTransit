@@ -242,7 +242,7 @@ class FamilyLocationService {
 
   async getFamilyLocations(): Promise<FamilyMember[]> {
     if (!this.token) {
-      return this.getMockFamilyLocations();
+      return [];
     }
 
     try {
@@ -264,57 +264,8 @@ class FamilyLocationService {
       return data.locations || [];
     } catch (error) {
       console.error("Get family locations error:", error);
-      // Return mock data on error for development
-      return this.getMockFamilyLocations();
+      return [];
     }
-  }
-
-  private getMockFamilyLocations(): FamilyMember[] {
-    const now = new Date();
-    const mockMembers = [
-      {
-        user_id: "mock-1",
-        full_name: "Maria Santos",
-        profile_image_url: undefined,
-        latitude: 14.5547, // Makati CBD
-        longitude: 121.0244,
-        timestamp: new Date(now.getTime() - 1 * 60 * 1000).toISOString(), // 1 min ago
-        is_live: true,
-        accuracy: 10,
-      },
-      {
-        user_id: "mock-2",
-        full_name: "Juan Dela Cruz",
-        profile_image_url: undefined,
-        latitude: 14.5995, // Manila City Hall
-        longitude: 120.9842,
-        timestamp: new Date(now.getTime() - 15 * 60 * 1000).toISOString(), // 15 min ago
-        is_live: true,
-        accuracy: 15,
-      },
-      {
-        user_id: "mock-3",
-        full_name: "Ana Reyes",
-        profile_image_url: undefined,
-        latitude: 14.6507, // Quezon City
-        longitude: 121.0494,
-        timestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-        is_live: false,
-        accuracy: 20,
-      },
-      {
-        user_id: "mock-4",
-        full_name: "Carlos Mendoza",
-        profile_image_url: undefined,
-        latitude: 14.5764, // BGC
-        longitude: 121.0851,
-        timestamp: new Date(now.getTime() - 5 * 60 * 1000).toISOString(), // 5 min ago - SOS simulation
-        is_live: true,
-        accuracy: 8,
-      },
-    ];
-
-    return mockMembers;
   }
 
   cleanup() {

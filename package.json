@@ -12,6 +12,10 @@
     "db:test": "node scripts/test-db.js",
     "db:migrate": "node db/migrate.js",
     "db:reset": "node db/reset.js",
+    "pois:fetch": "node scripts/fetch-pois-from-overpass.js",
+    "pois:seed": "node scripts/seed-safety-pois.js",
+    "seed:build": "node scripts/build-corrected-seed.js && node scripts/generate-migration-036.js",
+    "verify:pins": "node scripts/verify-seed-corrections.js && node scripts/verify-poi-dataset.js",
     "postinstall": "patch-package && node scripts/patch-maven-mirror.js"
   },
   "dependencies": {
@@ -53,6 +57,7 @@
     "react-native-keyboard-controller": "1.18.5",
     "react-native-map-clustering": "^4.0.0",
     "react-native-maps": "1.20.1",
+    "react-native-markdown-display": "^7.0.2",
     "react-native-pager-view": "^8.0.0",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "5.6.0",

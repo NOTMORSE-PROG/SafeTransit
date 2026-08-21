@@ -19,11 +19,6 @@ const FamilyMemberMarker: React.FC<FamilyMemberMarkerProps> = ({
     const memberTime = new Date(member.timestamp).getTime();
     const timeDiff = now - memberTime;
 
-    // Check for SOS simulation (Carlos Mendoza mock)
-    if (member.full_name === "Carlos Mendoza") {
-      return "#ef4444"; // Red for SOS
-    }
-
     if (member.is_live && timeDiff < 2 * 60 * 1000) {
       return "#10b981"; // Green for live (< 2 min)
     }

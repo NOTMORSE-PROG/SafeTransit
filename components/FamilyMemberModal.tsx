@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal, View, Text, TouchableOpacity, Pressable } from "react-native";
 import { Image } from "expo-image";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
@@ -9,9 +9,11 @@ import {
   MapPin,
   Clock,
   Navigation,
-  AlertTriangle,
 } from "lucide-react-native";
 import { FamilyMember } from "../services/familyLocationService";
+import { reverseGeocode } from "../services/nominatim";
+
+const addressCache = new Map<string, string>();
 
 interface FamilyMemberModalProps {
   member: FamilyMember | null;
@@ -27,22 +29,46 @@ const FamilyMemberModal: React.FC<FamilyMemberModalProps> = ({
   onCenterOnMap,
 }) => {
   const insets = useSafeAreaInsets();
+  const [resolvedAddress, setResolvedAddress] = useState<string | null>(null);
+  const [addressLoading, setAddressLoading] = useState(false);
+  const inFlightRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!isVisible || !member) return;
+    const cacheKey = `${member.user_id}:${member.latitude.toFixed(5)}:${member.longitude.toFixed(5)}`;
+    const cached = addressCache.get(cacheKey);
+    if (cached) {
+      setResolvedAddress(cached);
+      return;
+    }
+    if (inFlightRef.current === cacheKey) return;
+    inFlightRef.current = cacheKey;
+    setResolvedAddress(null);
+    setAddressLoading(true);
+    reverseGeocode(member.latitude, member.longitude)
+      .then((result) => {
+        if (inFlightRef.current !== cacheKey) return;
+        const address = result?.address || result?.name || null;
+        if (address) addressCache.set(cacheKey, address);
+        setResolvedAddress(address);
+      })
+      .catch(() => {
+        if (inFlightRef.current !== cacheKey) return;
+        setResolvedAddress(null);
+      })
+      .finally(() => {
+        if (inFlightRef.current === cacheKey) {
+          setAddressLoading(false);
+        }
+      });
+  }, [isVisible, member]);
+
   if (!member) return null;
 
   const getStatusInfo = (member: FamilyMember) => {
     const now = Date.now();
     const memberTime = new Date(member.timestamp).getTime();
     const timeDiff = now - memberTime;
-
-    // Check for SOS simulation
-    if (member.full_name === "Carlos Mendoza") {
-      return {
-        status: "SOS ACTIVE 🚨",
-        color: "#DC2626",
-        icon: AlertTriangle,
-        isEmergency: true,
-      };
-    }
 
     if (member.is_live && timeDiff < 2 * 60 * 1000) {
       return {
@@ -71,21 +97,9 @@ const FamilyMemberModal: React.FC<FamilyMemberModalProps> = ({
   };
 
   const getFormattedAddress = () => {
-    // Mock address based on coordinates (in real app, use reverse geocoding)
-    const { latitude, longitude } = member;
-
-    // Simple mock address generator based on known Manila coordinates
-    if (latitude >= 14.55 && latitude <= 14.56) {
-      return "Makati Central Business District, Makati City";
-    } else if (latitude >= 14.59 && latitude <= 14.6) {
-      return "Manila City Hall Area, Manila";
-    } else if (latitude >= 14.64 && latitude <= 14.66) {
-      return "Quezon City, Metro Manila";
-    } else if (latitude >= 14.57 && latitude <= 14.58) {
-      return "Bonifacio Global City, Taguig";
-    } else {
-      return `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-    }
+    if (resolvedAddress) return resolvedAddress;
+    if (addressLoading) return "Loading address…";
+    return `${member.latitude.toFixed(4)}, ${member.longitude.toFixed(4)}`;
   };
 
   const statusInfo = getStatusInfo(member);

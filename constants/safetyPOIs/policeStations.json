@@ -1,0 +1,6190 @@
+[
+  {
+    "id": "70110000-0000-0000-0002-000055049917",
+    "osm_id": 255049917,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Police Precint 8",
+    "address": "Anahaw Street, Taguig",
+    "phone": null,
+    "latitude": 14.5490107,
+    "longitude": 121.0652569,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055049933",
+    "osm_id": 255049933,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 2",
+    "address": "Alabang-Zapote Road, Las Piñas",
+    "phone": null,
+    "latitude": 14.4585299,
+    "longitude": 120.9701761,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055049936",
+    "osm_id": 255049936,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinc № 2",
+    "address": "MacArthur Highway, Malabon",
+    "phone": null,
+    "latitude": 14.6634751,
+    "longitude": 120.9840103,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055050240",
+    "osm_id": 255050240,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 2",
+    "address": "Mandaluyong",
+    "phone": null,
+    "latitude": 14.581231,
+    "longitude": 121.02983,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055051494",
+    "osm_id": 255051494,
+    "type": "police",
+    "subtype": null,
+    "name": "CAA Police Community Precinct 4",
+    "address": "Las Piñas",
+    "phone": null,
+    "latitude": 14.457091,
+    "longitude": 120.994751,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055052977",
+    "osm_id": 255052977,
+    "type": "police",
+    "subtype": null,
+    "name": "Community Precinct No. 2",
+    "address": "Parañaque",
+    "phone": null,
+    "latitude": 14.50036,
+    "longitude": 120.9897,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055053941",
+    "osm_id": 255053941,
+    "type": "police",
+    "subtype": null,
+    "name": "Pandacan Police Station",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5931654,
+    "longitude": 121.0035632,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055054475",
+    "osm_id": 255054475,
+    "type": "police",
+    "subtype": null,
+    "name": "SPD Police Precinct 1 (SS10)",
+    "address": "Taguig",
+    "phone": null,
+    "latitude": 14.5628034,
+    "longitude": 121.0603958,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055054486",
+    "osm_id": 255054486,
+    "type": "police",
+    "subtype": null,
+    "name": "Caloocan City Police Community Precint 7",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6815301,
+    "longitude": 121.0089111,
+    "tags": {
+      "operator": "Caloocan City",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055055167",
+    "osm_id": 255055167,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp- 5",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5474907,
+    "longitude": 121.0084187,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055058373",
+    "osm_id": 255058373,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-3",
+    "address": null,
+    "phone": null,
+    "latitude": 14.65179,
+    "longitude": 120.960632,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055058436",
+    "osm_id": 255058436,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-3",
+    "address": "Las Piñas",
+    "phone": null,
+    "latitude": 14.4661887,
+    "longitude": 120.967851,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055058503",
+    "osm_id": 255058503,
+    "type": "police",
+    "subtype": null,
+    "name": "East Grace Park Police Station",
+    "address": "C-3 Road, Caloocan",
+    "phone": null,
+    "latitude": 14.6443335,
+    "longitude": 120.9899723,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055058703",
+    "osm_id": 255058703,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct",
+    "address": "Marikina",
+    "phone": null,
+    "latitude": 14.6291528,
+    "longitude": 121.0983621,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055058912",
+    "osm_id": 255058912,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-4",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6467701,
+    "longitude": 120.9548519,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055060037",
+    "osm_id": 255060037,
+    "type": "police",
+    "subtype": null,
+    "name": "Taguig Central Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.52864,
+    "longitude": 121.070686,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055060171",
+    "osm_id": 255060171,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay City Police Station 1",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5579626,
+    "longitude": 120.9849132,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055061715",
+    "osm_id": 255061715,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP-1",
+    "address": "P. Diego Cera Avenue, Las Piñas",
+    "phone": null,
+    "latitude": 14.4807742,
+    "longitude": 120.9815772,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055062399",
+    "osm_id": 255062399,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-3",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.603378,
+    "longitude": 121.0987299,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055063240",
+    "osm_id": 255063240,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay City Traffic Headquarter",
+    "address": null,
+    "phone": null,
+    "latitude": 14.545137,
+    "longitude": 120.9936053,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055063581",
+    "osm_id": 255063581,
+    "type": "police",
+    "subtype": null,
+    "name": "Mandaluyong Police Community Precinct 1",
+    "address": "A. T. Reyes Street, Mandaluyong",
+    "phone": null,
+    "latitude": 14.5897925,
+    "longitude": 121.0268436,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055064572",
+    "osm_id": 255064572,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp- 5",
+    "address": "M. H. del Pilar Road, Valenzuela",
+    "phone": null,
+    "latitude": 14.7081371,
+    "longitude": 120.946227,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055064648",
+    "osm_id": 255064648,
+    "type": "police",
+    "subtype": null,
+    "name": "Station 3",
+    "address": "Valenzuela",
+    "phone": null,
+    "latitude": 14.68709,
+    "longitude": 121.025001,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055064839",
+    "osm_id": 255064839,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP-4",
+    "address": "Evangelista Street, Makati",
+    "phone": null,
+    "latitude": 14.541426,
+    "longitude": 121.0120271,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055064989",
+    "osm_id": 255064989,
+    "type": "police",
+    "subtype": null,
+    "name": "Taguig Traffic Police",
+    "address": "Taguig",
+    "phone": null,
+    "latitude": 14.5069266,
+    "longitude": 121.0358949,
+    "tags": {
+      "operator": "City Government of Taguig",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055065215",
+    "osm_id": 255065215,
+    "type": "police",
+    "subtype": null,
+    "name": "Central Market Police Station",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6039633,
+    "longitude": 120.9846776,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055066642",
+    "osm_id": 255066642,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precint № 1",
+    "address": "Santa Isabela Street, Pasig",
+    "phone": null,
+    "latitude": 14.571531,
+    "longitude": 121.059608,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055067324",
+    "osm_id": 255067324,
+    "type": "police",
+    "subtype": null,
+    "name": "Central Police Station",
+    "address": "Marikina",
+    "phone": null,
+    "latitude": 14.6330419,
+    "longitude": 121.100654,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055067580",
+    "osm_id": 255067580,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 7",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.5587257,
+    "longitude": 121.0818435,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055067595",
+    "osm_id": 255067595,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-2",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.5780621,
+    "longitude": 121.0783786,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055067622",
+    "osm_id": 255067622,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-9",
+    "address": "Makati",
+    "phone": null,
+    "latitude": 14.5666316,
+    "longitude": 121.0313601,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055068202",
+    "osm_id": 255068202,
+    "type": "police",
+    "subtype": null,
+    "name": "QCPD Station 1",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.6318513,
+    "longitude": 120.9949851,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055069680",
+    "osm_id": 255069680,
+    "type": "police",
+    "subtype": null,
+    "name": "Sub-station 4",
+    "address": "Zabarte Road, Caloocan",
+    "phone": null,
+    "latitude": 14.75145,
+    "longitude": 121.044197,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055069799",
+    "osm_id": 255069799,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp- 3",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4869974,
+    "longitude": 121.0464199,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055069851",
+    "osm_id": 255069851,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 6",
+    "address": "F. Cruz Street, Pasay",
+    "phone": null,
+    "latitude": 14.5370798,
+    "longitude": 121.0082732,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055069882",
+    "osm_id": 255069882,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 10",
+    "address": "Pasay",
+    "phone": null,
+    "latitude": 14.5083513,
+    "longitude": 121.0287462,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055070426",
+    "osm_id": 255070426,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp-6",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.5665337,
+    "longitude": 121.0794801,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055070470",
+    "osm_id": 255070470,
+    "type": "police",
+    "subtype": null,
+    "name": "Station 2",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.6477905,
+    "longitude": 121.0280928,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055070474",
+    "osm_id": 255070474,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP 7",
+    "address": "Apelo Cruz Loop, Pasay",
+    "phone": null,
+    "latitude": 14.5337118,
+    "longitude": 121.0097537,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055071033",
+    "osm_id": 255071033,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Sub-Station 7",
+    "address": "Makati",
+    "phone": null,
+    "latitude": 14.5652039,
+    "longitude": 121.0457858,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055071178",
+    "osm_id": 255071178,
+    "type": "police",
+    "subtype": null,
+    "name": "Parañaque Central Police Station",
+    "address": "Quirino Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.5007998,
+    "longitude": 120.9910888,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055071445",
+    "osm_id": 255071445,
+    "type": "police",
+    "subtype": null,
+    "name": "Dagonoy Police Community Precint",
+    "address": "Dagonoy Street, Manila",
+    "phone": null,
+    "latitude": 14.5720282,
+    "longitude": 121.0044632,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000020864273",
+    "osm_id": 320864273,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay Police Community Precint № 11",
+    "address": "Seaside Boulevard",
+    "phone": null,
+    "latitude": 14.5360346,
+    "longitude": 120.9794859,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000057738999",
+    "osm_id": 357738999,
+    "type": "police",
+    "subtype": null,
+    "name": "San Mateo Police Substation",
+    "address": "General A. Luna Street",
+    "phone": null,
+    "latitude": 14.6777182,
+    "longitude": 121.1119333,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000047803528",
+    "osm_id": 447803528,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4024903,
+    "longitude": 120.9851547,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000082962545",
+    "osm_id": 582962545,
+    "type": "police",
+    "subtype": null,
+    "name": "Obando Police Station",
+    "address": "J. P. Rizal Street",
+    "phone": null,
+    "latitude": 14.7115714,
+    "longitude": 120.935307,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000072667263",
+    "osm_id": 672667263,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP",
+    "address": "Champaca 1, Marikina",
+    "phone": null,
+    "latitude": 14.6632601,
+    "longitude": 121.1275081,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000096288642",
+    "osm_id": 696288642,
+    "type": "police",
+    "subtype": null,
+    "name": "BCEO-TCMP Pasig",
+    "address": "Pasig",
+    "phone": null,
+    "latitude": 14.6198835,
+    "longitude": 121.0884764,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000002067499",
+    "osm_id": 702067499,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5711522,
+    "longitude": 121.1490497,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000083057841",
+    "osm_id": 983057841,
+    "type": "police",
+    "subtype": null,
+    "name": "Soldiers Hill Precinct",
+    "address": "Marcos Alvarez Avenue, Bacoor",
+    "phone": null,
+    "latitude": 14.4124173,
+    "longitude": 120.990577,
+    "tags": {
+      "operator": "Bacoor City Police, Cavite Police Provincial Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000037921414",
+    "osm_id": 1037921414,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Station",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5941953,
+    "longitude": 120.9788065,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000058992625",
+    "osm_id": 1058992625,
+    "type": "police",
+    "subtype": null,
+    "name": "EAC Outpost",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5819555,
+    "longitude": 120.9861761,
+    "tags": {
+      "operator": "Manila Police District Precint 5",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000088819081",
+    "osm_id": 1188819081,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 1",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5274292,
+    "longitude": 120.9942343,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0012-000073269496",
+    "osm_id": 1273269496,
+    "type": "police",
+    "subtype": null,
+    "name": "Pinagsama Police Sub-station № 3",
+    "address": "C5-Palar Service Road, Taguig",
+    "phone": null,
+    "latitude": 14.5330416,
+    "longitude": 121.0572948,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0012-000077182553",
+    "osm_id": 1277182553,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 6",
+    "address": "Dr. A. Santos Avenue, Paranaque, PH",
+    "phone": null,
+    "latitude": 14.453914,
+    "longitude": 121.0441788,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0012-000092507696",
+    "osm_id": 1292507696,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP № 2",
+    "address": "Elisco Road, Pasig",
+    "phone": null,
+    "latitude": 14.5510546,
+    "longitude": 121.0763884,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0013-000019873625",
+    "osm_id": 1319873625,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct",
+    "address": "P. Rosales Street, Pateros",
+    "phone": null,
+    "latitude": 14.5470939,
+    "longitude": 121.0760729,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000012141682",
+    "osm_id": 1412141682,
+    "type": "police",
+    "subtype": null,
+    "name": "Tourist Police Station",
+    "address": "Kalaw Avenue, Manila",
+    "phone": null,
+    "latitude": 14.5824944,
+    "longitude": 120.9814114,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000054723792",
+    "osm_id": 1454723792,
+    "type": "police",
+    "subtype": null,
+    "name": "Imus City Police Station",
+    "address": "General J. Castañeda Street, Imus",
+    "phone": "+63 46 515 2975;+63 46 471 2656;+63 46 471 3993; +63 916 444 4924",
+    "latitude": 14.4294359,
+    "longitude": 120.9365547,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": "https://www.cavite.gov.ph/home/index.php/cities-and-municipalities/district-iii/imus-city"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0015-000098554051",
+    "osm_id": 1598554051,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Community Police Station",
+    "address": "Mandaluyong",
+    "phone": null,
+    "latitude": 14.5942518,
+    "longitude": 121.0584623,
+    "tags": {
+      "operator": "Barangay Government of Wack-Wack Greenhills, Mandaluyong City",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0017-000097836391",
+    "osm_id": 1797836391,
+    "type": "police",
+    "subtype": null,
+    "name": "Evangelista Bacoor PNP",
+    "address": "General Evangelista Street, Bacoor",
+    "phone": null,
+    "latitude": 14.4518663,
+    "longitude": 120.9282282,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0019-000089696203",
+    "osm_id": 1989696203,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5808872,
+    "longitude": 121.1758244,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0020-000004106467",
+    "osm_id": 2004106467,
+    "type": "police",
+    "subtype": null,
+    "name": "Compac 3",
+    "address": "Corazon C. Aquino Avenue, Antipolo",
+    "phone": null,
+    "latitude": 14.586872,
+    "longitude": 121.1572436,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0021-000026363178",
+    "osm_id": 2126363178,
+    "type": "police",
+    "subtype": null,
+    "name": "Bacood Police Station",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5904792,
+    "longitude": 121.0207744,
+    "tags": {
+      "operator": "Manila Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0022-000086478395",
+    "osm_id": 2286478395,
+    "type": "police",
+    "subtype": null,
+    "name": "Bacoor Police Station",
+    "address": "Aguinaldo Boulevard, Bacoor",
+    "phone": null,
+    "latitude": 14.4606911,
+    "longitude": 120.9599598,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0023-000022746703",
+    "osm_id": 2322746703,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay 260 Outpost",
+    "address": "Benavidez Street, Manila",
+    "phone": null,
+    "latitude": 14.6057277,
+    "longitude": 120.9776802,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0024-000043915638",
+    "osm_id": 2443915638,
+    "type": "police",
+    "subtype": null,
+    "name": "Municipal Public Safety Office (Fishport)",
+    "address": "Taytay",
+    "phone": null,
+    "latitude": 14.5491289,
+    "longitude": 121.1206887,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0027-000038956830",
+    "osm_id": 2738956830,
+    "type": "police",
+    "subtype": null,
+    "name": "Malinta Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6921868,
+    "longitude": 120.9644655,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0031-000045456700",
+    "osm_id": 3145456700,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Sub-station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7188683,
+    "longitude": 121.1382835,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0031-000097999887",
+    "osm_id": 3197999887,
+    "type": "police",
+    "subtype": null,
+    "name": "Tanza Police Sub-station",
+    "address": "E. Rodriguez Street, Navotas",
+    "phone": null,
+    "latitude": 14.6765029,
+    "longitude": 120.936464,
+    "tags": {
+      "operator": "Navotas City Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0032-000038982943",
+    "osm_id": 3238982943,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Help Desk",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5097428,
+    "longitude": 121.0126758,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0035-000000218093",
+    "osm_id": 3500218093,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay City Police Station",
+    "address": "Derham Street, Pasay",
+    "phone": null,
+    "latitude": 14.5454154,
+    "longitude": 120.9935058,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0035-000078952587",
+    "osm_id": 3578952587,
+    "type": "police",
+    "subtype": null,
+    "name": "Marikina Community Police Precint № 8",
+    "address": "Lilac Street, Marikina",
+    "phone": null,
+    "latitude": 14.6396494,
+    "longitude": 121.1216995,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0036-000003996801",
+    "osm_id": 3603996801,
+    "type": "police",
+    "subtype": null,
+    "name": "Sub-Station 6 - Patrol Section",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6688353,
+    "longitude": 120.9470413,
+    "tags": {
+      "operator": "Malabon City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0036-000050427156",
+    "osm_id": 3650427156,
+    "type": "police",
+    "subtype": null,
+    "name": "Nangka Police Headquarters",
+    "address": "Old J. P. Rizal Street, Marikina",
+    "phone": null,
+    "latitude": 14.6733496,
+    "longitude": 121.1087721,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0039-000011978514",
+    "osm_id": 3911978514,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5980399,
+    "longitude": 121.0299052,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000004993895",
+    "osm_id": 4104993895,
+    "type": "police",
+    "subtype": null,
+    "name": "Sibama Police Community Precinct 3",
+    "address": "Simoun Street, Manila",
+    "phone": null,
+    "latitude": 14.6210066,
+    "longitude": 120.9921011,
+    "tags": {
+      "operator": "Sampaloc Police Station № 4",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000018406196",
+    "osm_id": 4118406196,
+    "type": "police",
+    "subtype": null,
+    "name": "Compact 4 PNP Sub Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7461667,
+    "longitude": 121.1391198,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000018494690",
+    "osm_id": 4118494690,
+    "type": "police",
+    "subtype": null,
+    "name": "Rodriguez Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7305574,
+    "longitude": 121.1364094,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000074135490",
+    "osm_id": 4174135490,
+    "type": "police",
+    "subtype": null,
+    "name": "Gandara Police Community Precinct",
+    "address": "S. Padilla Street",
+    "phone": null,
+    "latitude": 14.600051,
+    "longitude": 120.97719,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000075755590",
+    "osm_id": 4175755590,
+    "type": "police",
+    "subtype": null,
+    "name": "Calabash Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6114875,
+    "longitude": 121.003199,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000086250697",
+    "osm_id": 4186250697,
+    "type": "police",
+    "subtype": null,
+    "name": "Tala Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7678224,
+    "longitude": 121.059962,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0041-000096499445",
+    "osm_id": 4196499445,
+    "type": "police",
+    "subtype": null,
+    "name": "Mandaluyong Police Community Precinct 5",
+    "address": "Mayflower Street, Mandaluyong",
+    "phone": null,
+    "latitude": 14.5778239,
+    "longitude": 121.0535323,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0042-000081349455",
+    "osm_id": 4281349455,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct - 7",
+    "address": "Doña Pilar Aguirre Avenue",
+    "phone": null,
+    "latitude": 14.424131,
+    "longitude": 121.0089114,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0043-000018280802",
+    "osm_id": 4318280802,
+    "type": "police",
+    "subtype": null,
+    "name": "Binakayan Police Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4500107,
+    "longitude": 120.9233158,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0043-000033492989",
+    "osm_id": 4333492989,
+    "type": "police",
+    "subtype": null,
+    "name": "Gulod Police Community Precinct № 2",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7168231,
+    "longitude": 121.0404034,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0045-000020639894",
+    "osm_id": 4520639894,
+    "type": "police",
+    "subtype": null,
+    "name": "Palanan Police Station",
+    "address": "Casino Street",
+    "phone": null,
+    "latitude": 14.5603236,
+    "longitude": 121.0056626,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0045-000027629091",
+    "osm_id": 4527629091,
+    "type": "police",
+    "subtype": null,
+    "name": "Task Force Commo",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6975409,
+    "longitude": 121.0878743,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0045-000080455490",
+    "osm_id": 4580455490,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 1",
+    "address": "Mabuhay Rotonda",
+    "phone": null,
+    "latitude": 14.6174997,
+    "longitude": 121.00176,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0046-000007637304",
+    "osm_id": 4607637304,
+    "type": "police",
+    "subtype": null,
+    "name": "Binangonan Municipal Police Station",
+    "address": "Manila East Road",
+    "phone": "+63 286520159",
+    "latitude": 14.4815519,
+    "longitude": 121.1881283,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0046-000049834090",
+    "osm_id": 4649834090,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Palm Plaza",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5732756,
+    "longitude": 120.981093,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0047-000007069893",
+    "osm_id": 4707069893,
+    "type": "police",
+    "subtype": null,
+    "name": "Soler Police Precint MPD PS11",
+    "address": "Soler Street",
+    "phone": null,
+    "latitude": 14.6058735,
+    "longitude": 120.9709705,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0047-000007124891",
+    "osm_id": 4707124891,
+    "type": "police",
+    "subtype": null,
+    "name": "Raxabago Police Station № 1",
+    "address": "Raxabago Street",
+    "phone": null,
+    "latitude": 14.6210654,
+    "longitude": 120.9679762,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0047-000090139421",
+    "osm_id": 4790139421,
+    "type": "police",
+    "subtype": null,
+    "name": "Bagong Silang Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7745152,
+    "longitude": 121.044824,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0048-000012536028",
+    "osm_id": 4812536028,
+    "type": "police",
+    "subtype": null,
+    "name": "Gagalangin Police Community Precinct",
+    "address": "Pampanga",
+    "phone": null,
+    "latitude": 14.6288627,
+    "longitude": 120.9736226,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0048-000037730421",
+    "osm_id": 4837730421,
+    "type": "police",
+    "subtype": null,
+    "name": "Taguig Traffic Management Office (TMO) Outpost",
+    "address": "Taguig",
+    "phone": null,
+    "latitude": 14.5679091,
+    "longitude": 121.0474338,
+    "tags": {
+      "operator": "Taguig City Government",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0049-000012234581",
+    "osm_id": 4912234581,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 8",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6016987,
+    "longitude": 121.0314293,
+    "tags": {
+      "operator": "San Juan City Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0049-000074141256",
+    "osm_id": 4974141256,
+    "type": "police",
+    "subtype": null,
+    "name": "Kamuning Police Post",
+    "address": "Kamuning Road, Quezon City",
+    "phone": null,
+    "latitude": 14.6285733,
+    "longitude": 121.0387398,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0049-000088120329",
+    "osm_id": 4988120329,
+    "type": "police",
+    "subtype": null,
+    "name": "Harmony Hills 1 Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7838021,
+    "longitude": 121.0299434,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0051-000042570622",
+    "osm_id": 5142570622,
+    "type": "police",
+    "subtype": null,
+    "name": "Pag-asa Police Sub-station",
+    "address": "General Kalentong Street",
+    "phone": null,
+    "latitude": 14.5913857,
+    "longitude": 121.0253942,
+    "tags": {
+      "operator": "Mandaluyong City Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0051-000042570722",
+    "osm_id": 5142570722,
+    "type": "police",
+    "subtype": null,
+    "name": "Mandaluyong Station Patrol Unit",
+    "address": "Shaw Boulevard",
+    "phone": null,
+    "latitude": 14.5826033,
+    "longitude": 121.0520936,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0052-000000147021",
+    "osm_id": 5200147021,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 1",
+    "address": "Quirino Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.5322366,
+    "longitude": 120.9968124,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0054-000069036422",
+    "osm_id": 5469036422,
+    "type": "police",
+    "subtype": null,
+    "name": "PDEA Special Enforcement Service",
+    "address": "NIA Road",
+    "phone": null,
+    "latitude": 14.639742,
+    "longitude": 121.0421241,
+    "tags": {
+      "operator": "Philippine Drug Enforcement Agency",
+      "opening_hours": null,
+      "website": "http://www.pdea.gov.ph"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0055-000085712312",
+    "osm_id": 5585712312,
+    "type": "police",
+    "subtype": null,
+    "name": "Bahay Toro Police Community Precinct",
+    "address": "Road 15",
+    "phone": null,
+    "latitude": 14.6646084,
+    "longitude": 121.0211809,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0057-000049690821",
+    "osm_id": 5749690821,
+    "type": "police",
+    "subtype": null,
+    "name": "CAA Police Community Precinct",
+    "address": "CAA Avenue",
+    "phone": null,
+    "latitude": 14.4614618,
+    "longitude": 120.9949266,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0059-000048084152",
+    "osm_id": 5948084152,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6884203,
+    "longitude": 120.9826621,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0059-000048084154",
+    "osm_id": 5948084154,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6895642,
+    "longitude": 120.9832576,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0059-000050372299",
+    "osm_id": 5950372299,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6864631,
+    "longitude": 120.9780135,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0059-000050415379",
+    "osm_id": 5950415379,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7233466,
+    "longitude": 120.9317742,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0060-000048268364",
+    "osm_id": 6048268364,
+    "type": "police",
+    "subtype": null,
+    "name": "Remedios Police Community Precinct",
+    "address": "Remedios Circle",
+    "phone": null,
+    "latitude": 14.5701369,
+    "longitude": 120.9868338,
+    "tags": {
+      "operator": "Ermita Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0060-000091301796",
+    "osm_id": 6091301796,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7147501,
+    "longitude": 120.9472794,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0060-000091301797",
+    "osm_id": 6091301797,
+    "type": "police",
+    "subtype": null,
+    "name": "Bantay Bantay Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7139964,
+    "longitude": 120.947451,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0060-000091301798",
+    "osm_id": 6091301798,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7176829,
+    "longitude": 120.9486654,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0060-000091344458",
+    "osm_id": 6091344458,
+    "type": "police",
+    "subtype": null,
+    "name": "Bata Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7225083,
+    "longitude": 120.9443752,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0062-000016144786",
+    "osm_id": 6216144786,
+    "type": "police",
+    "subtype": null,
+    "name": "Highway Patrol Group Clearance Office",
+    "address": "Captain Henry Javier Street",
+    "phone": null,
+    "latitude": 14.5775735,
+    "longitude": 121.0652683,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0063-000049150229",
+    "osm_id": 6349150229,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4689586,
+    "longitude": 121.0493584,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0063-000080993937",
+    "osm_id": 6380993937,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4903699,
+    "longitude": 121.0603395,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0063-000081001889",
+    "osm_id": 6381001889,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4850478,
+    "longitude": 121.0592184,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0064-000008064698",
+    "osm_id": 6408064698,
+    "type": "police",
+    "subtype": null,
+    "name": "Purok 6 Outpost Boundarey",
+    "address": "Ynares Avenue",
+    "phone": null,
+    "latitude": 14.5333963,
+    "longitude": 121.1085247,
+    "tags": {
+      "operator": "Chairman",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0064-000049466293",
+    "osm_id": 6449466293,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5334992,
+    "longitude": 121.0573645,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0065-000001983997",
+    "osm_id": 6501983997,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precint",
+    "address": "F. Concepcion Street",
+    "phone": null,
+    "latitude": 14.5612779,
+    "longitude": 121.0742311,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0065-000023052905",
+    "osm_id": 6523052905,
+    "type": "police",
+    "subtype": null,
+    "name": "Bantay Bayan Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.586823,
+    "longitude": 121.0225622,
+    "tags": {
+      "operator": "Barangay Mabini-J. Rizal",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0065-000028177247",
+    "osm_id": 6528177247,
+    "type": "police",
+    "subtype": null,
+    "name": "PNP Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5869423,
+    "longitude": 121.0632718,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0065-000068964446",
+    "osm_id": 6568964446,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Police Station",
+    "address": "Archimedes Street",
+    "phone": null,
+    "latitude": 14.5683683,
+    "longitude": 121.0073615,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0069-000064498785",
+    "osm_id": 6964498785,
+    "type": "police",
+    "subtype": null,
+    "name": "Arenda Tapayan Outpost",
+    "address": "Ynares Avenue",
+    "phone": null,
+    "latitude": 14.5406482,
+    "longitude": 121.1110714,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0070-000022731494",
+    "osm_id": 7022731494,
+    "type": "police",
+    "subtype": null,
+    "name": "Intramuros Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5873532,
+    "longitude": 120.9788247,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0071-000087287099",
+    "osm_id": 7187287099,
+    "type": "police",
+    "subtype": null,
+    "name": "Ibayo-TIpas Police Station",
+    "address": "Doctor A. Natividad Street",
+    "phone": null,
+    "latitude": 14.5406209,
+    "longitude": 121.0884688,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0071-000094651840",
+    "osm_id": 7194651840,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Police Sub-station",
+    "address": "J. P. Rizal Extension",
+    "phone": null,
+    "latitude": 14.549058,
+    "longitude": 121.0635672,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0072-000037897451",
+    "osm_id": 7237897451,
+    "type": "police",
+    "subtype": null,
+    "name": "Parañaque City Police Community Precinct № 2",
+    "address": "President Diosdado Macapagal Boulevard",
+    "phone": null,
+    "latitude": 14.5167719,
+    "longitude": 120.99042,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0073-000063528785",
+    "osm_id": 7363528785,
+    "type": "police",
+    "subtype": null,
+    "name": "Sub-Station 4",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6702152,
+    "longitude": 120.9602107,
+    "tags": {
+      "operator": "Malabon City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0074-000040507610",
+    "osm_id": 7440507610,
+    "type": "police",
+    "subtype": null,
+    "name": "Bambang Police Community Precinct",
+    "address": "Bambang Street",
+    "phone": null,
+    "latitude": 14.6113969,
+    "longitude": 120.9792915,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0074-000083331804",
+    "osm_id": 7483331804,
+    "type": "police",
+    "subtype": null,
+    "name": "Purok 5 Outpost Barangay Santa Ana",
+    "address": "Masipag Street",
+    "phone": null,
+    "latitude": 14.5351334,
+    "longitude": 121.1091907,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0078-000036311985",
+    "osm_id": 7836311985,
+    "type": "police",
+    "subtype": null,
+    "name": "PNP Station Camalig",
+    "address": "Gulod Road",
+    "phone": null,
+    "latitude": 14.7736875,
+    "longitude": 120.9966963,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0080-000038138785",
+    "osm_id": 8038138785,
+    "type": "police",
+    "subtype": null,
+    "name": "Caloocan City Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7484346,
+    "longitude": 121.0308572,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0084-000096839835",
+    "osm_id": 8496839835,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasig Sub-station № 3",
+    "address": "Ramon Jabson Street",
+    "phone": null,
+    "latitude": 14.558016,
+    "longitude": 121.0760394,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0085-000097344780",
+    "osm_id": 8597344780,
+    "type": "police",
+    "subtype": null,
+    "name": "Bambang Police Precinct",
+    "address": "Pio Alvarez Street",
+    "phone": null,
+    "latitude": 14.5548234,
+    "longitude": 121.0820831,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0086-000052201976",
+    "osm_id": 8652201976,
+    "type": "police",
+    "subtype": null,
+    "name": "Delpan Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5998948,
+    "longitude": 120.9645226,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0086-000085244152",
+    "osm_id": 8685244152,
+    "type": "police",
+    "subtype": null,
+    "name": "Valenzuela City Police Community Precinct 6",
+    "address": "MacArthur Highway, Valenzuela",
+    "phone": null,
+    "latitude": 14.704229,
+    "longitude": 120.9612704,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0087-000017675646",
+    "osm_id": 8717675646,
+    "type": "police",
+    "subtype": null,
+    "name": "Hillcrest Police Sub-station",
+    "address": "Camarin Road",
+    "phone": null,
+    "latitude": 14.7510085,
+    "longitude": 121.0385306,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0087-000037452120",
+    "osm_id": 8737452120,
+    "type": "police",
+    "subtype": null,
+    "name": "Lawang Bato Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7300372,
+    "longitude": 120.9931907,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0087-000051784375",
+    "osm_id": 8751784375,
+    "type": "police",
+    "subtype": null,
+    "name": "Lico Community Police Assistance Center",
+    "address": "Lico Street",
+    "phone": null,
+    "latitude": 14.6244764,
+    "longitude": 120.9828387,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0088-000026429716",
+    "osm_id": 8826429716,
+    "type": "police",
+    "subtype": null,
+    "name": "Galas Police Station Ⅱ",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6189133,
+    "longitude": 121.0155285,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0088-000060848641",
+    "osm_id": 8860848641,
+    "type": "police",
+    "subtype": null,
+    "name": "COMPAC Extension Office",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7596781,
+    "longitude": 121.0861655,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0089-000020806228",
+    "osm_id": 8920806228,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 10",
+    "address": "V. Pozon Street",
+    "phone": null,
+    "latitude": 14.5547676,
+    "longitude": 121.078497,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0089-000034965399",
+    "osm_id": 8934965399,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 4",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5220542,
+    "longitude": 120.9968369,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0089-000090042117",
+    "osm_id": 8990042117,
+    "type": "police",
+    "subtype": null,
+    "name": "La Huerta Barangay Outpost",
+    "address": "Quirino Avenue",
+    "phone": null,
+    "latitude": 14.5012884,
+    "longitude": 120.9924292,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0093-000097180323",
+    "osm_id": 9397180323,
+    "type": "police",
+    "subtype": null,
+    "name": "Valenzuela Police Station - Police Assistance Desk #3",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6852423,
+    "longitude": 120.976506,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0094-000058409094",
+    "osm_id": 9458409094,
+    "type": "police",
+    "subtype": null,
+    "name": "Talipapa Police Station",
+    "address": "Quirino Highway",
+    "phone": null,
+    "latitude": 14.6681018,
+    "longitude": 121.0087086,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0094-000092703785",
+    "osm_id": 9492703785,
+    "type": "police",
+    "subtype": null,
+    "name": "Valenzuela Police Station - Police Assisstance Desk 14",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7240928,
+    "longitude": 120.9864,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0095-000001082218",
+    "osm_id": 9501082218,
+    "type": "police",
+    "subtype": null,
+    "name": "Task Force Disiplina Comlaint and Action Post",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7218139,
+    "longitude": 121.0404754,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0097-000068685613",
+    "osm_id": 9768685613,
+    "type": "police",
+    "subtype": null,
+    "name": "Addition Hills, Police Substation № 2",
+    "address": "Molave Street",
+    "phone": null,
+    "latitude": 14.5851253,
+    "longitude": 121.0365433,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0098-000000560473",
+    "osm_id": 9800560473,
+    "type": "police",
+    "subtype": null,
+    "name": "Parola Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5984244,
+    "longitude": 120.9604651,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0099-000052551810",
+    "osm_id": 9952551810,
+    "type": "police",
+    "subtype": null,
+    "name": "Maysan Police Station",
+    "address": "Tongco Street, Valenzuela",
+    "phone": null,
+    "latitude": 14.698314,
+    "longitude": 120.9798824,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0099-000058193933",
+    "osm_id": 9958193933,
+    "type": "police",
+    "subtype": null,
+    "name": "Palanca Community Police Precinct",
+    "address": "Carlos Palanca Street",
+    "phone": null,
+    "latitude": 14.5951364,
+    "longitude": 120.9842348,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0100-000088106946",
+    "osm_id": 10088106946,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 1",
+    "address": "Luzon Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6720666,
+    "longitude": 121.0688786,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0101-000025158740",
+    "osm_id": 10125158740,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Station № 16",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7354736,
+    "longitude": 121.0694244,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0101-000064182723",
+    "osm_id": 10164182723,
+    "type": "police",
+    "subtype": null,
+    "name": "Escopa Police Community Precinct",
+    "address": "Pud Site, Quezon City",
+    "phone": null,
+    "latitude": 14.6278321,
+    "longitude": 121.0721435,
+    "tags": {
+      "operator": "Quezon City Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0102-000026667726",
+    "osm_id": 10226667726,
+    "type": "police",
+    "subtype": null,
+    "name": "Community Precinct № 3",
+    "address": "M. Naval Street, Navotas",
+    "phone": null,
+    "latitude": 14.6547554,
+    "longitude": 120.9486825,
+    "tags": {
+      "operator": "Philippine National Police, Navotas Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0107-000040492905",
+    "osm_id": 10740492905,
+    "type": "police",
+    "subtype": null,
+    "name": "Pandacan Police Station 10",
+    "address": "Paco-Santa Mesa Road",
+    "phone": null,
+    "latitude": 14.5844047,
+    "longitude": 121.0033989,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0107-000082462168",
+    "osm_id": 10782462168,
+    "type": "police",
+    "subtype": null,
+    "name": "Marilao MPS",
+    "address": null,
+    "phone": null,
+    "latitude": 14.771472,
+    "longitude": 120.9788791,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0107-000084647920",
+    "osm_id": 10784647920,
+    "type": "police",
+    "subtype": null,
+    "name": "Community Police Assisstance Center 6",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7532968,
+    "longitude": 120.9636676,
+    "tags": {
+      "operator": "Meycauayan City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0107-000087049501",
+    "osm_id": 10787049501,
+    "type": "police",
+    "subtype": null,
+    "name": "Malanday Police Sub-station",
+    "address": "Marikina",
+    "phone": null,
+    "latitude": 14.652513,
+    "longitude": 121.0938946,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0109-000013135789",
+    "osm_id": 10913135789,
+    "type": "police",
+    "subtype": null,
+    "name": "Hulo Police Sub-Station",
+    "address": "Coronado Street, Mandaluyong",
+    "phone": null,
+    "latitude": 14.5701453,
+    "longitude": 121.0318474,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0109-000081773372",
+    "osm_id": 10981773372,
+    "type": "police",
+    "subtype": null,
+    "name": "NAIA Terminal 4 Police Station",
+    "address": null,
+    "phone": "09954053092",
+    "latitude": 14.5253872,
+    "longitude": 121.0005462,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0110-000049327939",
+    "osm_id": 11049327939,
+    "type": "police",
+    "subtype": null,
+    "name": "Pandacan Police Station 10",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5907143,
+    "longitude": 121.0093085,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0110-000053698376",
+    "osm_id": 11053698376,
+    "type": "police",
+    "subtype": null,
+    "name": "Meisic Police Station (PS-11)",
+    "address": null,
+    "phone": "82443079",
+    "latitude": 14.6043803,
+    "longitude": 120.9732004,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0110-000085853530",
+    "osm_id": 11085853530,
+    "type": "police",
+    "subtype": null,
+    "name": "V. Mapa Police Community Precint",
+    "address": "Victorino Mapa Street, Manila",
+    "phone": null,
+    "latitude": 14.5993689,
+    "longitude": 121.0171453,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0111-000073244240",
+    "osm_id": 11173244240,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangka Police Sub-station",
+    "address": "P. Oliveros Street",
+    "phone": null,
+    "latitude": 14.5715114,
+    "longitude": 121.0410936,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0114-000062331163",
+    "osm_id": 11462331163,
+    "type": "police",
+    "subtype": null,
+    "name": "San Juan City Police Station",
+    "address": "Santolan Road",
+    "phone": null,
+    "latitude": 14.6054864,
+    "longitude": 121.0323486,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0115-000019249221",
+    "osm_id": 11519249221,
+    "type": "police",
+    "subtype": null,
+    "name": "Wawang Pulo Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7335832,
+    "longitude": 120.9276865,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0115-000019656411",
+    "osm_id": 11519656411,
+    "type": "police",
+    "subtype": null,
+    "name": "Parada Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6958623,
+    "longitude": 120.9891788,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0116-000058175874",
+    "osm_id": 11658175874,
+    "type": "police",
+    "subtype": null,
+    "name": "SAB Police Community Precinct Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5762126,
+    "longitude": 121.0058387,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0116-000080848090",
+    "osm_id": 11680848090,
+    "type": "police",
+    "subtype": null,
+    "name": "Mobile Police Sub-station 5",
+    "address": "Pioneer Street",
+    "phone": null,
+    "latitude": 14.5723226,
+    "longitude": 121.0476361,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0117-000027971667",
+    "osm_id": 11727971667,
+    "type": "police",
+    "subtype": null,
+    "name": "Tourist Assistance Desk",
+    "address": "NAIA Road",
+    "phone": null,
+    "latitude": 14.5170822,
+    "longitude": 120.9974494,
+    "tags": {
+      "operator": "Parañaque City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0117-000043296258",
+    "osm_id": 11743296258,
+    "type": "police",
+    "subtype": null,
+    "name": "Mabini - J. Rizal Police Sub-station",
+    "address": "J. P. Rizal Street",
+    "phone": null,
+    "latitude": 14.5855163,
+    "longitude": 121.0211081,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0118-000061378908",
+    "osm_id": 11861378908,
+    "type": "police",
+    "subtype": null,
+    "name": "J. Bocobo Police Community Precinct 3",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5796997,
+    "longitude": 120.981381,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0118-000082889024",
+    "osm_id": 11882889024,
+    "type": "police",
+    "subtype": null,
+    "name": "Fort Bonifacio Sub-station 1",
+    "address": "40th Street",
+    "phone": null,
+    "latitude": 14.5607541,
+    "longitude": 121.0550782,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0119-000012109088",
+    "osm_id": 11912109088,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasig City Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5699225,
+    "longitude": 121.0815962,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0119-000027188049",
+    "osm_id": 11927188049,
+    "type": "police",
+    "subtype": null,
+    "name": "Ugong Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5791143,
+    "longitude": 121.0785051,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0119-000033426774",
+    "osm_id": 11933426774,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Substation 8 - Airport",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5101077,
+    "longitude": 121.0035514,
+    "tags": {
+      "operator": "Pasay City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0119-000050533033",
+    "osm_id": 11950533033,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Substation 2 - Western Bicutan",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5026883,
+    "longitude": 121.0430858,
+    "tags": {
+      "operator": "Taguig City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0119-000057600291",
+    "osm_id": 11957600291,
+    "type": "police",
+    "subtype": null,
+    "name": "Manggahan, Police Sub-station № 8",
+    "address": "Kaayusan Street",
+    "phone": null,
+    "latitude": 14.5992517,
+    "longitude": 121.1000801,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0120-000013020174",
+    "osm_id": 12013020174,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Substation 9",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5218326,
+    "longitude": 121.0750893,
+    "tags": {
+      "operator": "Taguig City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0120-000054109131",
+    "osm_id": 12054109131,
+    "type": "police",
+    "subtype": null,
+    "name": "North Bay Boulevard Police Sub-station",
+    "address": "North Bay Boulevard",
+    "phone": null,
+    "latitude": 14.6483716,
+    "longitude": 120.9511396,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0120-000067204615",
+    "osm_id": 12067204615,
+    "type": "police",
+    "subtype": null,
+    "name": "Balingasa Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6547654,
+    "longitude": 120.9994268,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0120-000075001329",
+    "osm_id": 12075001329,
+    "type": "police",
+    "subtype": null,
+    "name": "Potrero Police Sub-station",
+    "address": "Governor Wenceslao Pascual Avenue",
+    "phone": null,
+    "latitude": 14.6659572,
+    "longitude": 120.9806547,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0121-000093944181",
+    "osm_id": 12193944181,
+    "type": "police",
+    "subtype": null,
+    "name": "Malabon City Police Station Headquarters",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6715457,
+    "longitude": 120.9607007,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0124-000055553882",
+    "osm_id": 12455553882,
+    "type": "police",
+    "subtype": null,
+    "name": "Santa Lucia Police Sub-station",
+    "address": "V. P. Ibañez Street",
+    "phone": null,
+    "latitude": 14.5993087,
+    "longitude": 121.0367776,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0127-000035604439",
+    "osm_id": 12735604439,
+    "type": "police",
+    "subtype": null,
+    "name": "Bambang Police Substation",
+    "address": "E. Jacinto Street",
+    "phone": null,
+    "latitude": 14.556191,
+    "longitude": 121.0769407,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0128-000091672124",
+    "osm_id": 12891672124,
+    "type": "police",
+    "subtype": null,
+    "name": "EDSA/Cabrera Police Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5382368,
+    "longitude": 121.0049441,
+    "tags": {
+      "operator": "Pasay City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0131-000064956573",
+    "osm_id": 13164956573,
+    "type": "police",
+    "subtype": null,
+    "name": "Plaza Ruiz Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6002556,
+    "longitude": 120.9737829,
+    "tags": {
+      "operator": "Manila Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0133-000095557698",
+    "osm_id": 13395557698,
+    "type": "police",
+    "subtype": null,
+    "name": "EDSA Barangay 144 Police Outpost",
+    "address": "EDSA",
+    "phone": null,
+    "latitude": 14.5389237,
+    "longitude": 121.0103818,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0134-000081893710",
+    "osm_id": 13481893710,
+    "type": "police",
+    "subtype": null,
+    "name": "Arnaiz Sub-station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5542858,
+    "longitude": 120.9971102,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0137-000027414876",
+    "osm_id": 13727414876,
+    "type": "police",
+    "subtype": null,
+    "name": "Ermita Police Station 5",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5801278,
+    "longitude": 120.995186,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000025843007",
+    "osm_id": 25843007,
+    "type": "police",
+    "subtype": null,
+    "name": "Antipolo City Police",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6066478,
+    "longitude": 121.1732433,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000033164568",
+    "osm_id": 33164568,
+    "type": "police",
+    "subtype": null,
+    "name": "Camp Bagong Diwa",
+    "address": "General Paulino Santos Avenue",
+    "phone": null,
+    "latitude": 14.4866463,
+    "longitude": 121.0566313,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000038317302",
+    "osm_id": 38317302,
+    "type": "police",
+    "subtype": null,
+    "name": "Old Makati Police Station (Makati Subway)",
+    "address": "Ayala Avenue Extension, Makati",
+    "phone": null,
+    "latitude": 14.5632527,
+    "longitude": 121.0155447,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000038715205",
+    "osm_id": 38715205,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct - 7",
+    "address": "7th Avenue",
+    "phone": null,
+    "latitude": 14.5488374,
+    "longitude": 121.0486547,
+    "tags": {
+      "operator": "Taguig City Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000043903691",
+    "osm_id": 43903691,
+    "type": "police",
+    "subtype": null,
+    "name": "Southern Police District Office",
+    "address": "Lawton Avenue, Taguig",
+    "phone": null,
+    "latitude": 14.530008,
+    "longitude": 121.0335501,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000046647931",
+    "osm_id": 46647931,
+    "type": "police",
+    "subtype": null,
+    "name": "Project 4 Police Station № 8",
+    "address": "P. Tuazon Boulevard, Quezon City",
+    "phone": null,
+    "latitude": 14.6227209,
+    "longitude": 121.0678593,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000055343380",
+    "osm_id": 55343380,
+    "type": "police",
+    "subtype": null,
+    "name": "Jaime Cardinal Sin Building",
+    "address": "Evangelista Street, Manila",
+    "phone": null,
+    "latitude": 14.5990272,
+    "longitude": 120.9835518,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000064624698",
+    "osm_id": 64624698,
+    "type": "police",
+    "subtype": null,
+    "name": "Muntinlupa City Police Department",
+    "address": "Market Drive, Muntinlupa",
+    "phone": null,
+    "latitude": 14.4189435,
+    "longitude": 121.0436796,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000081135552",
+    "osm_id": 81135552,
+    "type": "police",
+    "subtype": null,
+    "name": "Southern Police District Highway Patrol Group",
+    "address": "General Paulino Santos Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.4874247,
+    "longitude": 121.0451614,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0000-000092006190",
+    "osm_id": 92006190,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6997954,
+    "longitude": 121.0642209,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000012551105",
+    "osm_id": 112551105,
+    "type": "police",
+    "subtype": null,
+    "name": "Mandaluyong City Police Office",
+    "address": "Mandaluyong",
+    "phone": null,
+    "latitude": 14.5774216,
+    "longitude": 121.0332331,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000017164670",
+    "osm_id": 117164670,
+    "type": "police",
+    "subtype": null,
+    "name": "U.P. Diliman Police",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6520832,
+    "longitude": 121.0654163,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000017164675",
+    "osm_id": 117164675,
+    "type": "police",
+    "subtype": null,
+    "name": "University Police And Fire Department",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.6521063,
+    "longitude": 121.0657646,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000018701080",
+    "osm_id": 118701080,
+    "type": "police",
+    "subtype": null,
+    "name": "PNP-NCRPO Headquarters",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4882129,
+    "longitude": 121.0561958,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000028969885",
+    "osm_id": 128969885,
+    "type": "police",
+    "subtype": null,
+    "name": "Manila Police District Headquarters",
+    "address": "United Nations Avenue, Manila",
+    "phone": null,
+    "latitude": 14.5836563,
+    "longitude": 120.9862793,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000061306371",
+    "osm_id": 161306371,
+    "type": "police",
+    "subtype": null,
+    "name": "Manila Police Station 2",
+    "address": "Morga Street, Manila",
+    "phone": "+63 2 245 4551",
+    "latitude": 14.6086698,
+    "longitude": 120.9668754,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000062715898",
+    "osm_id": 162715898,
+    "type": "police",
+    "subtype": null,
+    "name": "Kalayaan Kawit MPS",
+    "address": "Lancaster Boulevard, Kawit",
+    "phone": "+63 (46) 6867411",
+    "latitude": 14.4172874,
+    "longitude": 120.8995169,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000063063664",
+    "osm_id": 163063664,
+    "type": "police",
+    "subtype": null,
+    "name": "Kanluran Police Sub-station",
+    "address": "Pateros",
+    "phone": null,
+    "latitude": 14.5515413,
+    "longitude": 121.068436,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000079408054",
+    "osm_id": 179408054,
+    "type": "police",
+    "subtype": null,
+    "name": "Barbosa Police Community Precinct",
+    "address": "Ariston Bautista, Manila",
+    "phone": null,
+    "latitude": 14.5987316,
+    "longitude": 120.9847326,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000079576218",
+    "osm_id": 179576218,
+    "type": "police",
+    "subtype": null,
+    "name": "Tourist Police",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.5821433,
+    "longitude": 120.9792645,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000084851253",
+    "osm_id": 184851253,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay Police Community Precinct 3",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5485253,
+    "longitude": 120.9982694,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0001-000090043727",
+    "osm_id": 190043727,
+    "type": "police",
+    "subtype": null,
+    "name": "Antipolo City Police Station",
+    "address": "Senator L. Sumulong Memorial Circle, Antipolo",
+    "phone": null,
+    "latitude": 14.5855855,
+    "longitude": 121.1820132,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000002156965",
+    "osm_id": 202156965,
+    "type": "police",
+    "subtype": null,
+    "name": "Bulacan Police Provincial Office - Bocaue Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7957003,
+    "longitude": 120.9252728,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000022612841",
+    "osm_id": 222612841,
+    "type": "police",
+    "subtype": null,
+    "name": "Malate Police Station",
+    "address": "A. Mabini Street, Manila",
+    "phone": null,
+    "latitude": 14.5632803,
+    "longitude": 120.987916,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000030070443",
+    "osm_id": 230070443,
+    "type": "police",
+    "subtype": null,
+    "name": "PNP Compound Hilltop",
+    "address": "Cabrera Road",
+    "phone": null,
+    "latitude": 14.5744609,
+    "longitude": 121.1492941,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000036255044",
+    "osm_id": 236255044,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Peace-keeping Action Team (BPAT)",
+    "address": "Casimiro A. Ynares Sr. Boulevard, Taytay",
+    "phone": null,
+    "latitude": 14.544279,
+    "longitude": 121.1241233,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000037236733",
+    "osm_id": 237236733,
+    "type": "police",
+    "subtype": null,
+    "name": "PNP Outpost (SWAT)",
+    "address": "Don Hilario Cruz Avenue",
+    "phone": null,
+    "latitude": 14.5506003,
+    "longitude": 121.1304199,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000037756970",
+    "osm_id": 237756970,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6881836,
+    "longitude": 120.9703997,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000048797519",
+    "osm_id": 248797519,
+    "type": "police",
+    "subtype": null,
+    "name": "General Trias Police Substation",
+    "address": "Antero Soriano Highway, General Trias",
+    "phone": null,
+    "latitude": 14.4080888,
+    "longitude": 120.8783662,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000051315022",
+    "osm_id": 251315022,
+    "type": "police",
+    "subtype": null,
+    "name": "Noveleta Municipal Police Station",
+    "address": "Noveleta",
+    "phone": null,
+    "latitude": 14.4275517,
+    "longitude": 120.8806298,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000055987873",
+    "osm_id": 255987873,
+    "type": "police",
+    "subtype": null,
+    "name": "Santa Mesa Police Station",
+    "address": "Magsaysay Boulevard, Manila",
+    "phone": null,
+    "latitude": 14.6021729,
+    "longitude": 121.0121772,
+    "tags": {
+      "operator": "Philippine National Police - NCR Command",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000063121478",
+    "osm_id": 263121478,
+    "type": "police",
+    "subtype": null,
+    "name": "Angono Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5259899,
+    "longitude": 121.1523156,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000065382092",
+    "osm_id": 265382092,
+    "type": "police",
+    "subtype": null,
+    "name": "Villamor Police Sub-station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5252391,
+    "longitude": 121.0118636,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000065893836",
+    "osm_id": 265893836,
+    "type": "police",
+    "subtype": null,
+    "name": "West Grace Park Police Sub-station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6503119,
+    "longitude": 120.9821874,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000066413076",
+    "osm_id": 266413076,
+    "type": "police",
+    "subtype": null,
+    "name": "Caloocan City Police Station",
+    "address": "Samson Road, Caloocan",
+    "phone": null,
+    "latitude": 14.6578039,
+    "longitude": 120.9745218,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000077749986",
+    "osm_id": 277749986,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Station № 5",
+    "address": "Santa Lucia Street, Quezon City",
+    "phone": null,
+    "latitude": 14.7073436,
+    "longitude": 121.0531646,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000079275151",
+    "osm_id": 279275151,
+    "type": "police",
+    "subtype": null,
+    "name": "Mauway Police Sub-station",
+    "address": "Barangka Drive, Mandaluyong",
+    "phone": "+632 7342378",
+    "latitude": 14.5790044,
+    "longitude": 121.0439927,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000082789966",
+    "osm_id": 282789966,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Police Station 12",
+    "address": "E. Rodriguez Jr. Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6098069,
+    "longitude": 121.076878,
+    "tags": {
+      "operator": "Quezon City Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000084605032",
+    "osm_id": 284605032,
+    "type": "police",
+    "subtype": null,
+    "name": "Cavite City Component Police Station",
+    "address": "Cavite City",
+    "phone": null,
+    "latitude": 14.4813155,
+    "longitude": 120.9029408,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000087969050",
+    "osm_id": 287969050,
+    "type": "police",
+    "subtype": null,
+    "name": "MPD Outpost 12",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6104216,
+    "longitude": 120.9940072,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000088278916",
+    "osm_id": 288278916,
+    "type": "police",
+    "subtype": null,
+    "name": "Valenzuela City Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6922777,
+    "longitude": 120.9686115,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000088588372",
+    "osm_id": 288588372,
+    "type": "police",
+    "subtype": null,
+    "name": "Navotas City Police Station",
+    "address": "M. Naval Street, Navotas",
+    "phone": "+63 2 281 9099",
+    "latitude": 14.6574354,
+    "longitude": 120.9479835,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000088744529",
+    "osm_id": 288744529,
+    "type": "police",
+    "subtype": null,
+    "name": "Caloocan City Police Community Precint 8",
+    "address": "General San Miguel Street",
+    "phone": null,
+    "latitude": 14.6583107,
+    "longitude": 120.9707119,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000089827005",
+    "osm_id": 289827005,
+    "type": "police",
+    "subtype": null,
+    "name": "Pateros Central Police Station",
+    "address": "E. Ragas Street, Pateros",
+    "phone": null,
+    "latitude": 14.5435417,
+    "longitude": 121.0701046,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0002-000090138004",
+    "osm_id": 290138004,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay City Central Police Station",
+    "address": "F. B. Harrison Street, Pasay",
+    "phone": null,
+    "latitude": 14.5442654,
+    "longitude": 120.9951765,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000000444886",
+    "osm_id": 300444886,
+    "type": "police",
+    "subtype": null,
+    "name": "Malhacan Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7439528,
+    "longitude": 120.9716413,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000000593102",
+    "osm_id": 300593102,
+    "type": "police",
+    "subtype": null,
+    "name": "Meycauayan City Police Station",
+    "address": "Hulo - Banga Road, Meycauayan",
+    "phone": null,
+    "latitude": 14.7346418,
+    "longitude": 120.9581559,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000001869146",
+    "osm_id": 301869146,
+    "type": "police",
+    "subtype": null,
+    "name": "police community presint",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6645415,
+    "longitude": 120.9961382,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000001879787",
+    "osm_id": 301879787,
+    "type": "police",
+    "subtype": null,
+    "name": "Mazan Security & Investigatory Agency",
+    "address": "Revillin Street, Manila",
+    "phone": null,
+    "latitude": 14.5782588,
+    "longitude": 121.011792,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000003264393",
+    "osm_id": 303264393,
+    "type": "police",
+    "subtype": null,
+    "name": "Santa Ana Police Station",
+    "address": "Pedro Gil Street, Manila",
+    "phone": null,
+    "latitude": 14.5824367,
+    "longitude": 121.0120096,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000008675213",
+    "osm_id": 308675213,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 2",
+    "address": "Lawa Road, Meycauayan",
+    "phone": null,
+    "latitude": 14.7379736,
+    "longitude": 120.9735396,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000009927964",
+    "osm_id": 309927964,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Police Sub-Station 3",
+    "address": "Batangas Street, Makati",
+    "phone": null,
+    "latitude": 14.5505829,
+    "longitude": 121.0072453,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000010467476",
+    "osm_id": 310467476,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP",
+    "address": "Marikina",
+    "phone": null,
+    "latitude": 14.621708,
+    "longitude": 121.0932898,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000010625383",
+    "osm_id": 310625383,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Police Station 11",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.6121374,
+    "longitude": 121.0087896,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000010745071",
+    "osm_id": 310745071,
+    "type": "police",
+    "subtype": null,
+    "name": "Philippine National Police Aviation Security Group",
+    "address": "Pasay",
+    "phone": null,
+    "latitude": 14.509541,
+    "longitude": 121.028809,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": "https://avsegroup.pnp.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000010746225",
+    "osm_id": 310746225,
+    "type": "police",
+    "subtype": null,
+    "name": "PNP Aviation Security Group",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5091435,
+    "longitude": 121.0241091,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000010901338",
+    "osm_id": 310901338,
+    "type": "police",
+    "subtype": null,
+    "name": "Gulod Police Community Precinct",
+    "address": "Visayan Avenue",
+    "phone": null,
+    "latitude": 14.6096134,
+    "longitude": 121.0085211,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000011517297",
+    "osm_id": 311517297,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Precinct",
+    "address": "Marcos Alvarez Avenue",
+    "phone": null,
+    "latitude": 14.4176721,
+    "longitude": 120.9968401,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012219944",
+    "osm_id": 312219944,
+    "type": "police",
+    "subtype": null,
+    "name": "Pcp- 5",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6416329,
+    "longitude": 120.9839072,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012543409",
+    "osm_id": 312543409,
+    "type": "police",
+    "subtype": null,
+    "name": "Marilao Police Station",
+    "address": "Sandico Street, Poblacion 1 Marilao, Bulacan",
+    "phone": null,
+    "latitude": 14.7572098,
+    "longitude": 120.9482661,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": "https://pnp.gov.ph/"
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012543665",
+    "osm_id": 312543665,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7609407,
+    "longitude": 121.086462,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012543779",
+    "osm_id": 312543779,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 1",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7093207,
+    "longitude": 120.9943097,
+    "tags": {
+      "operator": "Philippine National Police, Valenzuela Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012543868",
+    "osm_id": 312543868,
+    "type": "police",
+    "subtype": null,
+    "name": "Bantay Bayan Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6859222,
+    "longitude": 120.9757755,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012688392",
+    "osm_id": 312688392,
+    "type": "police",
+    "subtype": null,
+    "name": "Greenhills Sub-station 1",
+    "address": "San Juan",
+    "phone": null,
+    "latitude": 14.6030759,
+    "longitude": 121.0503979,
+    "tags": {
+      "operator": "San Juan City Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012714531",
+    "osm_id": 312714531,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 8",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5308747,
+    "longitude": 121.0085514,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000012963843",
+    "osm_id": 312963843,
+    "type": "police",
+    "subtype": null,
+    "name": "Amparo Police Substation",
+    "address": "Quirino Highway, Caloocan",
+    "phone": null,
+    "latitude": 14.746197,
+    "longitude": 121.079799,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000013324049",
+    "osm_id": 313324049,
+    "type": "police",
+    "subtype": null,
+    "name": "Sampaloc Police Station",
+    "address": "G. Tuazon Street, Manila",
+    "phone": null,
+    "latitude": 14.6063038,
+    "longitude": 121.0023689,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000013349345",
+    "osm_id": 313349345,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 4",
+    "address": "Dagat-Dagatan Avenue",
+    "phone": null,
+    "latitude": 14.657553,
+    "longitude": 120.9615108,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000016753817",
+    "osm_id": 316753817,
+    "type": "police",
+    "subtype": null,
+    "name": "Campus Safety and Mobility Office",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6348812,
+    "longitude": 121.0758465,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000019521036",
+    "osm_id": 319521036,
+    "type": "police",
+    "subtype": null,
+    "name": "Binondo Police Station",
+    "address": "Manila",
+    "phone": null,
+    "latitude": 14.6043649,
+    "longitude": 120.9732126,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000024129456",
+    "osm_id": 324129456,
+    "type": "police",
+    "subtype": null,
+    "name": "Tugatog Police Substation",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6645126,
+    "longitude": 120.9697164,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000025151690",
+    "osm_id": 325151690,
+    "type": "police",
+    "subtype": null,
+    "name": "MMDA - Police Station",
+    "address": "Cainta",
+    "phone": null,
+    "latitude": 14.6211308,
+    "longitude": 121.1049324,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000029656308",
+    "osm_id": 329656308,
+    "type": "police",
+    "subtype": null,
+    "name": "Antipolo Tourist Police",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5872253,
+    "longitude": 121.1760584,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000042868522",
+    "osm_id": 342868522,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Police District Station 5",
+    "address": "Pearl, Quezon City",
+    "phone": null,
+    "latitude": 14.7065591,
+    "longitude": 121.0731788,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000051550295",
+    "osm_id": 351550295,
+    "type": "police",
+    "subtype": null,
+    "name": "San Juan Police -Traffic Investigation Unit",
+    "address": "F. Sevilla Street, San Juan",
+    "phone": null,
+    "latitude": 14.6035271,
+    "longitude": 121.0265078,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000054487556",
+    "osm_id": 354487556,
+    "type": "police",
+    "subtype": null,
+    "name": "San Mateo Police Station",
+    "address": "General A. Luna Street, San Mateo",
+    "phone": null,
+    "latitude": 14.6951741,
+    "longitude": 121.1181495,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000054488610",
+    "osm_id": 354488610,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Station 2",
+    "address": "Abad Santos Avenue, Manila",
+    "phone": "+63 2 252 8450",
+    "latitude": 14.6073656,
+    "longitude": 120.9754241,
+    "tags": {
+      "operator": "Manila Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000060693831",
+    "osm_id": 360693831,
+    "type": "police",
+    "subtype": null,
+    "name": "Tayuman Police Community Precinct",
+    "address": "Tayuman Street",
+    "phone": null,
+    "latitude": 14.6173655,
+    "longitude": 120.9745017,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000069984385",
+    "osm_id": 369984385,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP 2 Solaire",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5234781,
+    "longitude": 120.9828155,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000087272616",
+    "osm_id": 387272616,
+    "type": "police",
+    "subtype": null,
+    "name": "Cainta Police Station",
+    "address": "Cainta",
+    "phone": "+63 2 8655 2220",
+    "latitude": 14.5795698,
+    "longitude": 121.115186,
+    "tags": {
+      "operator": "Municipality of Cainta",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0003-000096347877",
+    "osm_id": 396347877,
+    "type": "police",
+    "subtype": null,
+    "name": "Aviation Security Group",
+    "address": null,
+    "phone": null,
+    "latitude": 14.508745,
+    "longitude": 121.0040752,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000015383308",
+    "osm_id": 415383308,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay UP Village Police",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6515346,
+    "longitude": 121.0560426,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000025045154",
+    "osm_id": 425045154,
+    "type": "police",
+    "subtype": null,
+    "name": "Cavite Police Provincial Office",
+    "address": "Colonel Jose S. Tagle Street, Imus",
+    "phone": "09985985592",
+    "latitude": 14.429704,
+    "longitude": 120.9406319,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000033235637",
+    "osm_id": 433235637,
+    "type": "police",
+    "subtype": null,
+    "name": "Parañaque Police General Headquarters",
+    "address": "Dr. A. Santos Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.4866263,
+    "longitude": 120.9917878,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000037703256",
+    "osm_id": 437703256,
+    "type": "police",
+    "subtype": null,
+    "name": "Taguig City Police Community Precinct 2",
+    "address": "Maharlika Road, Taguig",
+    "phone": null,
+    "latitude": 14.5015476,
+    "longitude": 121.0497216,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000039861900",
+    "osm_id": 439861900,
+    "type": "police",
+    "subtype": null,
+    "name": "Taguig Police Community Precinct 3",
+    "address": "Taguig City",
+    "phone": null,
+    "latitude": 14.4823326,
+    "longitude": 121.048286,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000041108982",
+    "osm_id": 441108982,
+    "type": "police",
+    "subtype": null,
+    "name": "NCRPO Admin Building",
+    "address": "Taguig",
+    "phone": null,
+    "latitude": 14.4883605,
+    "longitude": 121.0562115,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000042163661",
+    "osm_id": 442163661,
+    "type": "police",
+    "subtype": null,
+    "name": "Hagonoy Police Sub-station 9",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5085185,
+    "longitude": 121.0663058,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000043920207",
+    "osm_id": 443920207,
+    "type": "police",
+    "subtype": null,
+    "name": "Alapan 2-A Police Station",
+    "address": "Bucandala-Alapan Road, Imus",
+    "phone": null,
+    "latitude": 14.403476,
+    "longitude": 120.9030992,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000069743713",
+    "osm_id": 469743713,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Police Station 9",
+    "address": "San Mateo Street, Makati City",
+    "phone": null,
+    "latitude": 14.5666284,
+    "longitude": 121.0313575,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000077404423",
+    "osm_id": 477404423,
+    "type": "police",
+    "subtype": null,
+    "name": "Parang Local Police",
+    "address": "Marikina",
+    "phone": null,
+    "latitude": 14.6593126,
+    "longitude": 121.1120346,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0004-000086691718",
+    "osm_id": 486691718,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 4",
+    "address": "M. J. Paterno Street",
+    "phone": null,
+    "latitude": 14.6089355,
+    "longitude": 121.0310238,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000005985183",
+    "osm_id": 505985183,
+    "type": "police",
+    "subtype": null,
+    "name": "Taguig City Police - Mobile Police Unit",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4977442,
+    "longitude": 121.053859,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000023227101",
+    "osm_id": 523227101,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Police District Police Station 9",
+    "address": "Anonas Street, Quezon City",
+    "phone": "+63 2 434-36-37;+63 2 434-39-42",
+    "latitude": 14.6329006,
+    "longitude": 121.0593205,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000024846851",
+    "osm_id": 524846851,
+    "type": "police",
+    "subtype": null,
+    "name": "Project 6 Police Station",
+    "address": "Quezon City",
+    "phone": null,
+    "latitude": 14.6614681,
+    "longitude": 121.0433656,
+    "tags": {
+      "operator": "Quezon City",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000042700242",
+    "osm_id": 542700242,
+    "type": "police",
+    "subtype": null,
+    "name": "Ermita Police Station",
+    "address": "Katigbak Drive, Manila",
+    "phone": null,
+    "latitude": 14.582094,
+    "longitude": 120.9734547,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000051674418",
+    "osm_id": 551674418,
+    "type": "police",
+    "subtype": null,
+    "name": "Greater Lagro Police Station",
+    "address": "Ascencion Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.7258779,
+    "longitude": 121.0664371,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000067056959",
+    "osm_id": 567056959,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasay City Impounding Area",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5481602,
+    "longitude": 120.9901109,
+    "tags": {
+      "operator": "Metropolitan Manila Development Authority",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0005-000088994156",
+    "osm_id": 588994156,
+    "type": "police",
+    "subtype": null,
+    "name": "P.S. 21",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5812757,
+    "longitude": 121.0981709,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000001219977",
+    "osm_id": 601219977,
+    "type": "police",
+    "subtype": null,
+    "name": "Victorino Mapa Police Community Precinct",
+    "address": "Victorino Mapa Street",
+    "phone": null,
+    "latitude": 14.5993705,
+    "longitude": 121.0171641,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000002920787",
+    "osm_id": 602920787,
+    "type": "police",
+    "subtype": null,
+    "name": "Floodway Police Community Precinct",
+    "address": "Casimiro A. Ynares Sr. Boulevard, Cainta",
+    "phone": null,
+    "latitude": 14.570197,
+    "longitude": 121.1060123,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000003496944",
+    "osm_id": 603496944,
+    "type": "police",
+    "subtype": null,
+    "name": "Malabon City Police Substation",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6636072,
+    "longitude": 120.9686641,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000027415045",
+    "osm_id": 627415045,
+    "type": "police",
+    "subtype": null,
+    "name": "Pinagsama Police Precinct",
+    "address": "Pampanga Street, Taguig",
+    "phone": null,
+    "latitude": 14.5230383,
+    "longitude": 121.0555662,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000029915204",
+    "osm_id": 629915204,
+    "type": "police",
+    "subtype": null,
+    "name": "Asuncion Police Community Precinct",
+    "address": "C. M. Recto Avenue, Manila",
+    "phone": "+63 2 230 9438",
+    "latitude": 14.6027987,
+    "longitude": 120.9673714,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000035483554",
+    "osm_id": 635483554,
+    "type": "police",
+    "subtype": null,
+    "name": "San Juan City Police Community Precinct № 5",
+    "address": "Aurora Boulevard, San Juan",
+    "phone": null,
+    "latitude": 14.6089463,
+    "longitude": 121.0222262,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000037457857",
+    "osm_id": 637457857,
+    "type": "police",
+    "subtype": null,
+    "name": "barangay police headquarters",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6039626,
+    "longitude": 121.0230287,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000052136060",
+    "osm_id": 652136060,
+    "type": "police",
+    "subtype": null,
+    "name": "Las Piñas City Police",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4512285,
+    "longitude": 120.9828894,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000086001514",
+    "osm_id": 686001514,
+    "type": "police",
+    "subtype": null,
+    "name": "Purok 6 Outpost,Block 43-44 Barangay Santa Ana",
+    "address": "Block 43",
+    "phone": null,
+    "latitude": 14.5339218,
+    "longitude": 121.1074077,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000097247929",
+    "osm_id": 697247929,
+    "type": "police",
+    "subtype": null,
+    "name": "Punta Police Community Precinct",
+    "address": "J. Posadas Street",
+    "phone": null,
+    "latitude": 14.5856653,
+    "longitude": 121.0106141,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0006-000099815562",
+    "osm_id": 699815562,
+    "type": "police",
+    "subtype": null,
+    "name": "Sta. Cruz Police Outpost",
+    "address": "Pablo Ocampo Street, Makati",
+    "phone": null,
+    "latitude": 14.566415,
+    "longitude": 121.017009,
+    "tags": {
+      "operator": "City Government of Makati",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000011803647",
+    "osm_id": 711803647,
+    "type": "police",
+    "subtype": null,
+    "name": "Baseco Police Station № 13",
+    "address": "Main Road 2",
+    "phone": null,
+    "latitude": 14.5913819,
+    "longitude": 120.9613173,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000034721280",
+    "osm_id": 734721280,
+    "type": "police",
+    "subtype": null,
+    "name": "Parang Police Community Precinct",
+    "address": "Lakandula, Marikina",
+    "phone": null,
+    "latitude": 14.660658,
+    "longitude": 121.1144484,
+    "tags": {
+      "operator": "Eastern Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000040010589",
+    "osm_id": 740010589,
+    "type": "police",
+    "subtype": null,
+    "name": "PCP-7 Global",
+    "address": "Chino Roces Avenue Extension",
+    "phone": null,
+    "latitude": 14.5268725,
+    "longitude": 121.0265924,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000041169915",
+    "osm_id": 741169915,
+    "type": "police",
+    "subtype": null,
+    "name": "Philippine National Police Maritime Group",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5034372,
+    "longitude": 120.9906493,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000049677646",
+    "osm_id": 749677646,
+    "type": "police",
+    "subtype": null,
+    "name": "San Miguel Police Sub-station",
+    "address": "M. Eusebio Avenue",
+    "phone": null,
+    "latitude": 14.5711915,
+    "longitude": 121.0964095,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000062333244",
+    "osm_id": 762333244,
+    "type": "police",
+    "subtype": null,
+    "name": "Central Park Police Sub-station № 4",
+    "address": "D. Jorge Street",
+    "phone": null,
+    "latitude": 14.5476186,
+    "longitude": 121.0091118,
+    "tags": {
+      "operator": "Pasay City Police Office, PNP",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000072046515",
+    "osm_id": 772046515,
+    "type": "police",
+    "subtype": null,
+    "name": "Parañaque Police Community Precinct 4",
+    "address": "Dr. A. Santos Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.4655456,
+    "longitude": 121.017635,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000073155465",
+    "osm_id": 773155465,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct",
+    "address": "Sun Valley Drive",
+    "phone": null,
+    "latitude": 14.493714,
+    "longitude": 121.0414446,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000074622897",
+    "osm_id": 774622897,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 6",
+    "address": "Doña Soledad Avenue",
+    "phone": null,
+    "latitude": 14.4874933,
+    "longitude": 121.0247022,
+    "tags": {
+      "operator": "Parañaque City Police Office; Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000075162267",
+    "osm_id": 775162267,
+    "type": "police",
+    "subtype": null,
+    "name": "Marulas Police Station",
+    "address": "India Maria Street",
+    "phone": null,
+    "latitude": 14.6776262,
+    "longitude": 120.9844723,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000094322099",
+    "osm_id": 794322099,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Hall Police Precint",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6477277,
+    "longitude": 121.051298,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000094745686",
+    "osm_id": 794745686,
+    "type": "police",
+    "subtype": null,
+    "name": "Unified Security Group Headquarters",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7128411,
+    "longitude": 121.0729413,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000095213732",
+    "osm_id": 795213732,
+    "type": "police",
+    "subtype": null,
+    "name": "Pasong Putik Proper Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7386938,
+    "longitude": 121.0599698,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000097780930",
+    "osm_id": 797780930,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Police Station № 14",
+    "address": "Corregidor Street",
+    "phone": null,
+    "latitude": 14.6779693,
+    "longitude": 121.0730089,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0007-000099210872",
+    "osm_id": 799210872,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City Police Station 4",
+    "address": "Quirino Highway",
+    "phone": null,
+    "latitude": 14.7209256,
+    "longitude": 121.0393107,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0008-000005184278",
+    "osm_id": 805184278,
+    "type": "police",
+    "subtype": null,
+    "name": "Dapitan Police Community Precinct",
+    "address": "Dapitan Street",
+    "phone": "+632 87425757",
+    "latitude": 14.6223947,
+    "longitude": 121.0001488,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0008-000009434522",
+    "osm_id": 809434522,
+    "type": "police",
+    "subtype": null,
+    "name": "Manila Pulis",
+    "address": "Doroteo Jose Street",
+    "phone": null,
+    "latitude": 14.6052136,
+    "longitude": 120.9818708,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0008-000065708325",
+    "osm_id": 865708325,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 4",
+    "address": "Meralco Road, Muntinlupa",
+    "phone": null,
+    "latitude": 14.4537846,
+    "longitude": 121.0461773,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0008-000081074501",
+    "osm_id": 881074501,
+    "type": "police",
+    "subtype": null,
+    "name": "Community Police Assistance Center",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7367911,
+    "longitude": 121.1545607,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0008-000090845563",
+    "osm_id": 890845563,
+    "type": "police",
+    "subtype": null,
+    "name": "Pamplona Police Substation",
+    "address": "Magnolia Street",
+    "phone": null,
+    "latitude": 14.4614013,
+    "longitude": 120.9773986,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000003873792",
+    "osm_id": 903873792,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Substation 6 - Signal Village",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5109219,
+    "longitude": 121.0571086,
+    "tags": {
+      "operator": "Taguig City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000007933709",
+    "osm_id": 907933709,
+    "type": "police",
+    "subtype": null,
+    "name": "Caloocan City Police Substation 5",
+    "address": "Zapote Road, Caloocan City",
+    "phone": null,
+    "latitude": 14.7510107,
+    "longitude": 121.0539328,
+    "tags": {
+      "operator": null,
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000016334116",
+    "osm_id": 916334116,
+    "type": "police",
+    "subtype": null,
+    "name": "Parañaque City Police Station",
+    "address": null,
+    "phone": null,
+    "latitude": 14.512886,
+    "longitude": 120.9828234,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000016590015",
+    "osm_id": 916590015,
+    "type": "police",
+    "subtype": null,
+    "name": "Antipolo Police Station",
+    "address": "Marcos Highway, Antipolo",
+    "phone": null,
+    "latitude": 14.6220562,
+    "longitude": 121.1732018,
+    "tags": {
+      "operator": "Rizal Provincial Police Office",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000029470186",
+    "osm_id": 929470186,
+    "type": "police",
+    "subtype": null,
+    "name": "Eastern Police District",
+    "address": "Meralco Avenue, Pasig",
+    "phone": null,
+    "latitude": 14.5793429,
+    "longitude": 121.0634875,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000030611319",
+    "osm_id": 930611319,
+    "type": "police",
+    "subtype": null,
+    "name": "Pangulo Barangay Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6947832,
+    "longitude": 120.9495121,
+    "tags": {
+      "operator": "Pangulo Barangay Government",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000035860280",
+    "osm_id": 935860280,
+    "type": "police",
+    "subtype": null,
+    "name": "Santa Cruz Police Station",
+    "address": "A. H. Lacson Avenue",
+    "phone": null,
+    "latitude": 14.6173016,
+    "longitude": 120.9854627,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0009-000037801023",
+    "osm_id": 937801023,
+    "type": "police",
+    "subtype": null,
+    "name": "Libertad Police Sub-Station",
+    "address": "Taft Avenue, Pasay",
+    "phone": null,
+    "latitude": 14.5466521,
+    "longitude": 120.9987342,
+    "tags": {
+      "operator": "Pasay City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000018795125",
+    "osm_id": 1018795125,
+    "type": "police",
+    "subtype": null,
+    "name": "Valenzuela Police Station - Police Assisstance Desk #6",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7205337,
+    "longitude": 120.9585034,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000027457842",
+    "osm_id": 1027457842,
+    "type": "police",
+    "subtype": null,
+    "name": "NLEX Traffic Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7084778,
+    "longitude": 120.99314,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000030739052",
+    "osm_id": 1030739052,
+    "type": "police",
+    "subtype": null,
+    "name": "Quezon City District Traffic Enforcement Unit - Sector № 2",
+    "address": "Quirino Highway, Quezon City",
+    "phone": null,
+    "latitude": 14.7291795,
+    "longitude": 121.0426372,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000035382439",
+    "osm_id": 1035382439,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Addition Hills Cluster 3 Command Base",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5876377,
+    "longitude": 121.038907,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000061596104",
+    "osm_id": 1061596104,
+    "type": "police",
+    "subtype": null,
+    "name": "Masambong Police Station",
+    "address": "Del Monte Avenue, Quezon City",
+    "phone": null,
+    "latitude": 14.6400374,
+    "longitude": 121.0121914,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000079804775",
+    "osm_id": 1079804775,
+    "type": "police",
+    "subtype": null,
+    "name": "Caloocan City Police Station- North Extension Office",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7677763,
+    "longitude": 121.0437001,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000080169705",
+    "osm_id": 1080169705,
+    "type": "police",
+    "subtype": null,
+    "name": "Panapaan Police Community Precinct (PCP-3)",
+    "address": "Aguinaldo Highway, Bacoor",
+    "phone": null,
+    "latitude": 14.4404671,
+    "longitude": 120.9507683,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000080689868",
+    "osm_id": 1080689868,
+    "type": "police",
+    "subtype": null,
+    "name": "Gandara Police Community Precinct (OPAC Outpost)",
+    "address": "Ronquillo Street, Manila",
+    "phone": null,
+    "latitude": 14.600133,
+    "longitude": 120.9803372,
+    "tags": {
+      "operator": "Manila Police District Police Station 11",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000081081233",
+    "osm_id": 1081081233,
+    "type": "police",
+    "subtype": null,
+    "name": "San Nicolas Police Community Precinct (PCP 2)",
+    "address": "Muelle de la Industria, Manila",
+    "phone": null,
+    "latitude": 14.5965453,
+    "longitude": 120.9702304,
+    "tags": {
+      "operator": "Manila Police District Police Station 11",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000085127682",
+    "osm_id": 1085127682,
+    "type": "police",
+    "subtype": null,
+    "name": "Juan Luna Police Community Precinct",
+    "address": "Juan Luna Street, Manila",
+    "phone": null,
+    "latitude": 14.6030764,
+    "longitude": 120.9718083,
+    "tags": {
+      "operator": "Meisic Police Station (PS11)",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000086820642",
+    "osm_id": 1086820642,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct № 3",
+    "address": "Quezon Avenue",
+    "phone": null,
+    "latitude": 14.6340302,
+    "longitude": 121.0204618,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000088740185",
+    "osm_id": 1088740185,
+    "type": "police",
+    "subtype": null,
+    "name": "Hermosa Police Community Precinct",
+    "address": "Hermosa Street",
+    "phone": null,
+    "latitude": 14.6326372,
+    "longitude": 120.9758668,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0010-000088852878",
+    "osm_id": 1088852878,
+    "type": "police",
+    "subtype": null,
+    "name": "Barangay Punturin Tanod Headquarters",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7403686,
+    "longitude": 120.9905846,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000007227005",
+    "osm_id": 1107227005,
+    "type": "police",
+    "subtype": null,
+    "name": "Bagong Silangan Police Community Precinct",
+    "address": "A. Bonifacio Street, Quezon City",
+    "phone": null,
+    "latitude": 14.6977403,
+    "longitude": 121.1106057,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000011918339",
+    "osm_id": 1111918339,
+    "type": "police",
+    "subtype": null,
+    "name": "University Avenue Police Community Precinct",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6545098,
+    "longitude": 121.056708,
+    "tags": {
+      "operator": "Quezon City Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000019525542",
+    "osm_id": 1119525542,
+    "type": "police",
+    "subtype": null,
+    "name": "Santo Niño Police Sub-station",
+    "address": "Ninoy Aquino Avenue, Parañaque",
+    "phone": null,
+    "latitude": 14.5002577,
+    "longitude": 120.9975814,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000024729190",
+    "osm_id": 1124729190,
+    "type": "police",
+    "subtype": null,
+    "name": "Marilao PNP Sub-station",
+    "address": "Miguel Villarica Road",
+    "phone": null,
+    "latitude": 14.7891864,
+    "longitude": 121.0033165,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000035215865",
+    "osm_id": 1135215865,
+    "type": "police",
+    "subtype": null,
+    "name": "6th Mobile Force Company",
+    "address": null,
+    "phone": null,
+    "latitude": 14.7831424,
+    "longitude": 121.030914,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000041885785",
+    "osm_id": 1141885785,
+    "type": "police",
+    "subtype": null,
+    "name": "City of Bacoor Police Substation",
+    "address": null,
+    "phone": null,
+    "latitude": 14.4063034,
+    "longitude": 120.9775432,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000080590708",
+    "osm_id": 1180590708,
+    "type": "police",
+    "subtype": null,
+    "name": "Talon Sub Station",
+    "address": "Governor G. Licaros Avenue, Las Piñas",
+    "phone": "+63 2 8550 1976",
+    "latitude": 14.4324937,
+    "longitude": 120.9856903,
+    "tags": {
+      "operator": "Southern Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000088818053",
+    "osm_id": 1188818053,
+    "type": "police",
+    "subtype": null,
+    "name": "Escolta Police Community Precinct",
+    "address": "Escolta Street",
+    "phone": null,
+    "latitude": 14.5967982,
+    "longitude": 120.9768964,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0011-000091975279",
+    "osm_id": 1191975279,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Mixed Used Building",
+    "address": "P. Burgos Street",
+    "phone": null,
+    "latitude": 14.5652083,
+    "longitude": 121.0457424,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0012-000004086903",
+    "osm_id": 1204086903,
+    "type": "police",
+    "subtype": null,
+    "name": "Hulong Duhat Police Sub-station",
+    "address": "Don Basilio Bautista Boulevard",
+    "phone": null,
+    "latitude": 14.6778454,
+    "longitude": 120.941941,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0012-000031159147",
+    "osm_id": 1231159147,
+    "type": "police",
+    "subtype": null,
+    "name": "District Mobile Force Battalion",
+    "address": null,
+    "phone": null,
+    "latitude": 14.6898396,
+    "longitude": 120.9531889,
+    "tags": {
+      "operator": "Northern Police District",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0013-000065442412",
+    "osm_id": 1365442412,
+    "type": "police",
+    "subtype": null,
+    "name": "Taytay Municipal Police Station",
+    "address": "Mahinhin Street",
+    "phone": null,
+    "latitude": 14.5704516,
+    "longitude": 121.1319742,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000012662726",
+    "osm_id": 1412662726,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati Public Safety Department",
+    "address": null,
+    "phone": null,
+    "latitude": 14.571795,
+    "longitude": 121.0153267,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000031176170",
+    "osm_id": 1431176170,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Sub-station 5 - Baclaran",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5352653,
+    "longitude": 120.9992994,
+    "tags": {
+      "operator": "Pasay City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000052392140",
+    "osm_id": 1452392140,
+    "type": "police",
+    "subtype": null,
+    "name": "Payatas-Bagong Silangan Police Station",
+    "address": "Payatas Road, Quezon City",
+    "phone": null,
+    "latitude": 14.7268451,
+    "longitude": 121.1155249,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000073296370",
+    "osm_id": 1473296370,
+    "type": "police",
+    "subtype": null,
+    "name": "New Makati Central Police Headquarters",
+    "address": "Malugay Street, Makati City",
+    "phone": null,
+    "latitude": 14.5586384,
+    "longitude": 121.0081694,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": "24/7",
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000076334008",
+    "osm_id": 1476334008,
+    "type": "police",
+    "subtype": null,
+    "name": "Makati City Police Station Police Community Precint No.10",
+    "address": null,
+    "phone": null,
+    "latitude": 14.5339744,
+    "longitude": 121.0603833,
+    "tags": {
+      "operator": null,
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000081563850",
+    "osm_id": 1481563850,
+    "type": "police",
+    "subtype": null,
+    "name": "Police Community Precinct 1",
+    "address": "Sumulong Highway",
+    "phone": null,
+    "latitude": 14.6297214,
+    "longitude": 121.1203565,
+    "tags": {
+      "operator": "Antipolo City Police Station",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  },
+  {
+    "id": "70110000-0000-0000-0014-000091016452",
+    "osm_id": 1491016452,
+    "type": "police",
+    "subtype": null,
+    "name": "Buting Police Outpost",
+    "address": null,
+    "phone": null,
+    "latitude": 14.554995,
+    "longitude": 121.0654478,
+    "tags": {
+      "operator": "Philippine National Police",
+      "opening_hours": null,
+      "website": null
+    },
+    "source": "osm"
+  }
+]

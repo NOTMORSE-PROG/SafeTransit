@@ -67,11 +67,6 @@ const FamilyLocationRow: React.FC<FamilyLocationRowProps> = ({
     const memberTime = new Date(member.timestamp).getTime();
     const timeDiff = now - memberTime;
 
-    // Check for SOS simulation (Carlos Mendoza mock)
-    if (member.full_name === "Carlos Mendoza") {
-      return "#ef4444"; // Red for SOS
-    }
-
     if (member.is_live && timeDiff < 2 * 60 * 1000) {
       return "#10b981"; // Green for live (< 2 min)
     }
@@ -83,10 +78,6 @@ const FamilyLocationRow: React.FC<FamilyLocationRowProps> = ({
     const now = Date.now();
     const memberTime = new Date(member.timestamp).getTime();
     const timeDiff = now - memberTime;
-
-    if (member.full_name === "Carlos Mendoza") {
-      return "SOS ACTIVE 🚨";
-    }
 
     if (member.is_live && timeDiff < 2 * 60 * 1000) {
       return "Live";
@@ -161,7 +152,6 @@ const FamilyLocationRow: React.FC<FamilyLocationRowProps> = ({
       >
         {visibleMembers.map((member, _index) => {
           const statusColor = getStatusColor(member);
-          const isSOSActive = member.full_name === "Carlos Mendoza";
 
           return (
             <TouchableOpacity
@@ -205,9 +195,7 @@ const FamilyLocationRow: React.FC<FamilyLocationRowProps> = ({
                 {member.full_name}
               </Text>
               <Text
-                className={`text-xs text-center mt-1 ${
-                  isSOSActive ? "text-red-600 font-bold" : "text-gray-500"
-                }`}
+                className="text-xs text-center mt-1 text-gray-500"
                 numberOfLines={1}
               >
                 {getStatusText(member)}

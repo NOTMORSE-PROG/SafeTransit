@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Modal } from 'react-native';
-import { Lightbulb, AlertTriangle, Bus, Shield, Construction, MapPin, Clock, LucideIcon, SlidersHorizontal, X } from 'lucide-react-native';
+import { Lightbulb, AlertTriangle, Bus, Shield, Construction, MapPin, Clock, LucideIcon, SlidersHorizontal, X, Hospital, TrainFront, Layers } from 'lucide-react-native';
 import Animated, { SlideInDown } from 'react-native-reanimated';
 import { TipCategory, TimeRelevance, getCategoryColor } from '@/services/tipsService';
 import { colors } from '@/constants/theme';
+
+export interface POILayers {
+  police: boolean;
+  hospitals: boolean;
+  transit: boolean;
+}
+
+export const DEFAULT_POI_LAYERS: POILayers = {
+  police: false,
+  hospitals: false,
+  transit: true,
+};
 
 export interface FilterState {
   categories: TipCategory[];
   radius: number;
   timeRelevance: TimeRelevance | null;
+  layers: POILayers;
 }
 
 interface FilterChipsProps {
@@ -28,6 +41,17 @@ const RADIUS_OPTIONS = [
   { value: 500, label: '500m' },
   { value: 1000, label: '1km' },
   { value: 5000, label: '5km' },
+];
+
+const LAYER_OPTIONS: {
+  key: keyof POILayers;
+  label: string;
+  icon: LucideIcon;
+  color: string;
+}[] = [
+  { key: 'police', label: 'Police', icon: Shield, color: colors.primary[600] },
+  { key: 'hospitals', label: 'Hospitals', icon: Hospital, color: colors.danger[600] },
+  { key: 'transit', label: 'Transit', icon: TrainFront, color: '#7c3aed' },
 ];
 
 const TIME_OPTIONS: { value: TimeRelevance; label: string; emoji: string }[] = [
@@ -58,16 +82,27 @@ const FilterChips: React.FC<FilterChipsProps> = ({ filters, onFiltersChange }) =
     onFiltersChange({ ...filters, timeRelevance: newTime });
   };
 
+  const toggleLayer = (key: keyof POILayers) => {
+    const layers = filters.layers ?? DEFAULT_POI_LAYERS;
+    onFiltersChange({
+      ...filters,
+      layers: { ...layers, [key]: !layers[key] },
+    });
+  };
+
   const clearAllFilters = () => {
     onFiltersChange({
       categories: [],
       radius: 5000,
       timeRelevance: null,
+      layers: DEFAULT_POI_LAYERS,
     });
   };
 
+  const layers = filters.layers ?? DEFAULT_POI_LAYERS;
+  const activeLayerCount = Object.values(layers).filter(Boolean).length;
   const hasActiveFilters = filters.categories.length > 0 || filters.timeRelevance !== null;
-  const activeFilterCount = filters.categories.length + (filters.timeRelevance ? 1 : 0);
+  const activeFilterCount = filters.categories.length + (filters.timeRelevance ? 1 : 0) + activeLayerCount;
 
   return (
     <>
@@ -124,6 +159,49 @@ const FilterChips: React.FC<FilterChipsProps> = ({ filters, onFiltersChange }) =
             </View>
 
             <ScrollView style={styles.modalScroll} showsVerticalScrollIndicator={false}>
+              {/* Layers Filter Section */}
+              <View style={styles.filterSection}>
+                <View style={styles.sectionHeaderStatic}>
+                  <Layers size={20} color={colors.neutral[700]} strokeWidth={2} />
+                  <Text style={styles.sectionTitle}>Layers</Text>
+                  {activeLayerCount > 0 && (
+                    <View style={styles.countBadge}>
+                      <Text style={styles.countBadgeText}>{activeLayerCount}</Text>
+                    </View>
+                  )}
+                </View>
+                <View style={styles.categoryGrid}>
+                  {LAYER_OPTIONS.map((option) => {
+                    const Icon = option.icon;
+                    const isOn = layers[option.key];
+                    return (
+                      <TouchableOpacity
+                        key={option.key}
+                        style={[
+                          styles.categoryChip,
+                          isOn && { backgroundColor: `${option.color}20`, borderColor: option.color },
+                        ]}
+                        onPress={() => toggleLayer(option.key)}
+                        accessible
+                        accessibilityLabel={`${option.label} layer${isOn ? ', on' : ', off'}`}
+                        accessibilityRole="switch"
+                        accessibilityState={{ checked: isOn }}
+                      >
+                        <Icon size={20} color={isOn ? option.color : colors.neutral[500]} />
+                        <Text
+                          style={[
+                            styles.categoryLabel,
+                            isOn && { color: option.color, fontWeight: '600' },
+                          ]}
+                        >
+                          {option.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+
               {/* Category Filter Section */}
               <View style={styles.filterSection}>
                 <View style={styles.sectionHeaderStatic}>
