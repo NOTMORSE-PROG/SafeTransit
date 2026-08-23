@@ -6,6 +6,15 @@ A comprehensive safety-first navigation app designed for women commuters in Phil
 
 SafeTransit empowers women travelers with real-time safety information, community-powered alerts, and intelligent route planning. The app combines location-based safety tips, background protection monitoring, and a supportive community forum to create a comprehensive safety network.
 
+## Repository Layout
+
+| Path | Component |
+|---|---|
+| `/` | Expo/React Native mobile application |
+| `backend/` | Vercel serverless API |
+
+The canonical repository is `https://github.com/NOTMORSE-PROG/SafeTransit`. The mobile app and API are maintained together, while each component keeps its own dependencies and runtime commands.
+
 ## ✨ Core Features
 
 ### 🛡️ Safety & Protection
@@ -74,7 +83,7 @@ Discussion-based posts with:
 
 1. **Clone and Install**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/NOTMORSE-PROG/SafeTransit.git
    cd SafeTransit
    npm install
    ```
@@ -96,6 +105,19 @@ Discussion-based posts with:
    npm start
    ```
    After the initial build, just use this command for daily development. Press `a` to open on Android, `r` to reload.
+
+### Backend Development
+
+From the repository root:
+
+```bash
+cd backend
+npm install
+npm test
+npm run dev
+```
+
+The API has its own environment variables and deployment configuration. See [`backend/README.md`](backend/README.md).
 
 ## 🛠️ Tech Stack
 
@@ -354,6 +376,10 @@ npx expo run:android
 # Production build (requires EAS)
 eas build --platform android
 ```
+
+### Backend Deployment
+
+The existing API remains available at `https://safetransitbackend.vercel.app`. Its Vercel project is connected to this repository with `backend/` as the root directory. Keep that project, root directory, environment configuration, and public alias unchanged when publishing backend updates.
 
 ## 👥 Team
 
