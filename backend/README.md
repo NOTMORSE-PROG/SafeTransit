@@ -4,6 +4,13 @@ Backend API for SafeTransit mobile app, deployed on Vercel as serverless functio
 
 ## Setup
 
+Clone the canonical project and enter the API directory:
+
+```bash
+git clone https://github.com/NOTMORSE-PROG/SafeTransit.git
+cd SafeTransit/backend
+```
+
 1. Install dependencies:
 ```bash
 npm install
@@ -26,7 +33,7 @@ npm run dev
 npm run deploy
 ```
 
-Or connect this repository to Vercel for automatic deployments.
+The existing Vercel project uses this canonical repository with `backend/` as its root directory and retains the public alias `https://safetransitbackend.vercel.app`. Do not create a replacement project or change the alias for routine deployments.
 
 ## API Endpoints
 
