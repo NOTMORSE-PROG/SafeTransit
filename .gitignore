@@ -51,8 +51,8 @@ KEYSTORE_SECRET.txt
 android/
 ios/
 
-# Backend (separate repository)
-backend/
+# The backend is part of this monorepo. Its own .gitignore excludes local
+# dependencies, Vercel linkage, environment files, and logs.
 
 # TypeScript
 *.tsbuildinfo
